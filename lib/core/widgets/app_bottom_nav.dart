@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/services/user_persistence_service.dart';
 
 enum AppNavTab { jaap, library, panchang, profile }
 
@@ -13,7 +14,6 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
     const Color activePillBg = Color(0xFFFBE4DC);
     const Color activeTextColor = Color(0xFF2E2428);
     const Color inactiveColor = Color(0xFF8A8287);
@@ -42,7 +42,15 @@ class AppBottomNav extends StatelessWidget {
                 tab: AppNavTab.jaap,
                 icon: Icons.filter_1_rounded,
                 label: 'Jaap',
-                route: '/naam-jaap',
+                onTap: () async {
+                  final isLoggedIn = await UserPersistenceService.isLoggedIn();
+                  if (!context.mounted) return;
+                  if (isLoggedIn) {
+                    context.go('/naam-jaap');
+                  } else {
+                    context.go('/jaap-intro');
+                  }
+                },
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,
                 inactiveColor: inactiveColor,
@@ -52,7 +60,7 @@ class AppBottomNav extends StatelessWidget {
                 tab: AppNavTab.library,
                 icon: Icons.menu_book_rounded,
                 label: 'Library',
-                route: '/amrit-vachan',
+                onTap: () => context.go('/library'),
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,
                 inactiveColor: inactiveColor,
@@ -62,7 +70,7 @@ class AppBottomNav extends StatelessWidget {
                 tab: AppNavTab.panchang,
                 icon: Icons.calendar_month_outlined,
                 label: 'Panchang',
-                route: '/home',
+                onTap: () => context.go('/home'),
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,
                 inactiveColor: inactiveColor,
@@ -72,7 +80,7 @@ class AppBottomNav extends StatelessWidget {
                 tab: AppNavTab.profile,
                 icon: Icons.person_outline_rounded,
                 label: 'Profile',
-                route: '/profile',
+                onTap: () => context.go('/profile'),
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,
                 inactiveColor: inactiveColor,
@@ -89,7 +97,7 @@ class AppBottomNav extends StatelessWidget {
     required AppNavTab tab,
     required IconData icon,
     required String label,
-    required String route,
+    required VoidCallback onTap,
     required Color activePillBg,
     required Color activeTextColor,
     required Color inactiveColor,
@@ -99,7 +107,7 @@ class AppBottomNav extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (!isActive) {
-          context.go(route);
+          onTap();
         }
       },
       behavior: HitTestBehavior.opaque,

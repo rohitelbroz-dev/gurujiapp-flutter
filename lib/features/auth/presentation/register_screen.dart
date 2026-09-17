@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guruji/app.dart';
 import '../bloc/auth_bloc.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  final String? redirectTo;
+
+  const RegisterScreen({super.key, this.redirectTo});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -24,7 +25,6 @@ class _RegisterScreenState extends State<RegisterScreen>
 
   late final AnimationController _animCtrl;
   late final Animation<double> _fadeAnim;
-  late final Animation<Offset> _slideAnim;
 
   bool _isFormValid = false;
 
@@ -33,34 +33,22 @@ class _RegisterScreenState extends State<RegisterScreen>
     super.initState();
     _animCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 500),
     );
     _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut));
     _animCtrl.forward();
 
-    // Add listeners to all controllers to validate form
     _nameController.addListener(_validateForm);
     _phoneController.addListener(_validateForm);
     _emailController.addListener(_validateForm);
     _cityController.addListener(_validateForm);
-    _stateController.addListener(_validateForm);
-    _dateOfBirthController.addListener(_validateForm);
-    _gotraController.addListener(_validateForm);
   }
 
   void _validateForm() {
     setState(() {
       _isFormValid = _nameController.text.trim().isNotEmpty &&
           _phoneController.text.trim().length == 10 &&
-          _emailController.text.trim().isNotEmpty &&
-          _cityController.text.trim().isNotEmpty &&
-          _stateController.text.trim().isNotEmpty &&
-          _dateOfBirthController.text.trim().isNotEmpty &&
-          _gotraController.text.trim().isNotEmpty;
+          _emailController.text.trim().isNotEmpty;
     });
   }
 
@@ -77,17 +65,20 @@ class _RegisterScreenState extends State<RegisterScreen>
     super.dispose();
   }
 
-  Future<void> _selectDate() async {
-    final picked = await showDatePicker(
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime(2000),
-      firstDate: DateTime(1950),
+      firstDate: DateTime(1920),
       lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: AppTheme.primaryColor,
+              primary: Color(0xFF7E2B58),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Color(0xFF1E1A1D),
             ),
           ),
           child: child!,
@@ -118,21 +109,26 @@ class _RegisterScreenState extends State<RegisterScreen>
 
   @override
   Widget build(BuildContext context) {
+    const Color bgGradientStart = Color(0xFFFFFDFE);
+    const Color bgGradientEnd = Color(0xFFFBF2F6);
+    const Color primaryPlum = Color(0xFF7E2B58);
+    const Color charcoalText = Color(0xFF1E1A1D);
+    const Color subtitleColor = Color(0xFF6B5E66);
+    const Color buttonColor = Color(0xFF8E3763);
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        print('RegisterScreen: AuthState changed: $state'); // Debug print
         if (state is OtpSentSuccess) {
-          print('RegisterScreen: OtpSentSuccess received, navigating to OTP'); // Debug print
           context.push(
             '/otp',
             extra: {
               'phone': state.phone,
               'expiresIn': state.expiresIn,
               'otpCode': state.otpCode,
+              'redirectTo': widget.redirectTo ?? '/home',
             },
           );
         } else if (state is AuthFailure) {
-          print('RegisterScreen: AuthFailure received: ${state.message}'); // Debug print
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
@@ -142,526 +138,318 @@ class _RegisterScreenState extends State<RegisterScreen>
         }
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
+        value: SystemUiOverlayStyle.dark,
         child: Scaffold(
-          backgroundColor: AppTheme.backgroundColor,
-          body: Column(
-            children: [
-              _buildHeader(context),
-              Expanded(
-                child: FadeTransition(
-                  opacity: _fadeAnim,
-                  child: SlideTransition(
-                    position: _slideAnim,
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                      child: Column(
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [bgGradientStart, bgGradientEnd],
+              ),
+            ),
+            child: SafeArea(
+              child: FadeTransition(
+                opacity: _fadeAnim,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Back Button
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: primaryPlum, size: 20),
+                          onPressed: () => context.pop(),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Om Badge
+                      Container(
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF7E9F0),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: primaryPlum.withOpacity(0.1),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'ॐ',
+                            style: TextStyle(
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: primaryPlum,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Title
+                      const Text(
+                        'Create Account',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'serif',
+                          color: charcoalText,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      const Text(
+                        'Join the devotional community of Hari Path',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w400,
+                          color: subtitleColor,
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      // Form Container
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _buildInput(
+                              label: 'FULL NAME *',
+                              controller: _nameController,
+                              icon: Icons.person_outline_rounded,
+                              hint: 'Enter your name',
+                              keyboardType: TextInputType.name,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildInput(
+                              label: 'MOBILE NUMBER *',
+                              controller: _phoneController,
+                              icon: Icons.phone_android_rounded,
+                              hint: '10-digit number',
+                              keyboardType: TextInputType.phone,
+                              prefixText: '+91 ',
+                              formatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(10),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            _buildInput(
+                              label: 'EMAIL ADDRESS *',
+                              controller: _emailController,
+                              icon: Icons.mail_outline_rounded,
+                              hint: 'example@domain.com',
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildInput(
+                              label: 'CITY',
+                              controller: _cityController,
+                              icon: Icons.location_city_rounded,
+                              hint: 'Enter your city',
+                            ),
+                            const SizedBox(height: 16),
+                            _buildInput(
+                              label: 'GOTRA (OPTIONAL)',
+                              controller: _gotraController,
+                              icon: Icons.family_restroom_rounded,
+                              hint: 'Enter Gotra',
+                            ),
+                            const SizedBox(height: 16),
+                            GestureDetector(
+                              onTap: () => _selectDate(context),
+                              child: AbsorbPointer(
+                                child: _buildInput(
+                                  label: 'DATE OF BIRTH (OPTIONAL)',
+                                  controller: _dateOfBirthController,
+                                  icon: Icons.calendar_today_rounded,
+                                  hint: 'YYYY-MM-DD',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      // Submit Button
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          final isLoading = state is AuthLoading;
+                          return SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: ElevatedButton(
+                              onPressed: (_isFormValid && !isLoading) ? _handleRegister : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: buttonColor,
+                                disabledBackgroundColor: buttonColor.withOpacity(0.4),
+                                foregroundColor: Colors.white,
+                                elevation: _isFormValid ? 6 : 0,
+                                shadowColor: buttonColor.withOpacity(0.45),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(28),
+                                ),
+                              ),
+                              child: isLoading
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.5,
+                                      ),
+                                    )
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Register & Send OTP',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 0.2,
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Icon(Icons.arrow_forward_rounded, size: 20),
+                                      ],
+                                    ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Link to Login
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildFormCard(),
-                          const SizedBox(height: 24),
-                          _buildRegisterButton(),
-                          const SizedBox(height: 20),
-                          _buildLoginRedirect(context),
+                          const Text(
+                            "Already have an account? ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: subtitleColor,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => context.pop(),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: primaryPlum,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ─── Header ───────────────────────────────────────────────────────────────────
-  Widget _buildHeader(BuildContext context) {
-    final top = MediaQuery.of(context).padding.top;
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppTheme.primaryDark,
-            AppTheme.primaryColor,
-            AppTheme.accentColor,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      padding: EdgeInsets.fromLTRB(20, top + 14, 20, 26),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Back button
-          GestureDetector(
-            onTap: () => context.pop(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              decoration: BoxDecoration(
-                color: AppTheme.white.withOpacity(0.18),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.arrow_back_ios_new,
-                    color: AppTheme.white,
-                    size: 13,
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    'वापस / Back',
-                    style: TextStyle(
-                      color: AppTheme.white,
-                      fontSize: 13,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
-          const SizedBox(height: 22),
-          // ॐ circle + Title
-          Row(
-            children: [
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppTheme.white.withOpacity(0.15),
-                  border: Border.all(
-                    color: AppTheme.white.withOpacity(0.4),
-                    width: 1.5,
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'ॐ',
-                  style: TextStyle(fontSize: 26, color: AppTheme.white),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'नया खाता बनाएं',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.white,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Create Your Account',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppTheme.accentColor.withOpacity(0.85),
-                      letterSpacing: 1.1,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Center(
-            child: Text(
-              'Jagadguru Shridharacharya Ji Maharaj',
-              style: TextStyle(
-                fontSize: 11,
-                color: AppTheme.accentColor.withOpacity(0.85),
-                fontStyle: FontStyle.italic,
-                letterSpacing: 0.6,
-                fontFamily: 'Poppins',
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  // ─── Form Card ────────────────────────────────────────────────────────────────
-  Widget _buildFormCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.cardColor, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryColor.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section 1 — Personal Details
-          const _SectionLabel(
-            hindi: 'व्यक्तिगत जानकारी',
-            english: 'Personal Details',
-          ),
-          const SizedBox(height: 18),
-
-          _buildField(
-            controller: _nameController,
-            label: 'पूरा नाम / Full Name',
-            hint: 'Neharika Singh',
-            icon: Icons.person_outline_rounded,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                RegExp(r'[a-zA-Z\u0900-\u097F\s]'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          _buildField(
-            controller: _phoneController,
-            label: 'मोबाइल नंबर / Phone',
-            hint: '9876543210',
-            icon: Icons.phone_outlined,
-            keyboardType: TextInputType.phone,
-            maxLength: 10,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-          const SizedBox(height: 16),
-
-          _buildField(
-            controller: _emailController,
-            label: 'ईमेल / Email',
-            hint: 'example@email.com',
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 16),
-
-          _buildField(
-            controller: _cityController,
-            label: 'शहर / City',
-            hint: 'Vrindavan',
-            icon: Icons.location_city_rounded,
-          ),
-          const SizedBox(height: 16),
-
-          _buildField(
-            controller: _stateController,
-            label: 'राज्य / State',
-            hint: 'Uttar Pradesh',
-            icon: Icons.map_rounded,
-          ),
-          const SizedBox(height: 16),
-
-          _buildDateField(),
-          const SizedBox(height: 16),
-
-          _buildField(
-            controller: _gotraController,
-            label: 'गोत्र / Gotra',
-            hint: 'Bharadwaj',
-            icon: Icons.family_restroom_rounded,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── Field Builder ────────────────────────────────────────────────────────────
-  Widget _buildField({
-    required TextEditingController controller,
+  Widget _buildInput({
     required String label,
-    required String hint,
+    required TextEditingController controller,
     required IconData icon,
+    required String hint,
     TextInputType keyboardType = TextInputType.text,
-    int? maxLength,
-    List<TextInputFormatter>? inputFormatters,
+    String? prefixText,
+    List<TextInputFormatter>? formatters,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 2, bottom: 6),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        ),
-        TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          maxLength: maxLength,
-          inputFormatters: inputFormatters,
-          style: TextStyle(
-            fontSize: 14.5,
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Poppins',
-          ),
-          cursorColor: AppTheme.primaryColor,
-          decoration: InputDecoration(
-            hintText: hint,
-            counterText: '',
-            filled: true,
-            fillColor: AppTheme.white,
-            prefixIcon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Icon(icon, color: AppTheme.primaryColor, size: 20),
-            ),
-            hintStyle: TextStyle(
-              color: AppTheme.textPrimary.withOpacity(0.4),
-              fontSize: 13.5,
-              fontFamily: 'Poppins',
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(
-                color: AppTheme.primaryDark.withOpacity(0.3),
-                width: 1.5,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: AppTheme.primaryColor, width: 2),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ─── Date Field Builder ────────────────────────────────────────────────────────
-  Widget _buildDateField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 2, bottom: 6),
-          child: Text(
-            'जन्मतिथि / Date of Birth',
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-              fontFamily: 'Poppins',
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: _selectDate,
-          child: AbsorbPointer(
-            child: TextFormField(
-              controller: _dateOfBirthController,
-              style: TextStyle(
-                fontSize: 14.5,
-                color: AppTheme.textPrimary,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
-              ),
-              cursorColor: AppTheme.primaryColor,
-              decoration: InputDecoration(
-                hintText: 'YYYY-MM-DD',
-                filled: true,
-                fillColor: AppTheme.white,
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Icon(
-                    Icons.calendar_today_rounded,
-                    color: AppTheme.primaryColor,
-                    size: 20,
-                  ),
-                ),
-                hintStyle: TextStyle(
-                  color: AppTheme.textPrimary.withOpacity(0.4),
-                  fontSize: 13.5,
-                  fontFamily: 'Poppins',
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(
-                    color: AppTheme.primaryDark.withOpacity(0.3),
-                    width: 1.5,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: AppTheme.primaryColor, width: 2),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ─── Register Button ──────────────────────────────────────────────────────────
-  Widget _buildRegisterButton() {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        final isLoading = state is AuthLoading;
-        return GestureDetector(
-          onTap: (_isFormValid && !isLoading) ? _handleRegister : null,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            width: double.infinity,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: _isFormValid
-                  ? LinearGradient(
-                      colors: [AppTheme.accentColor, AppTheme.primaryColor],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    )
-                  : null,
-              color: _isFormValid ? null : AppTheme.cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: _isFormValid
-                  ? [
-                      BoxShadow(
-                        color: AppTheme.primaryColor.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 5),
-                      ),
-                    ]
-                  : [],
-            ),
-            alignment: Alignment.center,
-            child: isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2.5,
-                    ),
-                  )
-                : Text(
-                    _isFormValid
-                        ? '🙏  पंजीकरण करें — Register'
-                        : 'पंजीकरण करें — Register',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: _isFormValid
-                          ? AppTheme.textPrimary
-                          : AppTheme.textPrimary.withOpacity(0.35),
-                      letterSpacing: 0.3,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-          ),
-        );
-      },
-    );
-  }
-
-  // ─── Login Redirect ───────────────────────────────────────────────────────────
-  Widget _buildLoginRedirect(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
         Text(
-          'पहले से खाता है?  ',
-          style: TextStyle(
-            color: AppTheme.textPrimary.withOpacity(0.6),
-            fontSize: 13,
-            fontFamily: 'Poppins',
+          label,
+          style: const TextStyle(
+            fontSize: 10.5,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF7A6D74),
+            letterSpacing: 0.8,
           ),
         ),
-        GestureDetector(
-          onTap: () => context.pop(),
-          child: Text(
-            'लॉग इन करें',
-            style: TextStyle(
-              color: AppTheme.primaryColor,
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Poppins',
-              decoration: TextDecoration.underline,
-              decorationColor: AppTheme.primaryColor,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ─── Section Label ────────────────────────────────────────────────────────────
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.hindi, required this.english});
-  final String hindi;
-  final String english;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
+        const SizedBox(height: 7),
         Container(
-          width: 4,
-          height: 24,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppTheme.primaryDark, AppTheme.accentColor],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: BorderRadius.circular(2),
+            color: const Color(0xFFFAF5F8),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFF1E3EA)),
           ),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              hindi,
-              style: TextStyle(
-                fontSize: 13.5,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.textPrimary,
+          child: Row(
+            children: [
+              Icon(icon, size: 18, color: const Color(0xFF8A7D84)),
+              const SizedBox(width: 10),
+              if (prefixText != null)
+                Text(
+                  prefixText,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1E1A1D),
+                  ),
+                ),
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  keyboardType: keyboardType,
+                  inputFormatters: formatters,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1E1A1D),
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFFB8ADB4),
+                      fontWeight: FontWeight.w400,
+                    ),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
               ),
-            ),
-            Text(
-              english,
-              style: TextStyle(
-                fontSize: 11,
-                color: AppTheme.textPrimary.withOpacity(0.6),
-                fontFamily: 'Poppins',
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
