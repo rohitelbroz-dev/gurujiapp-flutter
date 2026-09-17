@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:guruji/core/constant/api_constants.dart';
 import 'package:guruji/features/events/models/event_model.dart';
 
 class EventsRepository {
-  final String _baseUrl = 'https://gurujiappbackend.onrender.com/api';
+  final String _baseUrl = ApiConstants.baseUrl;
 
   Future<EventsResponse> fetchEvents({
     int page = 1,

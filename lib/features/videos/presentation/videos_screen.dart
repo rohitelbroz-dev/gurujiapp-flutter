@@ -17,7 +17,7 @@ class VideosScreen extends StatefulWidget {
 
 class _VideosScreenState extends State<VideosScreen> {
   int _currentPage = 1;
-  int _limit = 10;
+  final int _limit = 10;
   int _totalPages = 0;
   YoutubePlayerController? _playerController;
   String? _selectedVideoId;
@@ -494,7 +494,7 @@ class _VideosScreenState extends State<VideosScreen> {
 
   Widget _buildBottomNav() {
     return BottomNavigationBar(
-      currentIndex: 2, // Videos tab
+      currentIndex: 3, // Videos tab
       type: BottomNavigationBarType.fixed,
       backgroundColor: AppTheme.white,
       selectedItemColor: AppTheme.primaryColor,
@@ -503,12 +503,12 @@ class _VideosScreenState extends State<VideosScreen> {
         BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: const Icon(Icons.event), label: 'Events'),
         BottomNavigationBarItem(
-          icon: const Icon(Icons.video_library),
-          label: 'Videos',
+          icon: const Icon(Icons.play_circle_fill_rounded),
+          label: 'Shorts',
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Icons.person),
-          label: 'Profile',
+          icon: const Icon(Icons.video_library),
+          label: 'Videos',
         ),
       ],
       onTap: (index) {
@@ -520,10 +520,10 @@ class _VideosScreenState extends State<VideosScreen> {
             context.go('/events');
             break;
           case 2:
-            // Stay on videos
+            context.go('/shorts');
             break;
           case 3:
-            context.go('/profile');
+            // Stay on videos
             break;
         }
       },

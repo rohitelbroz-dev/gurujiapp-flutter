@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/features/amrit_vachan/presentation/amrit_vachan_screen.dart';
 import 'package:guruji/features/auth/presentation/login_screen.dart';
 import 'package:guruji/features/auth/presentation/otp_screen.dart';
 import 'package:guruji/features/home/presentation/homescreen.dart';
+import 'package:guruji/features/leaderboard/presentation/leaderboard_screen.dart';
+import 'package:guruji/features/naam_jaap/presentation/naam_jaap_screen.dart';
 import 'package:guruji/features/auth/presentation/register_screen.dart';
 import 'package:guruji/features/auth/presentation/profile_screen.dart';
 import 'package:guruji/features/events/presentation/events_screen.dart';
+import 'package:guruji/features/family/presentation/family_screen.dart';
+import 'package:guruji/features/videos/presentation/shorts_screen.dart';
 import 'package:guruji/features/videos/presentation/videos_screen.dart';
 import 'package:guruji/core/services/user_persistence_service.dart';
 
@@ -63,6 +68,14 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
+      path: '/naam-jaap',
+      builder: (context, state) => const NaamJaapScreen(),
+    ),
+    GoRoute(
+      path: '/leaderboard',
+      builder: (context, state) => const LeaderboardScreen(),
+    ),
+    GoRoute(
       path: '/profile',
       builder: (context, state) => const ProfileSettingsScreen(),
     ),
@@ -71,8 +84,20 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const EventsScreen(),
     ),
     GoRoute(
+      path: '/amrit-vachan',
+      builder: (context, state) => const AmritVachanScreen(),
+    ),
+    GoRoute(
       path: '/videos',
       builder: (context, state) => const VideosScreen(),
+    ),
+    GoRoute(
+      path: '/shorts',
+      builder: (context, state) => const ShortsScreen(),
+    ),
+    GoRoute(
+      path: '/family',
+      builder: (context, state) => const FamilyScreen(),
     ),
   ],
 );

@@ -11,10 +11,7 @@ class FetchEventsEvent extends EventsEvent {
   final int page;
   final int limit;
 
-  const FetchEventsEvent({
-    this.page = 1,
-    this.limit = 10,
-  });
+  const FetchEventsEvent({this.page = 1, this.limit = 10});
 
   @override
   List<Object?> get props => [page, limit];

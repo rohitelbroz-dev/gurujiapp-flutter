@@ -3,12 +3,12 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:guruji/core/constant/api_constants.dart';
 import 'package:guruji/core/services/user_persistence_service.dart';
 import 'package:guruji/features/auth/models/profile_model.dart';
 
 class AuthRepository {
-  final String _baseUrl = 'https://gurujiappbackend.onrender.com/api';
-
+  final String _baseUrl = ApiConstants.baseUrl;
   Future<Map<String, dynamic>> sendOtp(String phone) async {
     final url = Uri.parse('$_baseUrl/auth/request-otp');
     try {
@@ -178,8 +178,8 @@ class AuthRepository {
       final mimeType = lowerName.endsWith('.png')
           ? 'image/png'
           : lowerName.endsWith('.gif')
-              ? 'image/gif'
-              : 'image/jpeg';
+          ? 'image/gif'
+          : 'image/jpeg';
       final splitMime = mimeType.split('/');
 
       request.files.add(
@@ -193,7 +193,9 @@ class AuthRepository {
     }
 
     try {
-      final responseStream = await request.send().timeout(const Duration(seconds: 60));
+      final responseStream = await request.send().timeout(
+        const Duration(seconds: 60),
+      );
       final response = await http.Response.fromStream(responseStream);
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 

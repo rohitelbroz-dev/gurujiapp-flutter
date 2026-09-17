@@ -209,7 +209,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
     _originalProfile = profile;
     _profileImageUrl = profile.profileImage;
     _selectedProfileImageFile = null;
-
     _nameController.text = profile.name;
     _emailController.text = profile.email;
     _phoneController.text = profile.phone;
@@ -838,10 +837,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
       child: Container(
         height: 56,
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.red.shade400,
-            width: 2,
-          ),
+          border: Border.all(color: Colors.red.shade400, width: 2),
           borderRadius: BorderRadius.circular(18),
         ),
         alignment: Alignment.center,
@@ -882,13 +878,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                 false,
                 () => context.go('/home'),
               ),
-              _navItem(Icons.leaderboard_rounded, 'Events', false, () => context.go('/events')),
-              _navItem(Icons.video_library_rounded, 'Videos', false, () => context.go('/videos')),
               _navItem(
-                Icons.person_rounded,
-                'Profile',
-                true,
-                () => context.go('/profile'),
+                Icons.leaderboard_rounded,
+                'Events',
+                false,
+                () => context.go('/events'),
+              ),
+              _navItem(
+                Icons.play_circle_fill_rounded,
+                'Shorts',
+                false,
+                () => context.go('/shorts'),
+              ),
+              _navItem(
+                Icons.video_library_rounded,
+                'Videos',
+                false,
+                () => context.go('/videos'),
               ),
             ],
           ),
@@ -912,14 +918,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: isActive
-                  ? Colors.deepPurple.shade100
-                  : Colors.transparent,
+              color: isActive ? Colors.deepPurple.shade100 : Colors.transparent,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
               icon,
-              color: isActive ? Colors.deepPurple.shade600 : Colors.grey.shade400,
+              color: isActive
+                  ? Colors.deepPurple.shade600
+                  : Colors.grey.shade400,
               size: 22,
             ),
           ),
@@ -928,7 +934,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             label,
             style: TextStyle(
               fontSize: 10,
-              color: isActive ? Colors.deepPurple.shade600 : Colors.grey.shade400,
+              color: isActive
+                  ? Colors.deepPurple.shade600
+                  : Colors.grey.shade400,
               fontWeight: isActive ? FontWeight.w700 : FontWeight.normal,
             ),
           ),

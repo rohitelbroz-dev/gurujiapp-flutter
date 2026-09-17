@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/app.dart';
@@ -285,13 +286,16 @@ class _EventsScreenState extends State<EventsScreen>
                     ? const Center(
                         child: Icon(Icons.image, size: 36, color: Colors.grey),
                       )
-                    : Image.network(
-                        event.coverImage,
-                        width: 104,
-                        height: 104,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                        errorBuilder: (context, error, stackTrace) {
+                    : CachedNetworkImage(
+                        imageUrl: event.coverImage,
+                        imageBuilder: (context, imageProvider) => Image(
+                          image: imageProvider,
+                          width: 104,
+                          height: 104,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        ),
+                        errorWidget: (context, url, error) {
                           return const Center(
                             child: Icon(
                               Icons.broken_image,
@@ -300,17 +304,15 @@ class _EventsScreenState extends State<EventsScreen>
                             ),
                           );
                         },
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          );
-                        },
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: AppTheme.primaryColor,
+                                  value: downloadProgress.progress,
+                                ),
+                              );
+                            },
                       ),
               ),
             ),
@@ -490,16 +492,16 @@ class _EventsScreenState extends State<EventsScreen>
               ),
               _navItem(Icons.leaderboard_rounded, 'Events', true, () {}),
               _navItem(
+                Icons.play_circle_fill_rounded,
+                'Shorts',
+                false,
+                () => context.go('/shorts'),
+              ),
+              _navItem(
                 Icons.video_library_rounded,
                 'Videos',
                 false,
                 () => context.go('/videos'),
-              ),
-              _navItem(
-                Icons.person_rounded,
-                'Profile',
-                false,
-                () => context.go('/profile'),
               ),
             ],
           ),

@@ -4,10 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 import 'package:guruji/core/router/go_router.dart';
 import 'package:guruji/core/services/user_persistence_service.dart';
+import 'package:guruji/features/amrit_vachan/bloc/amrit_vachan_bloc.dart';
+import 'package:guruji/features/amrit_vachan/data/amrit_vachan_repository.dart';
 import 'package:guruji/features/auth/bloc/auth_bloc.dart';
 import 'package:guruji/features/auth/data/auth_repositiory.dart';
 import 'package:guruji/features/events/bloc/events_bloc.dart';
 import 'package:guruji/features/events/data/events_repository.dart';
+import 'package:guruji/features/family/bloc/family_bloc.dart';
+import 'package:guruji/features/family/data/family_repository.dart';
+import 'package:guruji/features/naam_jaap/bloc/naam_jaap_bloc.dart';
+import 'package:guruji/features/naam_jaap/data/naam_jaap_repository.dart';
 import 'package:guruji/features/videos/bloc/videos_bloc.dart';
 import 'package:guruji/features/videos/data/videos_repository.dart';
 
@@ -25,7 +31,7 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Allow certificate tolerance for development only
   if (!kReleaseMode) {
     HttpOverrides.global = MyHttpOverrides();
@@ -46,11 +52,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => AuthBloc(authRepository: AuthRepository())),
         BlocProvider(
-          create: (_) => AuthBloc(authRepository: AuthRepository()),
+          create: (_) => AmritVachanBloc(
+            amritVachanRepository: AmritVachanRepository(),
+          ),
         ),
         BlocProvider(
           create: (_) => EventsBloc(eventsRepository: EventsRepository()),
+        ),
+        BlocProvider(
+          create: (_) => FamilyBloc(familyRepository: FamilyRepository()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              NaamJaapBloc(naamJaapRepository: NaamJaapRepository()),
         ),
         BlocProvider(
           create: (_) => VideosBloc(videosRepository: VideosRepository()),

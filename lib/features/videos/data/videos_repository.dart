@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:guruji/core/constant/api_constants.dart';
 import 'package:guruji/features/videos/models/video_model.dart';
 import 'package:guruji/core/services/user_persistence_service.dart';
 
 class VideosRepository {
-  final String _baseUrl = 'https://gurujiappbackend.onrender.com/api';
+  final String _baseUrl = ApiConstants.baseUrl;
   Future<VideosResponse> fetchVideos({
     int page = 1,
     int limit = 10,
