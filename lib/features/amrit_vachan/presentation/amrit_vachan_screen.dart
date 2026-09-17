@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gal/gal.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guruji/app.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/amrit_vachan/bloc/amrit_vachan_bloc.dart';
 import 'package:guruji/features/amrit_vachan/models/amrit_vachan_model.dart';
@@ -26,6 +25,14 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
     'guruji/whatsapp_share',
   );
 
+  static const Color primaryPlum = Color(0xFF7E2B58);
+  static const Color richRose = Color(0xFF8E3763);
+  static const Color mauveCard = Color(0xFFCE6590);
+  static const Color bgStart = Color(0xFFFFFDFE);
+  static const Color bgEnd = Color(0xFFFBF4F7);
+  static const Color charcoalText = Color(0xFF1F1A1D);
+  static const Color subtitleColor = Color(0xFF6B5F66);
+
   @override
   void initState() {
     super.initState();
@@ -35,10 +42,13 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: bgEnd,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: const Icon(Icons.arrow_back_rounded, color: primaryPlum),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -49,13 +59,21 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
         ),
         title: const Text(
           'अमृत वचन',
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: TextStyle(
+            color: primaryPlum,
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            fontFamily: 'serif',
+          ),
         ),
-        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.home_rounded),
-            onPressed: () => context.go('/home'),
+            icon: const Icon(Icons.refresh_rounded, color: primaryPlum),
+            onPressed: () {
+              context.read<AmritVachanBloc>().add(
+                const FetchAmritVachanEvent(),
+              );
+            },
           ),
         ],
       ),
@@ -63,50 +81,101 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
         listener: (context, state) {
           if (state is AmritVachanFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red.shade700,
+                behavior: SnackBarBehavior.floating,
+              ),
             );
           }
         },
         child: BlocBuilder<AmritVachanBloc, AmritVachanState>(
           builder: (context, state) {
             if (state is AmritVachanLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(color: primaryPlum),
+              );
             }
 
             if (state is AmritVachanLoadSuccess) {
               return RefreshIndicator(
+                color: primaryPlum,
                 onRefresh: () async {
                   context.read<AmritVachanBloc>().add(
                     const FetchAmritVachanEvent(),
                   );
                 },
                 child: ListView(
+                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                   children: [
-                    Center(
-                      child: Text(
-                        'कुल रिकॉर्ड : ${state.allPosts.length}',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
+                    // Count Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFBF4F7),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFF3E5EB)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.auto_stories_rounded, size: 16, color: primaryPlum),
+                          const SizedBox(width: 8),
+                          Text(
+                            'कुल अमृत वचन : ${state.allPosts.length}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: primaryPlum,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Today's Featured Card
                     if (state.todayPosts.isNotEmpty)
                       _buildTodayCard(state.todayPosts.first),
-                    if (state.todayPosts.isNotEmpty) const SizedBox(height: 20),
-                    Text(
+                    if (state.todayPosts.isNotEmpty) const SizedBox(height: 24),
+
+                    // All Posts Header
+                    const Text(
                       'सभी अमृत वचन',
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: AppTheme.textPrimary,
+                        fontFamily: 'serif',
+                        color: charcoalText,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
                     ...state.allPosts.map(_buildListCard),
+                  ],
+                ),
+              );
+            }
+
+            if (state is AmritVachanFailure) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline_rounded, size: 48, color: Colors.redAccent),
+                    const SizedBox(height: 12),
+                    Text(state.message, style: const TextStyle(fontSize: 14, color: charcoalText)),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<AmritVachanBloc>().add(const FetchAmritVachanEvent());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryPlum,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Try Again'),
+                    ),
                   ],
                 ),
               );
@@ -116,20 +185,26 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
           },
         ),
       ),
-      bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.library),
+      bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
     );
   }
 
+  // ─── Today's Hero Card ─────────────────────────────────────────────────────
   Widget _buildTodayCard(AmritVachan post) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFFFE9BF),
-        borderRadius: BorderRadius.circular(28),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFF0F5), Color(0xFFFBE4ED)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFF7D9E4), width: 1.2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
+            color: primaryPlum.withOpacity(0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -137,52 +212,69 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Text(
-              'आज का अमृत वचन',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.primaryDark,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [primaryPlum, richRose]),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.star_rounded, size: 14, color: Colors.amberAccent),
+                    SizedBox(width: 4),
+                    Text(
+                      'आज का अमृत वचन',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Text(
+                _formatDate(post.scheduledDate),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: subtitleColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           Text(
             post.caption,
-            style: TextStyle(
-              fontSize: 18,
+            style: const TextStyle(
+              fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _formatDate(post.scheduledDate),
-            style: TextStyle(
-              fontSize: 14,
-              color: AppTheme.textPrimary.withOpacity(0.7),
-              fontWeight: FontWeight.w500,
+              fontFamily: 'serif',
+              color: charcoalText,
+              height: 1.4,
             ),
           ),
           const SizedBox(height: 14),
           ClipRRect(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(18),
             child: CachedNetworkImage(
               imageUrl: post.imageUrl,
               fit: BoxFit.cover,
               width: double.infinity,
               placeholder: (_, __) => Container(
-                height: 280,
+                height: 260,
                 color: Colors.white,
                 alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
+                child: const CircularProgressIndicator(color: primaryPlum),
               ),
               errorWidget: (_, __, ___) => Container(
-                height: 280,
+                height: 260,
                 color: Colors.white,
                 alignment: Alignment.center,
-                child: const Icon(Icons.broken_image_outlined, size: 42),
+                child: const Icon(Icons.broken_image_outlined, size: 42, color: primaryPlum),
               ),
             ),
           ),
@@ -193,59 +285,69 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
     );
   }
 
+  // ─── List Card ─────────────────────────────────────────────────────────────
   Widget _buildListCard(AmritVachan post) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFF3E5EB)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: primaryPlum.withOpacity(0.04),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            post.caption,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textPrimary,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  post.caption,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'serif',
+                    color: charcoalText,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 6),
           Text(
             _formatDate(post.scheduledDate),
-            style: TextStyle(
-              fontSize: 13,
-              color: AppTheme.textPrimary.withOpacity(0.7),
+            style: const TextStyle(
+              fontSize: 12,
+              color: subtitleColor,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 12),
           ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             child: CachedNetworkImage(
               imageUrl: post.imageUrl,
               fit: BoxFit.cover,
               width: double.infinity,
               placeholder: (_, __) => Container(
                 height: 220,
-                color: const Color(0xFFF6F4F9),
+                color: const Color(0xFFF8EEF3),
                 alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
+                child: const CircularProgressIndicator(color: primaryPlum),
               ),
               errorWidget: (_, __, ___) => Container(
                 height: 220,
-                color: const Color(0xFFF6F4F9),
+                color: const Color(0xFFF8EEF3),
                 alignment: Alignment.center,
-                child: const Icon(Icons.broken_image_outlined, size: 36),
+                child: const Icon(Icons.broken_image_outlined, size: 36, color: primaryPlum),
               ),
             ),
           ),
@@ -256,6 +358,7 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
     );
   }
 
+  // ─── Actions Row (Download, Share, WhatsApp) ────────────────────────────────
   Widget _buildActionRow(AmritVachan post) {
     return Row(
       children: [
@@ -263,22 +366,28 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
           child: _buildActionButton(
             icon: Icons.download_rounded,
             label: 'Download',
+            color: primaryPlum,
+            bgColor: const Color(0xFFFFF0F5),
             onTap: () => _downloadPostSafe(post),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
         Expanded(
           child: _buildActionButton(
-            icon: Icons.share_outlined,
+            icon: Icons.share_rounded,
             label: 'Share',
+            color: const Color(0xFF1565C0),
+            bgColor: const Color(0xFFE3F2FD),
             onTap: () => _sharePostSafe(post),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
         Expanded(
           child: _buildActionButton(
             icon: Icons.chat_rounded,
             label: 'WhatsApp',
+            color: const Color(0xFF2E7D32),
+            bgColor: const Color(0xFFE8F5E9),
             onTap: () => _shareOnWhatsAppSafe(post),
           ),
         ),
@@ -289,24 +398,40 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
   Widget _buildActionButton({
     required IconData icon,
     required String label,
+    required Color color,
+    required Color bgColor,
     required VoidCallback onTap,
   }) {
-    return OutlinedButton.icon(
-      onPressed: onTap,
-      icon: Icon(icon, size: 18),
-      label: Text(
-        label,
-        overflow: TextOverflow.ellipsis,
-      ),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppTheme.primaryDark,
-        side: BorderSide(color: AppTheme.primaryDark.withOpacity(0.24)),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16, color: color),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: color,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  // ─── Safe Downloader & Exporters ────────────────────────────────────────────
   Future<void> _downloadPostSafe(AmritVachan post) async {
     try {
       final hasAccess = await Gal.hasAccess(toAlbum: true);
@@ -320,7 +445,7 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
 
       final file = await _downloadImageToCacheFile(post);
       await Gal.putImage(file.path, album: 'Guruji');
-      _showMessage('पोस्ट डाउनलोड हो गई।');
+      _showMessage('अमृत वचन गैलरी में सुरक्षित हो गया।');
     } catch (e) {
       _showMessage('डाउनलोड नहीं हो पाया।');
     }
@@ -372,68 +497,6 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
     return file;
   }
 
-  Future<void> _downloadPost(AmritVachan post) async {
-    try {
-      final hasAccess = await Gal.hasAccess(toAlbum: true);
-      if (!hasAccess) {
-        final granted = await Gal.requestAccess(toAlbum: true);
-        if (!granted) {
-          _showMessage('गैलरी परमिशन नहीं मिली।');
-          return;
-        }
-      }
-
-      final file = await _downloadImageToTemp(post);
-      await Gal.putImage(file.path, album: 'Guruji');
-      _showMessage('पोस्ट डाउनलोड हो गई।');
-    } catch (e) {
-      _showMessage('डाउनलोड नहीं हो पाया।');
-    }
-  }
-
-  Future<void> _sharePost(AmritVachan post) async {
-    try {
-      final file = await _downloadImageToTemp(post);
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: post.caption,
-        subject: 'Amrit Vachan',
-      );
-    } catch (e) {
-      _showMessage('पोस्ट शेयर नहीं हो पाई।');
-    }
-  }
-
-  Future<void> _shareOnWhatsApp(AmritVachan post) async {
-    try {
-      final file = await _downloadImageToTemp(post);
-      if (Platform.isAndroid) {
-        await _whatsAppChannel.invokeMethod('shareImageToWhatsApp', {
-          'filePath': file.path,
-          'text': post.caption,
-        });
-        return;
-      }
-
-      await Share.shareXFiles([XFile(file.path)], text: post.caption);
-    } catch (e) {
-      _showMessage('WhatsApp पर शेयर नहीं हो पाया।');
-    }
-  }
-
-  Future<File> _downloadImageToTemp(AmritVachan post) async {
-    final response = await http.get(Uri.parse(post.imageUrl));
-    if (response.statusCode != 200) {
-      throw Exception('Unable to download image');
-    }
-
-    final file = File(
-      '${Directory.systemTemp.path}\\${post.id}${_fileExtensionFromUrl(post.imageUrl)}',
-    );
-    await file.writeAsBytes(response.bodyBytes, flush: true);
-    return file;
-  }
-
   String _fileExtensionFromUrl(String url) {
     final uri = Uri.tryParse(url);
     final segments = uri?.pathSegments ?? const <String>[];
@@ -451,20 +514,18 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
   }
 
   void _showMessage(String message) {
-    if (!mounted) {
-      return;
-    }
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: primaryPlum,
+      ),
+    );
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) {
-      return '';
-    }
-
+    if (date == null) return '';
     final local = date.toLocal();
     final day = local.day.toString().padLeft(2, '0');
     final month = local.month.toString().padLeft(2, '0');

@@ -148,7 +148,11 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/videos',
-      builder: (context, state) => const VideosScreen(),
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final initialType = extra?['initialType'] as String? ?? 'regular';
+        return VideosScreen(initialType: initialType);
+      },
     ),
     GoRoute(
       path: '/shorts',

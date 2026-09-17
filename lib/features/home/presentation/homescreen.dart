@@ -83,7 +83,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // ─── Sacred Contributions / Donate Section ───
                   _buildSacredLinksSection(primaryPlum, charcoalText, subtitleColor),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
+
+                  // ─── 1) Divine Videos & Satsang (Shorts, Videos, Live) ───
+                  _buildVideosSection(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 24),
+
+                  // ─── 2) Amrit Vachan Card ───
+                  _buildAmritVachanSection(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 24),
+
+                  // ─── 3) Spiritual Events Card ───
+                  _buildEventsSection(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 24),
+
+                  // ─── 4) Family Jaap Card ───
+                  _buildFamilySection(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 24),
+
+                  // ─── 5) Leaderboard Card ───
+                  _buildLeaderboardSection(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
@@ -931,4 +951,727 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+  // ─── 1) Divine Videos & Satsang Section ───────────────────────────────────
+  Widget _buildVideosSection(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'DIVINE SATSANG & VIDEOS',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF6A5D64),
+                letterSpacing: 0.8,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => context.push('/videos'),
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: primaryPlum,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // Row of 3 Video Category cards: Shorts, Videos, Live
+        Row(
+          children: [
+            Expanded(
+              child: _buildVideoCategoryCard(
+                title: 'Shorts',
+                subtitle: 'Quick Darshan',
+                icon: Icons.play_circle_filled_rounded,
+                badgeColor: const Color(0xFFE91E63),
+                bgColor: const Color(0xFFFFF0F5),
+                onTap: () => context.push('/videos', extra: {'initialType': 'short'}),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildVideoCategoryCard(
+                title: 'Videos',
+                subtitle: 'Katha & Pravachan',
+                icon: Icons.video_library_rounded,
+                badgeColor: primaryPlum,
+                bgColor: const Color(0xFFFBF4F7),
+                onTap: () => context.push('/videos', extra: {'initialType': 'regular'}),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildVideoCategoryCard(
+                title: 'Live',
+                subtitle: 'Aarti & Utsav',
+                icon: Icons.sensors_rounded,
+                badgeColor: const Color(0xFFE53935),
+                bgColor: const Color(0xFFFFEBEE),
+                isLive: true,
+                onTap: () => context.push('/videos', extra: {'initialType': 'live'}),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // Featured Video Highlight Card
+        GestureDetector(
+          onTap: () => context.push('/videos', extra: {'initialType': 'regular'}),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFF3E5EB)),
+              boxShadow: [
+                BoxShadow(
+                  color: primaryPlum.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF7E2B58), Color(0xFFCE6590)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Watch Daily Satsang & Pravachan',
+                        style: TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                          color: charcoalText,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Stream Shorts, Pravachans & Live Darshan',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: subtitleColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: primaryPlum,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVideoCategoryCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color badgeColor,
+    required Color bgColor,
+    required VoidCallback onTap,
+    bool isLive = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFFF3E5EB)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: badgeColor, size: 22),
+                ),
+                if (isLive)
+                  Positioned(
+                    top: -4,
+                    right: -6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE53935),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        'LIVE',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1F1A1D),
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 9.5,
+                color: Color(0xFF6B5F66),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── 2) Amrit Vachan Section ───────────────────────────────────────────────
+  Widget _buildAmritVachanSection(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'DAILY AMRIT VACHAN',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF6A5D64),
+                letterSpacing: 0.8,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => context.push('/amrit-vachan'),
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: primaryPlum,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: () => context.push('/amrit-vachan'),
+          child: Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFFF9F0), Color(0xFFFFF0E6)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFFFFE0CC)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFC86134).withOpacity(0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC86134),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.auto_stories_rounded, color: Colors.white, size: 12),
+                          SizedBox(width: 4),
+                          Text(
+                            'आज का विचार',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    const Text('📜', style: TextStyle(fontSize: 20)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  '“जिसका मन प्रभु के चरणों में समर्पित है, उसे संसार का कोई भी भय विचलित नहीं कर सकता।”',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'serif',
+                    color: Color(0xFF4A2810),
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'श्री गुरुदेव संदेश',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF9E4B25),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Read & Share',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: primaryPlum,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 14,
+                          color: primaryPlum,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── 3) Spiritual Events Section ──────────────────────────────────────────
+  Widget _buildEventsSection(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'UPCOMING SPIRITUAL EVENTS',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF6A5D64),
+                letterSpacing: 0.8,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => context.push('/events'),
+              child: Text(
+                'Explore',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: primaryPlum,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: () => context.push('/events'),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFE2F0EA)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF2E8A68).withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEBF7F2),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Column(
+                    children: [
+                      Text(
+                        'NOV',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF2E8A68),
+                        ),
+                      ),
+                      Text(
+                        '27',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF1B6349),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Kartik Purnima Mahotsav',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: charcoalText,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on_outlined, size: 13, color: subtitleColor),
+                          const SizedBox(width: 3),
+                          Text(
+                            'Shri Dham Vrindavan • Live Darshan',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: subtitleColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: primaryPlum,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── 4) Family Jaap Section ───────────────────────────────────────────────
+  Widget _buildFamilySection(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'FAMILY JAAP & SADHANA',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF6A5D64),
+                letterSpacing: 0.8,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => context.push('/family'),
+              child: Text(
+                'Open Tree',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: primaryPlum,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: () => context.push('/family'),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFAF7FF), Color(0xFFF3EDFB)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFE4D7F5)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF764BB2).withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF764BB2).withOpacity(0.1),
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Text('👨‍👩‍👧‍👦', style: TextStyle(fontSize: 24)),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Family Chanting Circle',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: charcoalText,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        'Connect loved ones & track collective Jaap',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: subtitleColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF764BB2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'Family Tree',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── 5) Leaderboard Section ───────────────────────────────────────────────
+  Widget _buildLeaderboardSection(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'GLOBAL SADHAK LEADERBOARD',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF6A5D64),
+                letterSpacing: 0.8,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => context.push('/leaderboard'),
+              child: Text(
+                'View Ranks',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: primaryPlum,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: () => context.push('/leaderboard'),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFFFDF5), Color(0xFFFFF8E1)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFFFECB3)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFB8860B).withOpacity(0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFB8860B).withOpacity(0.12),
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Text('🏆', style: TextStyle(fontSize: 24)),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Top Sadhak Ranks',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: charcoalText,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        'See highest daily & monthly chanting milestones',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: subtitleColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: primaryPlum,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
+

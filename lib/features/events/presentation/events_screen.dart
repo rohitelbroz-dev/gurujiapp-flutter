@@ -2,38 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guruji/app.dart';
+import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/events/bloc/events_bloc.dart';
+import 'package:guruji/features/events/models/event_model.dart';
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({super.key});
+
   @override
   State<EventsScreen> createState() => _EventsScreenState();
 }
 
-class _EventsScreenState extends State<EventsScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animController;
-  late Animation<double> _slideAnimation;
-  late Animation<double> _fadeAnimation;
+class _EventsScreenState extends State<EventsScreen> {
   int _currentPage = 1;
-  int _limit = 10;
+  final int _limit = 10;
+
+  static const Color primaryPlum = Color(0xFF7E2B58);
+  static const Color richRose = Color(0xFF8E3763);
+  static const Color emeraldGreen = Color(0xFF2E8A68);
+  static const Color bgEnd = Color(0xFFFBF4F7);
+  static const Color charcoalText = Color(0xFF1F1A1D);
+  static const Color subtitleColor = Color(0xFF6B5F66);
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _slideAnimation = Tween<double>(begin: 40, end: 0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
-    _animController.forward();
     _loadEvents();
   }
 
@@ -44,507 +37,310 @@ class _EventsScreenState extends State<EventsScreen>
   }
 
   @override
-  void dispose() {
-    _animController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F4F9),
-      body: Column(
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-          // _buildTopBanner(),
-          Expanded(
-            child: AnimatedBuilder(
-              animation: _animController,
-              builder: (_, child) => Opacity(
-                opacity: _fadeAnimation.value,
-                child: Transform.translate(
-                  offset: Offset(0, _slideAnimation.value),
-                  child: child,
-                ),
-              ),
-              child: BlocListener<EventsBloc, EventsState>(
-                listener: (context, state) {
-                  if (state is EventsFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(state.message),
-                        backgroundColor: Colors.red.shade600,
-                      ),
-                    );
-                  }
-                },
-                child: BlocBuilder<EventsBloc, EventsState>(
-                  builder: (context, state) {
-                    if (state is EventsLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is EventsLoadSuccess) {
-                      final events = state.eventsResponse.events;
-                      final totalPages = state.eventsResponse.totalPages;
-
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: events.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'No events found',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: AppTheme.textPrimary.withOpacity(
-                                          0.6,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : SingleChildScrollView(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      16,
-                                      16,
-                                      16,
-                                      100,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'UpComing Events',
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w800,
-                                            color: AppTheme.textPrimary,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        ...events
-                                            .map(
-                                              (event) => _buildEventCard(event),
-                                            )
-                                            .toList(),
-                                      ],
-                                    ),
-                                  ),
-                          ),
-                          if (totalPages > 1)
-                            _buildPaginationControls(totalPages),
-                        ],
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: _buildBottomNav(),
-    );
-  }
-
-  Widget _buildTopBanner() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFFFE566), Color(0xFFFFD000)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      backgroundColor: bgEnd,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: primaryPlum),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
         ),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFFD000).withOpacity(0.35),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+        title: const Text(
+          'Spiritual Events & Utsav',
+          style: TextStyle(
+            color: primaryPlum,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            fontFamily: 'serif',
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded, color: primaryPlum),
+            onPressed: _loadEvents,
           ),
         ],
       ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 18),
-          child: Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFF9D00), Color(0xFFFF6B00)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFFF9D00).withOpacity(0.4),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: const Text(
-                  'राधा',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
-                ),
+      body: BlocListener<EventsBloc, EventsState>(
+        listener: (context, state) {
+          if (state is EventsFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red.shade700,
+                behavior: SnackBarBehavior.floating,
               ),
-              const SizedBox(width: 12),
-              Expanded(
+            );
+          }
+        },
+        child: BlocBuilder<EventsBloc, EventsState>(
+          builder: (context, state) {
+            if (state is EventsLoading) {
+              return const Center(
+                child: CircularProgressIndicator(color: primaryPlum),
+              );
+            } else if (state is EventsLoadSuccess) {
+              final events = state.eventsResponse.events;
+              final totalPages = state.eventsResponse.totalPages;
+
+              return Column(
+                children: [
+                  Expanded(
+                    child: RefreshIndicator(
+                      color: primaryPlum,
+                      onRefresh: () async => _loadEvents(),
+                      child: events.isEmpty
+                          ? _buildEmptyState()
+                          : ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                              itemCount: events.length,
+                              separatorBuilder: (_, __) => const SizedBox(height: 14),
+                              itemBuilder: (context, index) {
+                                final event = events[index];
+                                return _buildEventCard(event);
+                              },
+                            ),
+                    ),
+                  ),
+                  if (totalPages > 1) _buildPaginationControls(totalPages),
+                ],
+              );
+            } else if (state is EventsFailure) {
+              return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'राधा नाम जप',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.brown.shade800,
-                        letterSpacing: -0.3,
+                    const Icon(Icons.error_outline_rounded, size: 48, color: Colors.redAccent),
+                    const SizedBox(height: 12),
+                    Text(state.message, style: const TextStyle(fontSize: 14, color: charcoalText)),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _loadEvents,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryPlum,
+                        foregroundColor: Colors.white,
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Discover Events',
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        color: Colors.brown.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      child: const Text('Try Again'),
                     ),
                   ],
                 ),
-              ),
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF1A9E8F), Color(0xFF0D7A6E)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF1A9E8F).withOpacity(0.35),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: const Text(
-                  'D7',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
+              );
+            }
+            return const SizedBox();
+          },
         ),
       ),
+      bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
     );
   }
 
-  Widget _buildEventCard(dynamic event) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryColor.withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Container(
-                width: 104,
-                height: 104,
-                color: Colors.grey.shade300,
-                child: event.coverImage.isEmpty
-                    ? const Center(
-                        child: Icon(Icons.image, size: 36, color: Colors.grey),
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: event.coverImage,
-                        imageBuilder: (context, imageProvider) => Image(
-                          image: imageProvider,
-                          width: 104,
-                          height: 104,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                        ),
-                        errorWidget: (context, url, error) {
-                          return const Center(
-                            child: Icon(
-                              Icons.broken_image,
-                              size: 36,
-                              color: Colors.grey,
-                            ),
-                          );
-                        },
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  color: AppTheme.primaryColor,
-                                  value: downloadProgress.progress,
-                                ),
-                              );
-                            },
-                      ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      event.title,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.textPrimary,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.location_on_rounded,
-                          size: 14,
-                          color: AppTheme.primaryColor.withOpacity(0.7),
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            event.location,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.textPrimary.withOpacity(0.6),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today_rounded,
-                          size: 14,
-                          color: AppTheme.primaryColor.withOpacity(0.7),
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            event.dateRange,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.textPrimary.withOpacity(0.6),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPaginationControls(int totalPages) {
+  // ─── Event Card ────────────────────────────────────────────────────────────
+  Widget _buildEventCard(Event event) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFF3E5EB)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: primaryPlum.withOpacity(0.04),
             blurRadius: 10,
-            offset: const Offset(0, -4),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_currentPage > 1)
-            GestureDetector(
-              onTap: () {
-                setState(() => _currentPage--);
-                _loadEvents();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.primaryColor.withOpacity(0.8),
-                      AppTheme.primaryDark.withOpacity(0.8),
+          // Event Image (if any)
+          if (event.coverImage.isNotEmpty)
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(19)),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: CachedNetworkImage(
+                  imageUrl: event.coverImage,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  placeholder: (_, __) => Container(
+                    color: const Color(0xFFFBF4F7),
+                    alignment: Alignment.center,
+                    child: const CircularProgressIndicator(color: primaryPlum),
+                  ),
+                  errorWidget: (_, __, ___) => Container(
+                    color: const Color(0xFFFBF4F7),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.event_note_rounded, size: 40, color: primaryPlum),
+                  ),
+                ),
+              ),
+            ),
+
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        event.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'serif',
+                          color: charcoalText,
+                        ),
+                      ),
+                    ),
+                    if (event.rsvpCount > 0)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEBF7F2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${event.rsvpCount} Attending',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: emeraldGreen,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Date Row
+                if (event.dateRange.isNotEmpty)
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_month_rounded, size: 15, color: richRose),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          event.dateRange,
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: richRose,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.chevron_left,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-            ),
-          const SizedBox(width: 12),
-          Text(
-            'Page $_currentPage of $totalPages',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
+                // Location Row
+                if (event.location.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 15, color: subtitleColor),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          event.location,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: subtitleColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
             ),
           ),
-          const SizedBox(width: 12),
-          if (_currentPage < totalPages)
-            GestureDetector(
-              onTap: () {
-                setState(() => _currentPage++);
-                _loadEvents();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppTheme.primaryColor, AppTheme.primaryDark],
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-            ),
         ],
       ),
     );
   }
 
-  Widget _buildBottomNav() {
+  // ─── Pagination ────────────────────────────────────────────────────────────
+  Widget _buildPaginationControls(int totalPages) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.07),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ElevatedButton.icon(
+            onPressed: _currentPage > 1
+                ? () {
+                    setState(() => _currentPage--);
+                    _loadEvents();
+                  }
+                : null,
+            icon: const Icon(Icons.arrow_back_rounded, size: 16),
+            label: const Text('Previous'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryPlum,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: Colors.grey.shade200,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+          Text(
+            'Page $_currentPage of $totalPages',
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+              color: charcoalText,
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: _currentPage < totalPages
+                ? () {
+                    setState(() => _currentPage++);
+                    _loadEvents();
+                  }
+                : null,
+            icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+            label: const Text('Next'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryPlum,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: Colors.grey.shade200,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
           ),
         ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(
-                Icons.home_rounded,
-                'Home',
-                false,
-                () => context.go('/home'),
-              ),
-              _navItem(Icons.leaderboard_rounded, 'Events', true, () {}),
-              _navItem(
-                Icons.play_circle_fill_rounded,
-                'Shorts',
-                false,
-                () => context.go('/shorts'),
-              ),
-              _navItem(
-                Icons.video_library_rounded,
-                'Videos',
-                false,
-                () => context.go('/videos'),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
 
-  Widget _navItem(
-    IconData icon,
-    String label,
-    bool isActive,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
+  Widget _buildEmptyState() {
+    return Center(
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: isActive ? Colors.deepPurple.shade100 : Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              icon,
-              size: 24,
-              color: isActive
-                  ? Colors.deepPurple.shade600
-                  : Colors.grey.shade400,
-            ),
+          const Icon(Icons.event_available_rounded, size: 56, color: primaryPlum),
+          const SizedBox(height: 12),
+          const Text(
+            'No upcoming events at this moment',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: charcoalText),
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-              color: isActive
-                  ? Colors.deepPurple.shade600
-                  : Colors.grey.shade400,
-            ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _loadEvents,
+            style: ElevatedButton.styleFrom(backgroundColor: primaryPlum),
+            child: const Text('Refresh', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

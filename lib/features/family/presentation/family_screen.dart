@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guruji/app.dart';
+import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/family/bloc/family_bloc.dart';
 import 'package:guruji/features/family/models/family_member.dart';
 
@@ -13,6 +13,13 @@ class FamilyScreen extends StatefulWidget {
 }
 
 class _FamilyScreenState extends State<FamilyScreen> {
+  static const Color primaryPlum = Color(0xFF7E2B58);
+  static const Color richRose = Color(0xFF8E3763);
+  static const Color mauveAccent = Color(0xFFCE6590);
+  static const Color bgEnd = Color(0xFFFBF4F7);
+  static const Color charcoalText = Color(0xFF1F1A1D);
+  static const Color subtitleColor = Color(0xFF6B5F66);
+
   @override
   void initState() {
     super.initState();
@@ -26,11 +33,36 @@ class _FamilyScreenState extends State<FamilyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F3EA),
+      backgroundColor: bgEnd,
       appBar: AppBar(
-        title: const Text('Family'),
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: AppTheme.white,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: primaryPlum),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
+        ),
+        title: const Text(
+          'Family Sadhana Circle',
+          style: TextStyle(
+            color: primaryPlum,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            fontFamily: 'serif',
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded, color: primaryPlum),
+            onPressed: _refreshFamilyTree,
+          ),
+        ],
       ),
       body: BlocConsumer<FamilyBloc, FamilyState>(
         listener: (context, state) {
@@ -38,14 +70,17 @@ class _FamilyScreenState extends State<FamilyScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Theme.of(context).colorScheme.error,
+                backgroundColor: Colors.red.shade700,
+                behavior: SnackBarBehavior.floating,
               ),
             );
           }
         },
         builder: (context, state) {
           if (state is FamilyLoading || state is FamilyInitial) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: primaryPlum),
+            );
           }
 
           if (state is FamilyFailure) {
@@ -58,21 +93,23 @@ class _FamilyScreenState extends State<FamilyScreen> {
           if (state is FamilyLoadSuccess) {
             final familyTree = state.familyTree;
             return RefreshIndicator(
-              color: AppTheme.primaryDark,
+              color: primaryPlum,
               onRefresh: () async => _refreshFamilyTree(),
               child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                 children: [
                   _FamilyHeroCard(rootMember: familyTree),
                   const SizedBox(height: 16),
                   _FamilyStatsRow(rootMember: familyTree),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Family Tree',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  const SizedBox(height: 22),
+                  const Text(
+                    'Family Hierarchy Tree',
+                    style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      color: AppTheme.textPrimary,
+                      fontSize: 18,
+                      fontFamily: 'serif',
+                      color: charcoalText,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -85,37 +122,18 @@ class _FamilyScreenState extends State<FamilyScreen> {
           return const SizedBox.shrink();
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppTheme.white,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.grey.shade400,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Family'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              context.go('/home');
-              break;
-            case 1:
-              break;
-            case 2:
-              context.go('/profile');
-              break;
-          }
-        },
-      ),
+      bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
     );
   }
 }
 
+// ─── Hero Card ───────────────────────────────────────────────────────────────
 class _FamilyHeroCard extends StatelessWidget {
   const _FamilyHeroCard({required this.rootMember});
   final FamilyMember rootMember;
+
+  static const Color primaryPlum = Color(0xFF7E2B58);
+  static const Color richRose = Color(0xFF8E3763);
 
   @override
   Widget build(BuildContext context) {
@@ -123,51 +141,58 @@ class _FamilyHeroCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFF2A900), Color(0xFFD18C00)],
+          colors: [primaryPlum, richRose],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryDark.withOpacity(0.25),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: primaryPlum.withOpacity(0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
-          _FamilyAvatar(member: rootMember, radius: 34),
+          _FamilyAvatar(member: rootMember, radius: 32),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  rootMember.name.isEmpty ? 'Unknown Member' : rootMember.name,
+                  rootMember.name.isEmpty ? 'Karta (Head of Family)' : rootMember.name,
                   style: const TextStyle(
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  rootMember.relationLabel,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    rootMember.relationLabel,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  rootMember.phone.isEmpty
-                      ? 'Phone not available'
-                      : rootMember.phone,
-                  style: const TextStyle(fontSize: 13, color: Colors.white),
-                ),
+                if (rootMember.phone.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    rootMember.phone,
+                    style: const TextStyle(fontSize: 12, color: Colors.white70),
+                  ),
+                ],
               ],
             ),
           ),
@@ -177,6 +202,7 @@ class _FamilyHeroCard extends StatelessWidget {
   }
 }
 
+// ─── Stats Row ───────────────────────────────────────────────────────────────
 class _FamilyStatsRow extends StatelessWidget {
   const _FamilyStatsRow({required this.rootMember});
 
@@ -203,25 +229,28 @@ class _FamilyStatsRow extends StatelessWidget {
             label: 'Members',
             value: '$totalMembers',
             icon: Icons.group_rounded,
-            color: const Color(0xFF4A7AE0),
+            color: const Color(0xFF7E2B58),
+            bgColor: const Color(0xFFFFF0F5),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _StatCard(
             label: 'Children',
             value: '$childrenCount',
             icon: Icons.family_restroom_rounded,
-            color: const Color(0xFFE07C54),
+            color: const Color(0xFFC86134),
+            bgColor: const Color(0xFFFFF0E8),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _StatCard(
-            label: 'Links',
+            label: 'Relations',
             value: '$connectionCount',
             icon: Icons.hub_rounded,
-            color: const Color(0xFF2DAA6E),
+            color: const Color(0xFF2E8A68),
+            bgColor: const Color(0xFFEBF7F2),
           ),
         ),
       ],
@@ -235,37 +264,47 @@ class _StatCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.color,
+    required this.bgColor,
   });
 
   final String label;
   final String value;
   final IconData icon;
   final Color color;
+  final Color bgColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFF3E5EB)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.12),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            color: color.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 22),
-          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(height: 10),
           Text(
             value,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.w800,
               color: color,
             ),
@@ -273,10 +312,10 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textPrimary.withOpacity(0.62),
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF6B5F66),
             ),
           ),
         ],
@@ -285,6 +324,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
+// ─── Hierarchy Tile ──────────────────────────────────────────────────────────
 class _FamilyMemberTile extends StatelessWidget {
   const _FamilyMemberTile({
     required this.member,
@@ -296,77 +336,85 @@ class _FamilyMemberTile extends StatelessWidget {
   final int level;
   final bool isRoot;
 
+  static const Color primaryPlum = Color(0xFF7E2B58);
+  static const Color richRose = Color(0xFF8E3763);
+
   @override
   Widget build(BuildContext context) {
-    final leftIndent = level * 18.0;
+    final leftIndent = level * 14.0;
 
     return Padding(
       padding: EdgeInsets.only(left: leftIndent, bottom: 12),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: isRoot
-                ? AppTheme.primaryColor.withOpacity(0.35)
-                : Colors.grey.shade200,
+            color: isRoot ? primaryPlum.withOpacity(0.3) : const Color(0xFFF3E5EB),
+            width: isRoot ? 1.5 : 1.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          shape: const Border(),
+          tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-          leading: _FamilyAvatar(member: member, radius: 24),
+          leading: _FamilyAvatar(member: member, radius: 22),
           title: Text(
             member.name.isEmpty ? 'Unknown Member' : member.name,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            style: const TextStyle(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1F1A1D),
+            ),
           ),
           subtitle: Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.only(top: 2),
+            child: Row(
               children: [
                 Text(
                   member.relationLabel,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.primaryDark,
+                  style: const TextStyle(
+                    fontSize: 11.5,
+                    color: richRose,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  member.phone.isEmpty ? 'Phone not available' : member.phone,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.textPrimary.withOpacity(0.65),
+                if (member.phone.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    '• ${member.phone}',
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      color: Color(0xFF6B5F66),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
           children: [
             if (member.children.isEmpty && member.connections.isEmpty)
-              Align(
+              const Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  'No child members found.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.textPrimary.withOpacity(0.6),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.0),
+                  child: Text(
+                    'No direct sub-branches found.',
+                    style: TextStyle(fontSize: 12, color: Color(0xFF6B5F66)),
                   ),
                 ),
               ),
             if (member.children.isNotEmpty) ...[
-              _SectionLabel(
+              const _SectionLabel(
                 icon: Icons.account_tree_outlined,
-                label: 'Children',
+                label: 'Direct Lineage (Children)',
               ),
               const SizedBox(height: 10),
               ...member.children.map(
@@ -375,7 +423,10 @@ class _FamilyMemberTile extends StatelessWidget {
             ],
             if (member.connections.isNotEmpty) ...[
               const SizedBox(height: 8),
-              _SectionLabel(icon: Icons.hub_outlined, label: 'Connections'),
+              const _SectionLabel(
+                icon: Icons.hub_outlined,
+                label: 'Connected Relatives',
+              ),
               const SizedBox(height: 10),
               ...member.connections.map(
                 (connection) => _ConnectionTile(connection: connection),
@@ -392,41 +443,43 @@ class _ConnectionTile extends StatelessWidget {
   const _ConnectionTile({required this.connection});
 
   final FamilyConnection connection;
+  static const Color primaryPlum = Color(0xFF7E2B58);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9F6EF),
-        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFFFBF4F7),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFF3E5EB)),
       ),
       child: Row(
         children: [
           CircleAvatar(
-            radius: 18,
-            backgroundColor: AppTheme.primaryColor.withOpacity(0.15),
+            radius: 16,
+            backgroundColor: primaryPlum.withOpacity(0.12),
             child: Text(
               connection.name.isEmpty ? '?' : connection.name[0].toUpperCase(),
               style: const TextStyle(
                 fontWeight: FontWeight.w800,
-                color: AppTheme.primaryDark,
+                fontSize: 12,
+                color: primaryPlum,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  connection.name.isEmpty
-                      ? 'Unknown Connection'
-                      : connection.name,
+                  connection.name.isEmpty ? 'Relative' : connection.name,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w700,
+                    color: Color(0xFF1F1A1D),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -434,9 +487,9 @@ class _ConnectionTile extends StatelessWidget {
                   connection.relationType.isEmpty
                       ? connection.phone
                       : '${connection.relationType} • ${connection.phone}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.textPrimary.withOpacity(0.6),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF6B5F66),
                   ),
                 ),
               ],
@@ -453,19 +506,20 @@ class _SectionLabel extends StatelessWidget {
 
   final IconData icon;
   final String label;
+  static const Color primaryPlum = Color(0xFF7E2B58);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: AppTheme.primaryDark),
+        Icon(icon, size: 14, color: primaryPlum),
         const SizedBox(width: 6),
         Text(
           label,
           style: const TextStyle(
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: FontWeight.w800,
-            color: AppTheme.textPrimary,
+            color: Color(0xFF1F1A1D),
           ),
         ),
       ],
@@ -478,6 +532,7 @@ class _FamilyAvatar extends StatelessWidget {
 
   final FamilyMember member;
   final double radius;
+  static const Color primaryPlum = Color(0xFF7E2B58);
 
   @override
   Widget build(BuildContext context) {
@@ -491,13 +546,13 @@ class _FamilyAvatar extends StatelessWidget {
 
     return CircleAvatar(
       radius: radius,
-      backgroundColor: Colors.white.withOpacity(0.92),
+      backgroundColor: Colors.white.withOpacity(0.9),
       child: Text(
         member.name.isEmpty ? '?' : member.name[0].toUpperCase(),
         style: TextStyle(
           fontSize: radius * 0.72,
           fontWeight: FontWeight.w800,
-          color: AppTheme.primaryDark,
+          color: primaryPlum,
         ),
       ),
     );
@@ -509,6 +564,7 @@ class _FamilyErrorView extends StatelessWidget {
 
   final String message;
   final VoidCallback onRetry;
+  static const Color primaryPlum = Color(0xFF7E2B58);
 
   @override
   Widget build(BuildContext context) {
@@ -520,30 +576,34 @@ class _FamilyErrorView extends StatelessWidget {
           children: [
             const Icon(
               Icons.group_off_rounded,
-              size: 58,
-              color: AppTheme.primaryDark,
+              size: 56,
+              color: primaryPlum,
             ),
             const SizedBox(height: 14),
             const Text(
-              'Unable to load family details',
+              'Unable to load family circle',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: AppTheme.textPrimary,
+                color: Color(0xFF1F1A1D),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: AppTheme.textPrimary.withOpacity(0.65),
-              ),
+              style: const TextStyle(fontSize: 13, color: Color(0xFF6B5F66)),
             ),
-            const SizedBox(height: 18),
-            ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onRetry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryPlum,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Retry'),
+            ),
           ],
         ),
       ),
