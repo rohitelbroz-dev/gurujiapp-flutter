@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 
 class DonateScreen extends StatefulWidget {
   const DonateScreen({super.key});
@@ -47,7 +48,6 @@ class _DonateScreenState extends State<DonateScreen> {
             ),
           ),
           child: SafeArea(
-            bottom: false,
             child: Column(
               children: [
                 Expanded(
@@ -72,8 +72,8 @@ class _DonateScreenState extends State<DonateScreen> {
                               },
                             ),
                             Text(
-                              'Hari Path',
-                              style: TextStyle(
+                              context.tr('hariPath'),
+                              style: const TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.w800,
                                 fontFamily: 'serif',
@@ -122,8 +122,8 @@ class _DonateScreenState extends State<DonateScreen> {
 
                         // ─── Title & Subtitle ───
                         Text(
-                          'Support Our Cows',
-                          style: TextStyle(
+                          context.tr('supportOurCows'),
+                          style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.w800,
                             fontFamily: 'serif',
@@ -133,8 +133,8 @@ class _DonateScreenState extends State<DonateScreen> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'Choose a recurring contribution to ensure daily nourishment and care for the sacred cows.',
-                          style: TextStyle(
+                          context.tr('donateDesc'),
+                          style: const TextStyle(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w400,
                             color: subtitleColor,
@@ -160,7 +160,7 @@ class _DonateScreenState extends State<DonateScreen> {
                         // ─── Monthly Plan Card (Most Popular) ───
                         _buildDonationCard(
                           planId: 'Monthly',
-                          title: 'Monthly',
+                          title: context.tr('monthlyPlan'),
                           subtitle: 'Consistent monthly support.',
                           priceText: '₹300',
                           frequencyText: '/month',
@@ -174,7 +174,7 @@ class _DonateScreenState extends State<DonateScreen> {
                         // ─── Yearly Plan Card ───
                         _buildDonationCard(
                           planId: 'Yearly',
-                          title: 'Yearly',
+                          title: context.tr('yearlyPlan'),
                           subtitle: 'Long-term devotion and care.',
                           priceText: '₹3100',
                           frequencyText: '/year',
@@ -240,9 +240,9 @@ class _DonateScreenState extends State<DonateScreen> {
                           borderRadius: BorderRadius.circular(28),
                         ),
                       ),
-                      child: const Text(
-                        'Continue to Payment',
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('continueToPayment'),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.2,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 
 class AudioLibraryScreen extends StatefulWidget {
@@ -108,7 +109,6 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
               ),
             ),
             child: SafeArea(
-              bottom: false,
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -130,8 +130,8 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
                           },
                         ),
                       Text(
-                        'Hari Path',
-                        style: TextStyle(
+                        context.tr('hariPath'),
+                        style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
                           fontFamily: 'serif',
@@ -168,7 +168,7 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
 
                   // ─── Divine Focus Section ───
                   Text(
-                    'Divine Focus',
+                    context.tr('allDeities'),
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
@@ -234,9 +234,9 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
                               color: charcoalText,
                               fontWeight: FontWeight.w500,
                             ),
-                            decoration: const InputDecoration(
-                              hintText: 'Search prayers, aartis, mantras...',
-                              hintStyle: TextStyle(
+                            decoration: InputDecoration(
+                              hintText: context.tr('audioSearchHint'),
+                              hintStyle: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFFB8ADB4),
                               ),
@@ -252,7 +252,7 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
 
                   // ─── Library Audio List ───
                   Text(
-                    'Library',
+                    context.tr('navLibrary'),
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,

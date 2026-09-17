@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp.router(
             title: 'Hari Path',
+            locale: Locale(state.languageCode),
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7E2B58)),
               fontFamily: 'sans-serif',

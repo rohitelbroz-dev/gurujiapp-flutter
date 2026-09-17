@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 
 class JaapHistoryScreen extends StatefulWidget {
@@ -11,8 +12,8 @@ class JaapHistoryScreen extends StatefulWidget {
 }
 
 class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
-  String _activeFilter = 'Month';
-  final List<String> _filters = ['Week', 'Month', 'Year'];
+  int _activeFilterIndex = 1;
+  final List<String> _filterKeys = ['week', 'month', 'year'];
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,6 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
             ),
           ),
           child: SafeArea(
-            bottom: false,
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -60,8 +60,8 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
 
                   // ─── Title & Subtitle ───
                   Text(
-                    'Naam Jaap History',
-                    style: TextStyle(
+                    context.tr('jaapHistoryTitle'),
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'serif',
@@ -71,8 +71,8 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Your devotional journey over time.',
-                    style: TextStyle(
+                    context.tr('jaapHistorySubtitle'),
+                    style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w400,
                       color: subtitleColor,
@@ -89,7 +89,7 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                     badgeIcon: 'Σ',
                     isTextBadge: true,
                     watermark: '1',
-                    label: 'TOTAL COUNT',
+                    label: context.tr('totalCount').toUpperCase(),
                     value: '1,248',
                     subtitleWidget: const Row(
                       children: [
@@ -113,11 +113,11 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                     badgeIcon: '🔥',
                     isTextBadge: false,
                     watermarkIcon: Icons.local_fire_department_outlined,
-                    label: 'LONGEST STREAK',
-                    value: '42 days',
+                    label: context.tr('longestStreak').toUpperCase(),
+                    value: '42 ${context.tr('days')}',
                     subtitleWidget: Text(
-                      'Current: 14 days',
-                      style: TextStyle(
+                      'Current: 14 ${context.tr('days')}',
+                      style: const TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w400,
                         color: subtitleColor,
@@ -131,9 +131,9 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                     badgeIcon: '📈',
                     isTextBadge: false,
                     watermarkIcon: Icons.show_chart_rounded,
-                    label: 'DAILY AVERAGE',
+                    label: context.tr('dailyAverage').toUpperCase(),
                     value: '11 malas',
-                    subtitleWidget: Text(
+                    subtitleWidget: const Text(
                       'Consistent with goal',
                       style: TextStyle(
                         fontSize: 12.5,
@@ -147,8 +147,8 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
 
                   // ─── Recent Sessions ───
                   Text(
-                    'Recent Sessions',
-                    style: TextStyle(
+                    context.tr('recentSessions'),
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'serif',
@@ -159,7 +159,7 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
 
                   _buildSessionCard(
                     icon: Icons.spa_outlined,
-                    title: 'Morning Meditation',
+                    title: context.tr('morningMeditation'),
                     time: 'Today, 5:30 AM',
                     malas: '11',
                     duration: '45 mins',
@@ -171,7 +171,7 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
 
                   _buildSessionCard(
                     icon: Icons.nightlight_outlined,
-                    title: 'Evening Reflection',
+                    title: context.tr('eveningReflection'),
                     time: 'Yesterday, 8:00 PM',
                     malas: '5',
                     duration: '20 mins',
@@ -207,7 +207,7 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
           },
         ),
         Text(
-          'Hari Path',
+          context.tr('hariPath'),
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w800,
@@ -272,10 +272,11 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
-                  children: _filters.map((f) {
-                    final isSelected = f == _activeFilter;
+                  children: List.generate(_filterKeys.length, (idx) {
+                    final key = _filterKeys[idx];
+                    final isSelected = idx == _activeFilterIndex;
                     return GestureDetector(
-                      onTap: () => setState(() => _activeFilter = f),
+                      onTap: () => setState(() => _activeFilterIndex = idx),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                         decoration: BoxDecoration(
@@ -283,7 +284,7 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          f,
+                          context.tr(key),
                           style: TextStyle(
                             fontSize: 11.5,
                             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
@@ -292,7 +293,7 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ),
               ),
             ],

@@ -22,9 +22,9 @@ void main() {
       ),
     );
 
-    // Verify Title and Subtitle are present
-    expect(find.text('Choose Your\nLanguage'), findsOneWidget);
-    expect(find.text('Get Started'), findsOneWidget);
+    // Verify Initial Hindi Title and Button (default 'hi')
+    expect(find.text('अपनी भाषा\nचुनें'), findsOneWidget);
+    expect(find.text('शुरू करें'), findsOneWidget);
 
     // Verify native languages are rendered
     expect(find.text('हिन्दी'), findsOneWidget);
@@ -34,8 +34,12 @@ void main() {
     expect(find.text('தமிழ்'), findsOneWidget);
     expect(find.text('తెలుగు'), findsOneWidget);
 
-    // Tap English card
+    // Tap English card to change language
     await tester.tap(find.text('English').first);
     await tester.pumpAndSettle();
+
+    // Verify reactive update to English
+    expect(find.text('Choose Your\nLanguage'), findsOneWidget);
+    expect(find.text('Get Started'), findsOneWidget);
   });
 }

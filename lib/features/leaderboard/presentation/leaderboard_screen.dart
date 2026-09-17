@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/leaderboard/data/leaderboard_repository.dart';
 import 'package:guruji/features/leaderboard/models/leaderboard_model.dart';
@@ -62,9 +63,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             }
           },
         ),
-        title: const Text(
-          'Global Sadhak Leaderboard',
-          style: TextStyle(
+        title: Text(
+          context.tr('leaderboardHeader'),
+          style: const TextStyle(
             color: primaryPlum,
             fontWeight: FontWeight.w700,
             fontSize: 18,

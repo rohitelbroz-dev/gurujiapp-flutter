@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   final Map<String, dynamic> audioData;
@@ -107,9 +108,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 30, color: Color(0xFF221C20)),
                         onPressed: () => context.pop(),
                       ),
-                      const Text(
-                        'NOW PLAYING',
-                        style: TextStyle(
+                      Text(
+                        context.tr('nowPlaying').toUpperCase(),
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: Color(0xFF6B5E66),
@@ -364,13 +365,13 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                           children: [
                             _buildBottomAction(
                               icon: _isSaved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                              label: 'Save',
+                              label: context.tr('save'),
                               color: _isSaved ? primaryPlum : subtitleColor,
                               onTap: () {
                                 setState(() => _isSaved = !_isSaved);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(_isSaved ? 'Added to Sacred Favorites' : 'Removed from Favorites'),
+                                    content: Text(_isSaved ? context.tr('addedToFavorites') : context.tr('removedFromFavorites')),
                                     duration: const Duration(seconds: 1),
                                   ),
                                 );
@@ -378,13 +379,13 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             ),
                             _buildBottomAction(
                               icon: Icons.playlist_add_rounded,
-                              label: 'Playlist',
+                              label: context.tr('playlist'),
                               color: subtitleColor,
                               onTap: () {},
                             ),
                             _buildBottomAction(
                               icon: Icons.share_outlined,
-                              label: 'Share',
+                              label: context.tr('share'),
                               color: subtitleColor,
                               onTap: () {},
                             ),

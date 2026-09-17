@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gal/gal.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/amrit_vachan/bloc/amrit_vachan_bloc.dart';
 import 'package:guruji/features/amrit_vachan/models/amrit_vachan_model.dart';
@@ -67,9 +68,9 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
             }
           },
         ),
-        title: const Text(
-          'अमृत वचन',
-          style: TextStyle(
+        title: Text(
+          context.tr('amritVachanHeader'),
+          style: const TextStyle(
             color: primaryPlum,
             fontWeight: FontWeight.w700,
             fontSize: 20,
@@ -133,7 +134,7 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
                           const Icon(Icons.auto_stories_rounded, size: 16, color: primaryPlum),
                           const SizedBox(width: 8),
                           Text(
-                            'कुल अमृत वचन : ${state.allPosts.length}',
+                            '${context.tr('totalAmritVachan')} : ${state.allPosts.length}',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -151,9 +152,9 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
                     if (state.todayPosts.isNotEmpty) const SizedBox(height: 24),
 
                     // All Posts Header
-                    const Text(
-                      'सभी अमृत वचन',
-                      style: TextStyle(
+                    Text(
+                      context.tr('allAmritVachan'),
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
                         fontFamily: 'serif',
@@ -375,8 +376,8 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
       children: [
         Expanded(
           child: _buildActionButton(
-            icon: Icons.download_rounded,
-            label: 'Download',
+            icon: Icons.file_download_outlined,
+            label: context.tr('save'),
             color: primaryPlum,
             bgColor: const Color(0xFFFFF0F5),
             onTap: () => _downloadPostSafe(post),
@@ -386,7 +387,7 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
         Expanded(
           child: _buildActionButton(
             icon: Icons.share_rounded,
-            label: 'Share',
+            label: context.tr('share'),
             color: const Color(0xFF1565C0),
             bgColor: const Color(0xFFE3F2FD),
             onTap: () => _sharePostSafe(post),
@@ -396,7 +397,7 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
         Expanded(
           child: _buildActionButton(
             icon: Icons.chat_rounded,
-            label: 'WhatsApp',
+            label: context.tr('whatsApp'),
             color: const Color(0xFF2E7D32),
             bgColor: const Color(0xFFE8F5E9),
             onTap: () => _shareOnWhatsAppSafe(post),

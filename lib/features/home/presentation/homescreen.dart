@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -128,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(width: 8),
             Text(
-              "Today's Panchang",
+              context.tr('todayAuspicious'),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -465,9 +466,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'CELESTIAL TIMINGS',
-            style: TextStyle(
+          Text(
+            context.tr('celestialTimings').toUpperCase(),
+            style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               color: Color(0xFF6A5D64),
@@ -480,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: _buildCelestialItem(
                   icon: Icons.wb_twilight_rounded,
-                  label: 'Sunrise',
+                  label: context.tr('sunrise'),
                   time: '06:42 AM',
                   bgColor: const Color(0xFFFBEBF1),
                   iconColor: const Color(0xFF9E3A6B),
@@ -491,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: _buildCelestialItem(
                   icon: Icons.wb_sunny_rounded,
-                  label: 'Sunset',
+                  label: context.tr('sunset'),
                   time: '05:28 PM',
                   bgColor: const Color(0xFFF1EFF1),
                   iconColor: const Color(0xFF6B5F66),
@@ -507,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: _buildCelestialItem(
                   icon: Icons.nightlight_round,
-                  label: 'Moonrise',
+                  label: context.tr('moonrise'),
                   time: '07:15 AM',
                   bgColor: const Color(0xFFFBEBF1),
                   iconColor: const Color(0xFF9E3A6B),
@@ -518,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: _buildCelestialItem(
                   icon: Icons.bedtime_outlined,
-                  label: 'Moonset',
+                  label: context.tr('moonset'),
                   time: '06:05 PM',
                   bgColor: const Color(0xFFF5EFEA),
                   iconColor: const Color(0xFF8A6B52),
@@ -616,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(width: 6),
               Text(
-                'INAUSPICIOUS PERIOD',
+                context.tr('inauspiciousPeriod').toUpperCase(),
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
@@ -648,7 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Rahu Kaal',
+                            context.tr('rahuKaal'),
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.w700,
@@ -658,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Avoid starting important tasks',
+                            context.tr('rahuKaalCaution'),
                             style: TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w400,
@@ -706,9 +707,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'UPCOMING FESTIVALS',
-              style: TextStyle(
+            Text(
+              context.tr('upcomingFestivals').toUpperCase(),
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF6A5D64),
@@ -723,7 +724,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                'View All',
+                context.tr('viewAll'),
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -854,9 +855,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'SACRED SEVA & CONTRIBUTIONS',
-          style: TextStyle(
+        Text(
+          context.tr('sacredSeva').toUpperCase(),
+          style: const TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
             color: Color(0xFF6A5D64),
@@ -914,7 +915,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Flexible(
                             child: Text(
-                              'Support Our Cows',
+                              context.tr('supportOurCows'),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -932,9 +933,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: const Color(0xFF8E3763),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Text(
-                              'Donate',
-                              style: TextStyle(
+                            child: Text(
+                              context.tr('donateBtn'),
+                              style: const TextStyle(
                                 fontSize: 9.5,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
@@ -945,7 +946,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Ensure daily nourishment & care for Gaumata',
+                        context.tr('donateDesc'),
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w400,
@@ -997,9 +998,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'DIVINE SATSANG & VIDEOS',
-              style: TextStyle(
+            Text(
+              context.tr('videosTitle').toUpperCase(),
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF6A5D64),
@@ -1009,7 +1010,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () => context.push('/videos'),
               child: Text(
-                'View All',
+                context.tr('viewAll'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -1025,7 +1026,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: _buildVideoCategoryCard(
-                title: 'Shorts',
+                title: context.tr('shortsTab'),
                 subtitle: 'Quick Darshan',
                 icon: Icons.play_circle_filled_rounded,
                 badgeColor: const Color(0xFFE91E63),
@@ -1036,7 +1037,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: _buildVideoCategoryCard(
-                title: 'Videos',
+                title: context.tr('videosTab'),
                 subtitle: 'Katha & Pravachan',
                 icon: Icons.video_library_rounded,
                 badgeColor: primaryPlum,
@@ -1047,7 +1048,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: _buildVideoCategoryCard(
-                title: 'Live',
+                title: context.tr('liveTab'),
                 subtitle: 'Aarti & Utsav',
                 icon: Icons.sensors_rounded,
                 badgeColor: const Color(0xFFE53935),
@@ -1099,7 +1100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Watch Daily Satsang & Pravachan',
+                        context.tr('videosAndSatsang'),
                         style: TextStyle(
                           fontSize: 14.5,
                           fontWeight: FontWeight.w700,
@@ -1108,7 +1109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Stream Shorts, Pravachans & Live Darshan',
+                        context.tr('videosDesc'),
                         style: TextStyle(
                           fontSize: 11.5,
                           color: subtitleColor,
@@ -1228,9 +1229,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'DAILY AMRIT VACHAN',
-              style: TextStyle(
+            Text(
+              context.tr('amritVachanHeader').toUpperCase(),
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF6A5D64),
@@ -1240,7 +1241,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () => context.push('/amrit-vachan'),
               child: Text(
-                'View All',
+                context.tr('viewAll'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -1282,13 +1283,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: const Color(0xFFC86134),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.auto_stories_rounded, color: Colors.white, size: 12),
-                          SizedBox(width: 4),
+                          const Icon(Icons.auto_stories_rounded, color: Colors.white, size: 12),
+                          const SizedBox(width: 4),
                           Text(
-                            'आज का विचार',
-                            style: TextStyle(
+                            context.tr('amritVachanHeader'),
+                            style: const TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -1316,9 +1317,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'श्री गुरुदेव संदेश',
-                      style: TextStyle(
+                    Text(
+                      context.tr('amritVachanTitle'),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF9E4B25),
@@ -1327,7 +1328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         Text(
-                          'Read & Share',
+                          context.tr('share'),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -1364,9 +1365,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'UPCOMING SPIRITUAL EVENTS',
-              style: TextStyle(
+            Text(
+              context.tr('spiritualEvents').toUpperCase(),
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF6A5D64),
@@ -1376,7 +1377,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () => context.push('/events'),
               child: Text(
-                'Explore',
+                context.tr('viewAll'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -1487,9 +1488,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'FAMILY JAAP & SADHANA',
-              style: TextStyle(
+            Text(
+              context.tr('familyHeader').toUpperCase(),
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF6A5D64),
@@ -1499,7 +1500,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () => context.push('/family'),
               child: Text(
-                'Open Tree',
+                context.tr('viewAll'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -1555,7 +1556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Family Chanting Circle',
+                        context.tr('familyTree'),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -1564,7 +1565,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        'Connect loved ones & track collective Jaap',
+                        context.tr('familyDesc'),
                         style: TextStyle(
                           fontSize: 11.5,
                           color: subtitleColor,
@@ -1579,9 +1580,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: const Color(0xFF764BB2),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text(
-                    'Family Tree',
-                    style: TextStyle(
+                  child: Text(
+                    context.tr('familyTree'),
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -1608,9 +1609,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'GLOBAL SADHAK LEADERBOARD',
-              style: TextStyle(
+            Text(
+              context.tr('leaderboardHeader').toUpperCase(),
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF6A5D64),
@@ -1620,7 +1621,7 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () => context.push('/leaderboard'),
               child: Text(
-                'View Ranks',
+                context.tr('viewAll'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -1676,7 +1677,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Top Sadhak Ranks',
+                        context.tr('sadhakLeaderboard'),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -1685,7 +1686,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        'See highest daily & monthly chanting milestones',
+                        context.tr('leaderboardDesc'),
                         style: TextStyle(
                           fontSize: 11.5,
                           color: subtitleColor,

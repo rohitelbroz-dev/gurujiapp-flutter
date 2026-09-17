@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/services/language_service.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/auth/models/profile_model.dart';
@@ -205,7 +206,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                 ),
               ),
               child: SafeArea(
-                bottom: false,
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
@@ -219,9 +219,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             icon: const Icon(Icons.arrow_back_rounded, size: 22, color: primaryPlum),
                             onPressed: _handleBack,
                           ),
-                          const Text(
-                            'Sadhak Profile',
-                            style: TextStyle(
+                          Text(
+                            context.tr('profileTitle'),
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'serif',
@@ -331,9 +331,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           color: const Color(0xFFFBEBF1),
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: const Text(
-                          'SADHAK LEVEL 4',
-                          style: TextStyle(
+                        child: Text(
+                          context.tr('devotee').toUpperCase(),
+                          style: const TextStyle(
                             fontSize: 10.5,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF8A2E5B),
@@ -349,8 +349,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           Expanded(
                             child: _buildProfileStatCard(
                               badgeWidget: const Text('🎖', style: TextStyle(fontSize: 18)),
-                              value: '108 Days',
-                              label: 'JAAP STREAK',
+                              value: '108 ${context.tr('days')}',
+                              label: context.tr('jaapStreak').toUpperCase(),
                               charcoalText: charcoalText,
                               primaryPlum: primaryPlum,
                             ),
@@ -360,7 +360,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             child: _buildProfileStatCard(
                               badgeWidget: const Text('🐄', style: TextStyle(fontSize: 18)),
                               value: '₹5,100',
-                              label: 'TOTAL GAUSEVA',
+                              label: context.tr('totalGauseva').toUpperCase(),
                               charcoalText: charcoalText,
                               primaryPlum: primaryPlum,
                             ),
@@ -387,14 +387,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             color: const Color(0xFFFBEBF1),
                             borderRadius: BorderRadius.circular(26),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.history_rounded, size: 20, color: Color(0xFF1E1A1D)),
-                              SizedBox(width: 8),
+                              const Icon(Icons.history_rounded, size: 20, color: Color(0xFF1E1A1D)),
+                              const SizedBox(width: 8),
                               Text(
-                                'View Chanting History',
-                                style: TextStyle(
+                                context.tr('jaapHistoryTitle'),
+                                style: const TextStyle(
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w700,
                                   color: Color(0xFF1E1A1D),
@@ -413,16 +413,16 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             context: context,
                             builder: (ctx) => AlertDialog(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                              title: const Text('Sign Out'),
-                              content: const Text('Are you sure you want to sign out from your account?'),
+                              title: Text(context.tr('logout')),
+                              content: Text(context.tr('logoutConfirm')),
                               actions: [
-                                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                                TextButton(onPressed: () => Navigator.pop(ctx), child: Text(context.tr('cancel'))),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.pop(ctx);
                                     context.read<AuthBloc>().add(const LogoutEvent());
                                   },
-                                  child: const Text('Sign Out', style: TextStyle(color: Colors.red)),
+                                  child: Text(context.tr('logout'), style: const TextStyle(color: Colors.red)),
                                 ),
                               ],
                             ),
@@ -442,14 +442,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                               ),
                             ],
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.logout_rounded, size: 18, color: Color(0xFFC93737)),
-                              SizedBox(width: 8),
+                              const Icon(Icons.logout_rounded, size: 18, color: Color(0xFFC93737)),
+                              const SizedBox(width: 8),
                               Text(
-                                'Sign Out',
-                                style: TextStyle(
+                                context.tr('logout'),
+                                style: const TextStyle(
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w700,
                                   color: Color(0xFFC93737),
@@ -503,7 +503,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   Icon(Icons.account_circle_outlined, size: 16, color: primaryPlum),
                   const SizedBox(width: 6),
                   Text(
-                    'PERSONAL INFORMATION',
+                    context.tr('personalInfo').toUpperCase(),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -535,7 +535,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        _showEditForm ? 'Done' : 'Edit',
+                        _showEditForm ? context.tr('save') : context.tr('edit'),
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
@@ -554,7 +554,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             // Read-only Details View (Displayed by default)
             _buildInfoRow(
               icon: Icons.phone_android_rounded,
-              label: 'Phone Number',
+              label: context.tr('phone'),
               value: _phoneController.text.isNotEmpty ? _phoneController.text : 'Not provided',
               charcoalText: charcoalText,
               subtitleColor: subtitleColor,
@@ -562,7 +562,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             const Divider(color: Color(0xFFF5EDF1), height: 18),
             _buildInfoRow(
               icon: Icons.mail_outline_rounded,
-              label: 'Email Address',
+              label: context.tr('email'),
               value: _emailController.text.isNotEmpty ? _emailController.text : 'Not provided',
               charcoalText: charcoalText,
               subtitleColor: subtitleColor,
@@ -570,7 +570,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             const Divider(color: Color(0xFFF5EDF1), height: 18),
             _buildInfoRow(
               icon: Icons.location_on_outlined,
-              label: 'City & State',
+              label: context.tr('cityState'),
               value: '${_cityController.text.isNotEmpty ? _cityController.text : "City"}, ${_stateController.text.isNotEmpty ? _stateController.text : "State"}',
               charcoalText: charcoalText,
               subtitleColor: subtitleColor,
@@ -578,7 +578,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             const Divider(color: Color(0xFFF5EDF1), height: 18),
             _buildInfoRow(
               icon: Icons.spa_outlined,
-              label: 'Gotra',
+              label: context.tr('gotra'),
               value: _gotraController.text.isNotEmpty ? _gotraController.text : 'Not provided',
               charcoalText: charcoalText,
               subtitleColor: subtitleColor,
@@ -586,30 +586,30 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             const Divider(color: Color(0xFFF5EDF1), height: 18),
             _buildInfoRow(
               icon: Icons.cake_outlined,
-              label: 'Date of Birth',
+              label: context.tr('dob'),
               value: _dateOfBirthController.text.isNotEmpty ? _dateOfBirthController.text : 'Not provided',
               charcoalText: charcoalText,
               subtitleColor: subtitleColor,
             ),
           ] else ...[
             // Editable Form Fields View
-            _buildInputField(label: 'Full Name', controller: _nameController, icon: Icons.person_outline_rounded),
+            _buildInputField(label: context.tr('fullName'), controller: _nameController, icon: Icons.person_outline_rounded),
             const SizedBox(height: 12),
-            _buildInputField(label: 'Email', controller: _emailController, icon: Icons.mail_outline_rounded),
+            _buildInputField(label: context.tr('email'), controller: _emailController, icon: Icons.mail_outline_rounded),
             const SizedBox(height: 12),
-            _buildInputField(label: 'Phone', controller: _phoneController, icon: Icons.phone_android_rounded, enabled: false),
+            _buildInputField(label: context.tr('phone'), controller: _phoneController, icon: Icons.phone_android_rounded, enabled: false),
             const SizedBox(height: 12),
             _buildInputField(label: 'City', controller: _cityController, icon: Icons.location_city_rounded),
             const SizedBox(height: 12),
             _buildStateDropdown(primaryPlum, charcoalText),
             const SizedBox(height: 12),
-            _buildInputField(label: 'Gotra', controller: _gotraController, icon: Icons.spa_outlined),
+            _buildInputField(label: context.tr('gotra'), controller: _gotraController, icon: Icons.spa_outlined),
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => _selectDate(context),
               child: AbsorbPointer(
                 child: _buildInputField(
-                  label: 'Date of Birth',
+                  label: context.tr('dob'),
                   controller: _dateOfBirthController,
                   icon: Icons.calendar_today_rounded,
                 ),
@@ -627,7 +627,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Cancel'),
+                    child: Text(context.tr('cancel')),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -642,7 +642,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     ),
                     child: _isSaving
                         ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                        : const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.w700)),
+                        : Text(context.tr('saveChanges'), style: const TextStyle(fontWeight: FontWeight.w700)),
                   ),
                 ),
               ],
@@ -730,7 +730,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               Icon(Icons.tune_rounded, size: 16, color: primaryPlum),
               const SizedBox(width: 6),
               Text(
-                'PREFERENCES',
+                context.tr('spiritualPreferences').toUpperCase(),
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
@@ -745,7 +745,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           // Muhurat Alerts
           _buildSwitchRow(
             title: 'Muhurat Alerts',
-            subtitle: 'Get notified for auspicious times',
+            subtitle: context.tr('todayAuspicious'),
             value: _muhuratAlerts,
             onChanged: (val) => setState(() => _muhuratAlerts = val),
             primaryPlum: primaryPlum,
@@ -756,7 +756,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
           // Prayer Reminders
           _buildSwitchRow(
-            title: 'Prayer Reminders',
+            title: context.tr('notifications'),
             subtitle: 'Daily sadhana notifications',
             value: _prayerReminders,
             onChanged: (val) => setState(() => _prayerReminders = val),
@@ -783,7 +783,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Language',
+                          context.tr('languageSetting'),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,

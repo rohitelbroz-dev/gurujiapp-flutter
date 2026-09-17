@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/videos/bloc/videos_bloc.dart';
 import 'package:guruji/features/videos/bloc/videos_event.dart';
@@ -130,9 +131,9 @@ class _VideosScreenState extends State<VideosScreen> {
                   icon: const Icon(Icons.arrow_back_rounded, color: primaryPlum),
                   onPressed: _handleBack,
                 ),
-                title: const Text(
-                  'Divine Satsang & Videos',
-                  style: TextStyle(
+                title: Text(
+                  context.tr('videosTitle'),
+                  style: const TextStyle(
                     color: primaryPlum,
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
@@ -243,7 +244,7 @@ class _VideosScreenState extends State<VideosScreen> {
         children: [
           Expanded(
             child: _buildTabButton(
-              label: 'Shorts',
+              label: context.tr('shortsTab'),
               type: 'short',
               icon: Icons.play_circle_fill_rounded,
             ),
@@ -251,7 +252,7 @@ class _VideosScreenState extends State<VideosScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: _buildTabButton(
-              label: 'Videos',
+              label: context.tr('videosTab'),
               type: 'regular',
               icon: Icons.video_library_rounded,
             ),
@@ -259,7 +260,7 @@ class _VideosScreenState extends State<VideosScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: _buildTabButton(
-              label: 'Live',
+              label: context.tr('liveTab'),
               type: 'live',
               icon: Icons.sensors_rounded,
               isLive: true,

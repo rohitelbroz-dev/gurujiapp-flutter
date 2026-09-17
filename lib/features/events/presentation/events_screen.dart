@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/events/bloc/events_bloc.dart';
 import 'package:guruji/features/events/models/event_model.dart';
@@ -64,9 +65,9 @@ class _EventsScreenState extends State<EventsScreen> {
             }
           },
         ),
-        title: const Text(
-          'Spiritual Events & Utsav',
-          style: TextStyle(
+        title: Text(
+          context.tr('eventsHeader'),
+          style: const TextStyle(
             color: primaryPlum,
             fontWeight: FontWeight.w700,
             fontSize: 18,

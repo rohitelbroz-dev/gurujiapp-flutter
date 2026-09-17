@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/family/bloc/family_bloc.dart';
 import 'package:guruji/features/family/models/family_member.dart';
@@ -58,9 +59,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
             }
           },
         ),
-        title: const Text(
-          'Family Sadhana Circle',
-          style: TextStyle(
+        title: Text(
+          context.tr('familyHeader'),
+          style: const TextStyle(
             color: primaryPlum,
             fontWeight: FontWeight.w700,
             fontSize: 18,

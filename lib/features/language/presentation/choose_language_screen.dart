@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/services/language_service.dart';
 import 'package:guruji/features/language/bloc/language_bloc.dart';
 
@@ -69,7 +70,6 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
           ),
         ),
         child: SafeArea(
-          bottom: false,
           child: Column(
             children: [
               if (widget.isFromSettings)
@@ -103,7 +103,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                             ),
                           ],
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '文A',
                             style: TextStyle(
@@ -118,10 +118,10 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                       const SizedBox(height: 24),
 
                       // Title
-                      const Text(
-                        'Choose Your\nLanguage',
+                      Text(
+                        AppStrings.get('chooseLanguageTitle', lang: _selectedCode),
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.w800,
                           fontFamily: 'serif',
@@ -133,10 +133,10 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                       const SizedBox(height: 12),
 
                       // Subtitle
-                      const Text(
-                        'Select the language you prefer for\nyour spiritual journey.',
+                      Text(
+                        AppStrings.get('chooseLanguageSubtitle', lang: _selectedCode),
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
                           color: subtitleColor,
@@ -189,19 +189,21 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                         borderRadius: BorderRadius.circular(28),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Get Started',
-                          style: TextStyle(
+                          widget.isFromSettings 
+                              ? AppStrings.get('saveChanges', lang: _selectedCode)
+                              : AppStrings.get('getStarted', lang: _selectedCode),
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.2,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward_rounded, size: 20),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.arrow_forward_rounded, size: 20),
                       ],
                     ),
                   ),

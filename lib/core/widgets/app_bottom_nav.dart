@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/services/user_persistence_service.dart';
 
 enum AppNavTab { jaap, library, panchang, profile }
@@ -40,7 +41,7 @@ class AppBottomNav extends StatelessWidget {
                 context: context,
                 tab: AppNavTab.jaap,
                 icon: Icons.filter_1_rounded,
-                label: 'Jaap',
+                label: context.tr('navJaap'),
                 onTap: () async {
                   final isLoggedIn = await UserPersistenceService.isLoggedIn();
                   if (!context.mounted) return;
@@ -58,7 +59,7 @@ class AppBottomNav extends StatelessWidget {
                 context: context,
                 tab: AppNavTab.library,
                 icon: Icons.menu_book_rounded,
-                label: 'Library',
+                label: context.tr('navLibrary'),
                 onTap: () => context.go('/library'),
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,
@@ -68,7 +69,7 @@ class AppBottomNav extends StatelessWidget {
                 context: context,
                 tab: AppNavTab.panchang,
                 icon: Icons.calendar_month_outlined,
-                label: 'Panchang',
+                label: context.tr('navPanchang'),
                 onTap: () => context.go('/home'),
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,
@@ -78,7 +79,7 @@ class AppBottomNav extends StatelessWidget {
                 context: context,
                 tab: AppNavTab.profile,
                 icon: Icons.person_outline_rounded,
-                label: 'Profile',
+                label: context.tr('navProfile'),
                 onTap: () => context.go('/profile'),
                 activePillBg: activePillBg,
                 activeTextColor: activeTextColor,

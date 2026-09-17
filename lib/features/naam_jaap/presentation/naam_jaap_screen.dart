@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/naam_jaap/bloc/naam_jaap_bloc.dart';
 
@@ -15,13 +16,12 @@ class NaamJaapScreen extends StatefulWidget {
 
 class _NaamJaapScreenState extends State<NaamJaapScreen>
     with SingleTickerProviderStateMixin {
-  String _selectedMantra = 'Ram Naam';
-  final List<String> _mantras = [
-    'Ram Naam',
-    'Krishna Naam',
-    'Radha Naam',
-    'Om Namah Shivaya',
-    'Custom...',
+  int _selectedMantraIndex = 0;
+  final List<String> _mantraKeys = [
+    'ramNaam',
+    'krishnaNaam',
+    'radhaNaam',
+    'omNamahShivaya',
   ];
 
   int _currentBeads = 0;
@@ -66,10 +66,10 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
         _completedMalas++;
         HapticFeedback.mediumImpact();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('🌸 1 Mala (108 Chants) Completed! Haribol!'),
-            duration: Duration(seconds: 2),
-            backgroundColor: Color(0xFF7E2B58),
+          SnackBar(
+            content: Text(context.tr('malaCompletedToast')),
+            duration: const Duration(seconds: 2),
+            backgroundColor: const Color(0xFF7E2B58),
           ),
         );
       }
@@ -130,8 +130,8 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                           },
                         ),
                       Text(
-                        'Hari Path',
-                        style: TextStyle(
+                        context.tr('hariPath'),
+                        style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
                           fontFamily: 'serif',
@@ -174,15 +174,15 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: _mantras.length,
+                    itemCount: _mantraKeys.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 10),
                     itemBuilder: (context, index) {
-                      final mantra = _mantras[index];
-                      final isSelected = mantra == _selectedMantra;
+                      final key = _mantraKeys[index];
+                      final isSelected = index == _selectedMantraIndex;
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            _selectedMantra = mantra;
+                            _selectedMantraIndex = index;
                           });
                         },
                         child: AnimatedContainer(
@@ -206,7 +206,7 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                             ],
                           ),
                           child: Text(
-                            mantra,
+                            context.tr(key),
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
@@ -277,9 +277,9 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                                   const SizedBox(height: 24),
 
                                   // "TAP TO COUNT"
-                                  const Text(
-                                    'TAP TO COUNT',
-                                    style: TextStyle(
+                                  Text(
+                                    context.tr('tapToCount').toUpperCase(),
+                                    style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xFF6B5E66),
@@ -330,9 +330,9 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
-                              'TODAY',
-                              style: TextStyle(
+                            Text(
+                              context.tr('today').toUpperCase(),
+                              style: const TextStyle(
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF7A6D74),
@@ -358,9 +358,9 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
-                              'STREAK',
-                              style: TextStyle(
+                            Text(
+                              context.tr('streak').toUpperCase(),
+                              style: const TextStyle(
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF7A6D74),
@@ -385,7 +385,7 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                                         ),
                                       ),
                                       TextSpan(
-                                        text: 'Days',
+                                        text: context.tr('days'),
                                         style: TextStyle(
                                           fontSize: 12.5,
                                           fontWeight: FontWeight.w500,
@@ -406,18 +406,18 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
                         GestureDetector(
                           onTap: () => context.push('/jaap-history'),
                           behavior: HitTestBehavior.opaque,
-                          child: const Column(
+                          child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.calendar_month_outlined,
                                 size: 20,
                                 color: Color(0xFF221C20),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
-                                'HISTORY',
-                                style: TextStyle(
+                                context.tr('history').toUpperCase(),
+                                style: const TextStyle(
                                   fontSize: 10.5,
                                   fontWeight: FontWeight.w800,
                                   color: Color(0xFF221C20),
