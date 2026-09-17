@@ -86,36 +86,49 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
     const Color charcoalText = Color(0xFF1E1A1D);
     const Color subtitleColor = Color(0xFF6B5E66);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        backgroundColor: bgGradientEnd,
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [bgGradientStart, bgGradientEnd],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/home');
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          backgroundColor: bgGradientEnd,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [bgGradientStart, bgGradientEnd],
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                // ─── Header: Menu, Hari Path, Profile ───
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.menu_rounded, size: 26, color: Color(0xFF221C20)),
-                        onPressed: () {
-                          // Optional drawer or profile navigation
-                          context.push('/profile');
-                        },
-                      ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // ─── Header: Back, Hari Path, Profile ───
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_rounded, size: 24, color: Color(0xFF221C20)),
+                          onPressed: () {
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.go('/home');
+                            }
+                          },
+                        ),
                       Text(
                         'Hari Path',
                         style: TextStyle(
@@ -424,8 +437,9 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
         ),
         bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.jaap),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 // ─── Custom Painter for Circular Mala Ring ──────────────────────────────────

@@ -36,8 +36,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgEnd,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/home');
+        }
+      },
+      child: Scaffold(
+        backgroundColor: bgEnd,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -137,7 +147,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           );
         },
       ),
-      bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
+        bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
+      ),
     );
   }
 

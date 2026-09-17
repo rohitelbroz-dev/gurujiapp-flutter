@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/services/language_service.dart';
-import 'package:guruji/core/services/user_persistence_service.dart';
 import 'package:guruji/features/language/bloc/language_bloc.dart';
 
 class WelcomeScreen extends StatefulWidget {

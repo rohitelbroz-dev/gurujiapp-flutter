@@ -31,11 +31,10 @@ class AppBottomNav extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Container(
-          height: 64,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        child: SizedBox(
+          height: 66,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildNavItem(
                 context: context,
@@ -114,11 +113,11 @@ class AppBottomNav extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: isActive
-            ? const EdgeInsets.symmetric(horizontal: 18, vertical: 6)
-            : const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 5)
+            : const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: isActive ? activePillBg : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -126,16 +125,19 @@ class AppBottomNav extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 22,
+              size: 21,
               color: isActive ? activeTextColor : inactiveColor,
             ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? activeTextColor : inactiveColor,
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                  color: isActive ? activeTextColor : inactiveColor,
+                ),
               ),
             ),
           ],

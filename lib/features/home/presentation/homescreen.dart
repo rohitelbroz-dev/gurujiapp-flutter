@@ -543,38 +543,48 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color subtitleColor,
   }) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 44,
-          height: 44,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(
             color: bgColor,
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 20, color: iconColor),
+          child: Icon(icon, size: 18, color: iconColor),
         ),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w500,
-                color: subtitleColor,
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: subtitleColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              time,
-              style: TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w700,
-                color: charcoalText,
+              const SizedBox(height: 1),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  time,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: charcoalText,
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -588,7 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFFFDF4F6),
         borderRadius: BorderRadius.circular(22),
@@ -621,50 +631,61 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 3,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      color: primaryPlum,
-                      borderRadius: BorderRadius.circular(2),
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 3,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: primaryPlum,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Rahu Kaal',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'serif',
-                          color: charcoalText,
-                        ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Rahu Kaal',
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'serif',
+                              color: charcoalText,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Avoid starting important tasks',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w400,
+                              color: subtitleColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Avoid starting important tasks',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: subtitleColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                '03:00 PM -\n04:30 PM',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                  color: charcoalText,
-                  height: 1.25,
+              const SizedBox(width: 8),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '03:00 PM -\n04:30 PM',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: charcoalText,
+                    height: 1.25,
+                  ),
                 ),
               ),
             ],
@@ -725,7 +746,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 subtitleColor: subtitleColor,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildFestivalCard(
                 badge: 'IN 3 DAYS',
@@ -751,10 +772,10 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color subtitleColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.035),
@@ -769,15 +790,15 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFBEBF1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   badge,
                   style: const TextStyle(
-                    fontSize: 9.5,
+                    fontSize: 9,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF8A305D),
                     letterSpacing: 0.5,
@@ -785,30 +806,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               if (hasIcon) ...[
-                const SizedBox(width: 6),
+                const SizedBox(width: 4),
                 const Icon(
                   Icons.celebration_outlined,
-                  size: 16,
+                  size: 14,
                   color: Color(0xFF8A305D),
                 ),
               ],
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16.5,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'serif',
-              color: charcoalText,
+          const SizedBox(height: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 15.5,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'serif',
+                color: charcoalText,
+              ),
             ),
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w400,
               color: subtitleColor,
             ),
@@ -842,14 +867,14 @@ class _HomeScreenState extends State<HomeScreen> {
         GestureDetector(
           onTap: () => context.push('/donate'),
           child: Container(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [Color(0xFFFFF0F5), Color(0xFFFBE4ED)],
               ),
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(22),
               border: Border.all(color: const Color(0xFFF7D9E4), width: 1.2),
               boxShadow: [
                 BoxShadow(
@@ -862,50 +887,55 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 46,
+                  height: 46,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
                         color: primaryPlum.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
                   child: const Center(
-                    child: Text('🐄', style: TextStyle(fontSize: 26)),
+                    child: Text('🐄', style: TextStyle(fontSize: 22)),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'Support Our Cows',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'serif',
-                              color: charcoalText,
+                          Flexible(
+                            child: Text(
+                              'Support Our Cows',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'serif',
+                                color: charcoalText,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                             decoration: BoxDecoration(
                               color: const Color(0xFF8E3763),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Text(
                               'Donate',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 9.5,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
                               ),
@@ -913,34 +943,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 2),
                       Text(
                         'Ensure daily nourishment & care for Gaumata',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: FontWeight.w400,
                           color: subtitleColor,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(width: 8),
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 28,
+                  height: 28,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.04),
-                        blurRadius: 6,
+                        blurRadius: 4,
                       ),
                     ],
                   ),
                   child: Icon(
                     Icons.arrow_forward_ios_rounded,
-                    size: 14,
+                    size: 12,
                     color: primaryPlum,
                   ),
                 ),

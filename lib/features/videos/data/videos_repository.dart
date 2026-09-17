@@ -8,14 +8,22 @@ import 'package:guruji/core/services/user_persistence_service.dart';
 
 class VideosRepository {
   final String _baseUrl = ApiConstants.baseUrl;
+
   Future<VideosResponse> fetchVideos({
     int page = 1,
     int limit = 10,
     String type = 'regular',
   }) async {
     final token = await UserPersistenceService.getToken();
+
+    // Ensure type is always one of the valid backend enum values
+    final normalized = type.trim().toLowerCase();
+    final validType = const ['short', 'regular', 'live', 'all'].contains(normalized)
+        ? normalized
+        : 'regular';
+
     final url = Uri.parse(
-      '$_baseUrl/videos?page=$page&limit=$limit&type=$type',
+      '$_baseUrl/videos?page=$page&limit=$limit&type=$validType',
     );
 
     try {

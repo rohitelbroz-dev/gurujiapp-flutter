@@ -83,36 +83,52 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
     const Color charcoalText = Color(0xFF1E1A1D);
     const Color subtitleColor = Color(0xFF6B5E66);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        backgroundColor: bgGradientEnd,
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [bgGradientStart, bgGradientEnd],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/home');
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          backgroundColor: bgGradientEnd,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [bgGradientStart, bgGradientEnd],
+              ),
             ),
-          ),
-          child: SafeArea(
-            bottom: false,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ─── Header: Menu, Hari Path, Profile ───
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.menu_rounded, size: 26, color: Color(0xFF221C20)),
-                        onPressed: () => context.push('/profile'),
-                      ),
+            child: SafeArea(
+              bottom: false,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ─── Header: Back/Menu, Hari Path, Profile ───
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_rounded, size: 24, color: Color(0xFF221C20)),
+                          onPressed: () {
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.go('/home');
+                            }
+                          },
+                        ),
                       Text(
                         'Hari Path',
                         style: TextStyle(
@@ -270,8 +286,9 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
         ),
         bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.library),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildDeityItem({
     required String title,

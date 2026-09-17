@@ -71,9 +71,19 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     final imagePath = widget.audioData['image'] as String? ?? 'assets/images/ram_divine.jpg';
     final lyrics = widget.audioData['lyrics'] as String? ?? 'हरण भवभय दारुणम्';
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/library');
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
         body: Container(
           width: double.infinity,
           height: double.infinity,
@@ -390,8 +400,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildBottomAction({
     required IconData icon,

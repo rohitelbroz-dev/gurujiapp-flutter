@@ -22,10 +22,20 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
     const Color charcoalText = Color(0xFF1E1A1D);
     const Color subtitleColor = Color(0xFF6B5E66);
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        backgroundColor: bgGradientEnd,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/naam-jaap');
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          backgroundColor: bgGradientEnd,
         body: Container(
           width: double.infinity,
           height: double.infinity,
@@ -177,8 +187,9 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
         ),
         bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.jaap),
       ),
-    );
-  }
+    ),
+  );
+}
 
   // ─── Header ────────────────────────────────────────────────────────────────
   Widget _buildHeader(Color primaryPlum) {

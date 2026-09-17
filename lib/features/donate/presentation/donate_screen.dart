@@ -22,10 +22,20 @@ class _DonateScreenState extends State<DonateScreen> {
     const Color subtitleColor = Color(0xFF6B5E66);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        backgroundColor: bgGradientEnd,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/home');
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          backgroundColor: bgGradientEnd,
         body: Container(
           width: double.infinity,
           height: double.infinity,
@@ -246,8 +256,9 @@ class _DonateScreenState extends State<DonateScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildDonationCard({
     required String planId,

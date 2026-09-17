@@ -28,7 +28,6 @@ class _VideosScreenState extends State<VideosScreen> {
   static const Color primaryPlum = Color(0xFF7E2B58);
   static const Color richRose = Color(0xFF8E3763);
   static const Color mauveAccent = Color(0xFFCE6590);
-  static const Color bgStart = Color(0xFFFFFDFE);
   static const Color bgEnd = Color(0xFFFBF4F7);
   static const Color charcoalText = Color(0xFF1F1A1D);
   static const Color subtitleColor = Color(0xFF6B5F66);
@@ -36,7 +35,12 @@ class _VideosScreenState extends State<VideosScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedType = widget.initialType;
+    final rawType = widget.initialType.trim().toLowerCase();
+    if (const ['short', 'regular', 'live', 'all'].contains(rawType)) {
+      _selectedType = rawType;
+    } else {
+      _selectedType = 'regular';
+    }
     _loadVideos();
   }
 
@@ -83,6 +87,20 @@ class _VideosScreenState extends State<VideosScreen> {
     });
   }
 
+  void _handleBack() {
+    if (_selectedVideoId != null) {
+      setState(() {
+        _clearSelectedVideo();
+      });
+      return;
+    }
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/home');
+    }
+  }
+
   @override
   void dispose() {
     _clearSelectedVideo();
@@ -94,122 +112,123 @@ class _VideosScreenState extends State<VideosScreen> {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
-    return Scaffold(
-      backgroundColor: bgEnd,
-      appBar: isLandscape
-          ? null
-          : AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              centerTitle: true,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_rounded, color: primaryPlum),
-                onPressed: () {
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    context.go('/home');
-                  }
-                },
-              ),
-              title: const Text(
-                'Divine Satsang & Videos',
-                style: TextStyle(
-                  color: primaryPlum,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  fontFamily: 'serif',
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: Scaffold(
+        backgroundColor: bgEnd,
+        appBar: isLandscape
+            ? null
+            : AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded, color: primaryPlum),
+                  onPressed: _handleBack,
                 ),
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.refresh_rounded, color: primaryPlum),
-                  onPressed: _loadVideos,
-                ),
-              ],
-            ),
-      body: BlocListener<VideosBloc, VideosState>(
-        listener: (context, state) {
-          if (state is VideosFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red.shade700,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        child: BlocBuilder<VideosBloc, VideosState>(
-          builder: (context, state) {
-            if (state is VideosLoading && _selectedVideoId == null) {
-              return const Center(
-                child: CircularProgressIndicator(color: primaryPlum),
-              );
-            }
-
-            if (isLandscape && _selectedVideoId != null && _playerController != null) {
-              return Container(
-                color: Colors.black,
-                child: SafeArea(
-                  child: Center(
-                    child: YoutubePlayer(
-                      key: ValueKey(_selectedVideoId),
-                      controller: _playerController!,
-                      showVideoProgressIndicator: true,
-                      progressIndicatorColor: richRose,
-                      onReady: () {},
-                    ),
+                title: const Text(
+                  'Divine Satsang & Videos',
+                  style: TextStyle(
+                    color: primaryPlum,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    fontFamily: 'serif',
                   ),
                 ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.refresh_rounded, color: primaryPlum),
+                    onPressed: _loadVideos,
+                  ),
+                ],
+              ),
+        body: BlocListener<VideosBloc, VideosState>(
+          listener: (context, state) {
+            if (state is VideosFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red.shade700,
+                  behavior: SnackBarBehavior.floating,
+                ),
               );
             }
-
-            List<Video> videos = [];
-            if (state is VideosLoadSuccess) {
-              _totalPages = state.videosResponse.totalPages;
-              videos = state.videosResponse.videos;
-            }
-
-            return Column(
-              children: [
-                // ─── Header Tabs (Shorts, Videos, Live) ───
-                _buildTabsHeader(),
-
-                // ─── Video Player Section (When playing) ───
-                if (_selectedVideoId != null && _playerController != null)
-                  _buildInlinePlayer(videos),
-
-                // ─── Videos List / Content ───
-                Expanded(
-                  child: state is VideosFailure
-                      ? _buildErrorState(state.message)
-                      : RefreshIndicator(
-                          color: primaryPlum,
-                          onRefresh: () async => _loadVideos(),
-                          child: videos.isEmpty
-                              ? _buildEmptyState()
-                              : _selectedType == 'short'
-                                  ? _buildShortsGrid(videos)
-                                  : _buildVideosList(videos),
-                        ),
-                ),
-
-                // ─── Pagination Controls ───
-                if (_totalPages > 1) _buildPaginationControls(),
-              ],
-            );
           },
+          child: BlocBuilder<VideosBloc, VideosState>(
+            builder: (context, state) {
+              if (state is VideosLoading && _selectedVideoId == null) {
+                return const Center(
+                  child: CircularProgressIndicator(color: primaryPlum),
+                );
+              }
+
+              if (isLandscape && _selectedVideoId != null && _playerController != null) {
+                return Container(
+                  color: Colors.black,
+                  child: SafeArea(
+                    child: Center(
+                      child: YoutubePlayer(
+                        key: ValueKey(_selectedVideoId),
+                        controller: _playerController!,
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: richRose,
+                        onReady: () {},
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              List<Video> videos = [];
+              if (state is VideosLoadSuccess) {
+                _totalPages = state.videosResponse.totalPages;
+                videos = state.videosResponse.videos;
+              }
+
+              return Column(
+                children: [
+                  // ─── Header Tabs (Shorts, Videos, Live) ───
+                  _buildTabsHeader(),
+
+                  // ─── Video Player Section (When playing) ───
+                  if (_selectedVideoId != null && _playerController != null)
+                    _buildInlinePlayer(videos),
+
+                  // ─── Videos List / Content ───
+                  Expanded(
+                    child: state is VideosFailure
+                        ? _buildErrorState(state.message)
+                        : RefreshIndicator(
+                            color: primaryPlum,
+                            onRefresh: () async => _loadVideos(),
+                            child: videos.isEmpty
+                                ? _buildEmptyState()
+                                : _selectedType == 'short'
+                                    ? _buildShortsGrid(videos)
+                                    : _buildVideosList(videos),
+                          ),
+                  ),
+
+                  // ─── Pagination Controls ───
+                  if (_totalPages > 1) _buildPaginationControls(),
+                ],
+              );
+            },
+          ),
         ),
+        bottomNavigationBar: isLandscape ? null : const AppBottomNav(currentTab: AppNavTab.panchang),
       ),
-      bottomNavigationBar: isLandscape ? null : const AppBottomNav(currentTab: AppNavTab.panchang),
     );
   }
 
   // ─── Header Tabs ───────────────────────────────────────────────────────────
   Widget _buildTabsHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      padding: const EdgeInsets.fromLTRB(14, 8, 14, 12),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -263,7 +282,7 @@ class _VideosScreenState extends State<VideosScreen> {
       onTap: () => _changeVideoType(type),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 9),
         decoration: BoxDecoration(
           gradient: isSelected
               ? const LinearGradient(
@@ -292,18 +311,21 @@ class _VideosScreenState extends State<VideosScreen> {
           children: [
             Icon(
               icon,
-              size: 16,
+              size: 15,
               color: isSelected
                   ? Colors.white
                   : (isLive ? const Color(0xFFE53935) : primaryPlum),
             ),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                color: isSelected ? Colors.white : charcoalText,
+            const SizedBox(width: 5),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                  color: isSelected ? Colors.white : charcoalText,
+                ),
               ),
             ),
           ],
@@ -333,7 +355,7 @@ class _VideosScreenState extends State<VideosScreen> {
           ),
           Container(
             color: const Color(0xFF1F1A1D),
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.all(12.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -344,18 +366,18 @@ class _VideosScreenState extends State<VideosScreen> {
                       Text(
                         playingVideo.title,
                         style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       Text(
                         playingVideo.description,
                         style: const TextStyle(
-                          fontSize: 11.5,
+                          fontSize: 11,
                           color: Colors.white70,
                         ),
                         maxLines: 2,
@@ -365,7 +387,7 @@ class _VideosScreenState extends State<VideosScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close_rounded, color: Colors.white70),
+                  icon: const Icon(Icons.close_rounded, color: Colors.white70, size: 20),
                   onPressed: () {
                     setState(() {
                       _clearSelectedVideo();
@@ -383,7 +405,7 @@ class _VideosScreenState extends State<VideosScreen> {
   // ─── Videos List ───────────────────────────────────────────────────────────
   Widget _buildVideosList(List<Video> videos) {
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
       itemCount: videos.length,
       separatorBuilder: (_, __) => const SizedBox(height: 14),
       itemBuilder: (context, index) {
@@ -396,7 +418,7 @@ class _VideosScreenState extends State<VideosScreen> {
   // ─── Shorts Grid View ──────────────────────────────────────────────────────
   Widget _buildShortsGrid(List<Video> shorts) {
     return GridView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
       itemCount: shorts.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -474,7 +496,7 @@ class _VideosScreenState extends State<VideosScreen> {
                       short.title,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 13,
+                        fontSize: 12.5,
                         fontWeight: FontWeight.w700,
                         shadows: [Shadow(color: Colors.black, blurRadius: 4)],
                       ),
@@ -539,8 +561,8 @@ class _VideosScreenState extends State<VideosScreen> {
                 Positioned.fill(
                   child: Center(
                     child: Container(
-                      width: 50,
-                      height: 50,
+                      width: 48,
+                      height: 48,
                       decoration: BoxDecoration(
                         color: primaryPlum.withOpacity(0.85),
                         shape: BoxShape.circle,
@@ -551,7 +573,7 @@ class _VideosScreenState extends State<VideosScreen> {
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 32),
+                      child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 30),
                     ),
                   ),
                 ),
@@ -587,7 +609,7 @@ class _VideosScreenState extends State<VideosScreen> {
                   Text(
                     video.title,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.w700,
                       color: charcoalText,
                     ),
@@ -647,7 +669,7 @@ class _VideosScreenState extends State<VideosScreen> {
   // ─── Pagination ────────────────────────────────────────────────────────────
   Widget _buildPaginationControls() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
@@ -662,20 +684,21 @@ class _VideosScreenState extends State<VideosScreen> {
                     _loadVideos();
                   }
                 : null,
-            icon: const Icon(Icons.arrow_back_rounded, size: 16),
-            label: const Text('Previous'),
+            icon: const Icon(Icons.arrow_back_rounded, size: 15),
+            label: const Text('Previous', style: TextStyle(fontSize: 12)),
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryPlum,
               foregroundColor: Colors.white,
               disabledBackgroundColor: Colors.grey.shade200,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           Text(
-            'Page $_currentPage of $_totalPages',
+            'Page $_currentPage / $_totalPages',
             style: const TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 13,
+              fontSize: 12.5,
               color: charcoalText,
             ),
           ),
@@ -686,13 +709,14 @@ class _VideosScreenState extends State<VideosScreen> {
                     _loadVideos();
                   }
                 : null,
-            icon: const Icon(Icons.arrow_forward_rounded, size: 16),
-            label: const Text('Next'),
+            icon: const Icon(Icons.arrow_forward_rounded, size: 15),
+            label: const Text('Next', style: TextStyle(fontSize: 12)),
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryPlum,
               foregroundColor: Colors.white,
               disabledBackgroundColor: Colors.grey.shade200,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
         ],
@@ -705,17 +729,21 @@ class _VideosScreenState extends State<VideosScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.video_collection_outlined, size: 56, color: primaryPlum),
+          const Icon(Icons.video_collection_outlined, size: 52, color: primaryPlum),
           const SizedBox(height: 12),
           Text(
             'No ${_selectedType} videos available right now',
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: charcoalText),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: charcoalText),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadVideos,
-            style: ElevatedButton.styleFrom(backgroundColor: primaryPlum),
-            child: const Text('Refresh', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryPlum,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('Refresh'),
           ),
         ],
       ),
