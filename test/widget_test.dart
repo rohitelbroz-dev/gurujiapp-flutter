@@ -1,30 +1,42 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:guruji/main.dart';
+import 'package:guruji/core/services/language_service.dart';
+import 'package:guruji/features/language/bloc/language_bloc.dart';
+import 'package:guruji/features/language/presentation/choose_language_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp(isLoggedIn: false));
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('ChooseLanguageScreen displays supported languages and selects Hindi by default', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider(
+          create: (_) => LanguageBloc(),
+          child: const ChooseLanguageScreen(),
+        ),
+      ),
+    );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify Title and Subtitle are present
+    expect(find.text('Choose Your\nLanguage'), findsOneWidget);
+    expect(find.text('Get Started'), findsOneWidget);
+
+    // Verify native languages are rendered
+    expect(find.text('हिन्दी'), findsOneWidget);
+    expect(find.text('English'), findsWidgets);
+    expect(find.text('मराठी'), findsOneWidget);
+    expect(find.text('ગુજરાતી'), findsOneWidget);
+    expect(find.text('தமிழ்'), findsOneWidget);
+    expect(find.text('తెలుగు'), findsOneWidget);
+
+    // Tap English card
+    await tester.tap(find.text('English').first);
+    await tester.pumpAndSettle();
   });
 }

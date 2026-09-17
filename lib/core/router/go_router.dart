@@ -1,46 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:guruji/core/services/language_service.dart';
+import 'package:guruji/core/services/user_persistence_service.dart';
 import 'package:guruji/features/amrit_vachan/presentation/amrit_vachan_screen.dart';
 import 'package:guruji/features/auth/presentation/login_screen.dart';
 import 'package:guruji/features/auth/presentation/otp_screen.dart';
-import 'package:guruji/features/home/presentation/homescreen.dart';
-import 'package:guruji/features/leaderboard/presentation/leaderboard_screen.dart';
-import 'package:guruji/features/naam_jaap/presentation/naam_jaap_screen.dart';
-import 'package:guruji/features/auth/presentation/register_screen.dart';
 import 'package:guruji/features/auth/presentation/profile_screen.dart';
+import 'package:guruji/features/auth/presentation/register_screen.dart';
 import 'package:guruji/features/events/presentation/events_screen.dart';
 import 'package:guruji/features/family/presentation/family_screen.dart';
+import 'package:guruji/features/home/presentation/homescreen.dart';
+import 'package:guruji/features/language/presentation/choose_language_screen.dart';
+import 'package:guruji/features/leaderboard/presentation/leaderboard_screen.dart';
+import 'package:guruji/features/naam_jaap/presentation/naam_jaap_screen.dart';
 import 'package:guruji/features/videos/presentation/shorts_screen.dart';
 import 'package:guruji/features/videos/presentation/videos_screen.dart';
-import 'package:guruji/core/services/user_persistence_service.dart';
+import 'package:guruji/features/welcome/presentation/welcome_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
   redirect: (context, state) async {
+    final hasChosenLang = await LanguageService.hasChosenLanguage();
+    final hasSeenWelcome = await LanguageService.hasSeenWelcome();
     final isLoggedIn = await UserPersistenceService.isLoggedIn();
 
-    // If user is logged in and trying to access auth routes, redirect to home
-    if (isLoggedIn) {
-      if (state.matchedLocation == '/' ||
-          state.matchedLocation == '/login' ||
-          state.matchedLocation == '/register') {
-        return '/home';
-      }
-    } else {
-      // If user is not logged in and trying to access protected routes, redirect to login
-      if (state.matchedLocation == '/home') {
-        return '/login';
-      }
+    final matched = state.matchedLocation;
+
+    // First time launch: Choose Language Screen
+    if (!hasChosenLang) {
+      if (matched == '/choose-language') return null;
+      return '/choose-language';
     }
 
-    // Default redirect from root to login
-    if (state.matchedLocation == '/') {
-      return '/login';
+    // After language chosen: Welcome Onboarding Screen
+    if (!hasSeenWelcome) {
+      if (matched == '/welcome' || matched == '/choose-language') return null;
+      return '/welcome';
+    }
+
+    // Once welcome is completed, root or welcome redirect directly to home
+    if (matched == '/' || matched == '/welcome') {
+      return '/home';
     }
 
     return null;
   },
   routes: [
+    GoRoute(
+      path: '/choose-language',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final isFromSettings = extra?['fromSettings'] as bool? ?? false;
+        return ChooseLanguageScreen(isFromSettings: isFromSettings);
+      },
+    ),
+    GoRoute(
+      path: '/welcome',
+      builder: (context, state) => const WelcomeScreen(),
+    ),
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
@@ -50,7 +67,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
         if (extra == null) {
-          return const LoginScreen(); // Fallback if no extra data
+          return const LoginScreen();
         }
         return OtpScreen(
           phone: extra['phone'] as String,

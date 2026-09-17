@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gal/gal.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/app.dart';
+import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/amrit_vachan/bloc/amrit_vachan_bloc.dart';
 import 'package:guruji/features/amrit_vachan/models/amrit_vachan_model.dart';
 import 'package:http/http.dart' as http;
@@ -115,6 +116,7 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
           },
         ),
       ),
+      bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.library),
     );
   }
 

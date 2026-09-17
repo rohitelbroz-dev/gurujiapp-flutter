@@ -6,7 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:guruji/app.dart';
+import 'package:guruji/core/services/language_service.dart';
+import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/auth/models/profile_model.dart';
+import 'package:guruji/features/language/bloc/language_bloc.dart';
 import '../bloc/auth_bloc.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
@@ -303,6 +306,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                             const SizedBox(height: 14),
                             _buildSaveButton(),
                             const SizedBox(height: 12),
+                            _buildLanguageSettingTile(),
+                            const SizedBox(height: 12),
                             _buildLogoutButton(),
                           ],
                         ),
@@ -311,7 +316,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             ),
           ],
         ),
-        bottomNavigationBar: _buildBottomNav(),
+        bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.profile),
       ),
     );
   }
@@ -804,6 +809,87 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                 ),
               ),
       ),
+    );
+  }
+
+  Widget _buildLanguageSettingTile() {
+    return BlocBuilder<LanguageBloc, LanguageState>(
+      builder: (context, state) {
+        final currentLang = LanguageService.supportedLanguages.firstWhere(
+          (l) => l.code == state.languageCode,
+          orElse: () => LanguageService.supportedLanguages.first,
+        );
+        return GestureDetector(
+          onTap: () {
+            context.push('/choose-language', extra: {'fromSettings': true});
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF7E9F0),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '文A',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF7E2B58),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'App Language',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF221C20),
+                        ),
+                      ),
+                      Text(
+                        '${currentLang.nativeName} (${currentLang.englishName})',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF7E2B58),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -1,1266 +1,798 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:async';
-import 'dart:ui';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:guruji/app.dart';
-import 'package:guruji/features/auth/bloc/auth_bloc.dart';
-import 'package:myanmar_calendar_widget/myanmar_calendar.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:math' as math;
+import 'package:guruji/core/widgets/app_bottom_nav.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  static const double _ayodhyaLatitude = 26.7992;
-  static const double _ayodhyaLongitude = 82.2040;
-  static final Uri _ramLallaBhawanUrl = Uri.parse(
-    'https://ramlallabhawan.com/',
-  );
-  static final Uri _madhavBhawanUrl = Uri.parse('https://madhavbhawan.com/');
-  static const List<String> _bannerUrls = [
-    'https://jagadgurushridharacharyji.com/wp-content/uploads/2026/02/banner-2.jpg.jpeg',
-    'https://jagadgurushridharacharyji.com/wp-content/uploads/2026/01/Artboard-3.jpg-2.jpeg',
-    'https://jagadgurushridharacharyji.com/wp-content/uploads/2026/01/Artboard-2.jpg-3.jpeg',
-    'https://jagadgurushridharacharyji.com/wp-content/uploads/2026/02/Artboard-1.jpg.jpeg',
+class _HomeScreenState extends State<HomeScreen> {
+  String _selectedLocation = 'Vrindavan';
+  final List<String> _locations = [
+    'Vrindavan',
+    'Ayodhya',
+    'Varanasi',
+    'Haridwar',
+    'Mathura',
+    'New Delhi',
+    'Mumbai',
   ];
-
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  Timer? _autoPlayTimer;
-  late AnimationController _fadeController;
-  late Animation<double> _fadeAnimation;
-  final List<CarouselItem> _carouselItems = [
-    CarouselItem(
-      emoji: '🎨',
-      title: 'Draw to Jaap',
-      subtitle: 'ड्रॉ करके जाप का नया अनुभव करें 🙏',
-      hint: '(Games सेक्शन में देखें)',
-      accentColor: const Color(0xFF7C5CBF),
-    ),
-    CarouselItem(
-      emoji: '👨‍👩‍👧',
-      title: 'Family Jaap',
-      subtitle: 'परिवार के साथ जाप करें और एक साथ गिनें',
-      accentColor: const Color(0xFFE07C54),
-    ),
-    CarouselItem(
-      emoji: '🏆',
-      title: 'Daily Streak',
-      subtitle: 'हर दिन जाप करें और अपनी streak बनाएं',
-      accentColor: const Color(0xFF4A90D9),
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _fadeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    );
-    _fadeController.forward();
-    _startAutoPlay();
-    context.read<AuthBloc>().add(const GetProfileEvent());
-  }
-
-  void _startAutoPlay() {
-    _autoPlayTimer = Timer.periodic(const Duration(seconds: 4), (_) {
-      final next = (_currentPage + 1) % _bannerUrls.length;
-      _pageController.animateToPage(
-        next,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _autoPlayTimer?.cancel();
-    _pageController.dispose();
-    _fadeController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now();
+    const Color bgGradientStart = Color(0xFFFFFDFE);
+    const Color bgGradientEnd = Color(0xFFFBF4F7);
+    const Color primaryPlum = Color(0xFF7E2B58);
+    const Color charcoalText = Color(0xFF1F1A1D);
+    const Color subtitleColor = Color(0xFF6B5F66);
+    const Color mauveCard = Color(0xFFCE6590);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF6F4F9),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        toolbarHeight: 88,
-        titleSpacing: 16,
-        scrolledUnderElevation: 0,
-        title: Text(
-          'Guruji', // or your app name/logo
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: AppTheme.textPrimary,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: bgGradientEnd,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [bgGradientStart, bgGradientEnd],
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ─── Header: Today's Panchang & Location ───
+                  _buildHeader(primaryPlum),
+                  const SizedBox(height: 20),
+
+                  // ─── Hindu Date Title & Subtitle ───
+                  _buildDateSection(charcoalText, subtitleColor),
+                  const SizedBox(height: 24),
+
+                  // ─── 2x2 Grid (Tithi, Nakshatra, Yoga, Karana) ───
+                  _buildPanchangGrid(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 20),
+
+                  // ─── Auspicious Timing Card (Abhijit Muhurat) ───
+                  _buildAuspiciousTimingCard(mauveCard),
+                  const SizedBox(height: 20),
+
+                  // ─── Celestial Timings ───
+                  _buildCelestialTimingsCard(charcoalText, subtitleColor),
+                  const SizedBox(height: 20),
+
+                  // ─── Inauspicious Period (Rahu Kaal) ───
+                  _buildInauspiciousPeriodCard(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 24),
+
+                  // ─── Upcoming Festivals ───
+                  _buildUpcomingFestivals(primaryPlum, charcoalText, subtitleColor),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
           ),
         ),
-        // title: _buildHinduCalendarTitle(today),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Center(
-              child: BlocBuilder<AuthBloc, AuthState>(
-                buildWhen: (previous, current) =>
-                    current is ProfileLoading ||
-                    current is ProfileLoadSuccess ||
-                    current is ProfileUpdateSuccess ||
-                    current is AuthFailure,
-                builder: (context, state) => _buildProfileAvatar(state),
+        bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
+      ),
+    );
+  }
+
+  // ─── Header ────────────────────────────────────────────────────────────────
+  Widget _buildHeader(Color primaryPlum) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.calendar_month_outlined,
+              size: 24,
+              color: primaryPlum,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              "Today's Panchang",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'serif',
+                color: primaryPlum,
+                letterSpacing: -0.3,
               ),
+            ),
+          ],
+        ),
+        PopupMenuButton<String>(
+          onSelected: (loc) {
+            setState(() {
+              _selectedLocation = loc;
+            });
+          },
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          itemBuilder: (context) => _locations
+              .map(
+                (loc) => PopupMenuItem(
+                  value: loc,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 18,
+                        color: loc == _selectedLocation ? primaryPlum : Colors.grey,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        loc,
+                        style: TextStyle(
+                          fontWeight: loc == _selectedLocation
+                              ? FontWeight.w700
+                              : FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                size: 18,
+                color: Color(0xFF6B5F66),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                _selectedLocation,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF4A3E45),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── Date Section ──────────────────────────────────────────────────────────
+  Widget _buildDateSection(Color charcoalText, Color subtitleColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Margashirsha, Krishna Paksha',
+          style: TextStyle(
+            fontSize: 27,
+            fontWeight: FontWeight.w800,
+            fontFamily: 'serif',
+            color: charcoalText,
+            height: 1.2,
+            letterSpacing: -0.5,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'Tuesday, 14 Nov 2023',
+          style: TextStyle(
+            fontSize: 14.5,
+            fontWeight: FontWeight.w500,
+            color: subtitleColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─── 2x2 Panchang Grid ─────────────────────────────────────────────────────
+  Widget _buildPanchangGrid(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildPanchangCard(
+                icon: Icons.nightlight_round,
+                title: 'TITHI',
+                value: 'Pratipada',
+                endsAt: 'Ends at 02:36 PM',
+                charcoalText: charcoalText,
+                subtitleColor: subtitleColor,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: _buildPanchangCard(
+                icon: Icons.star_border_rounded,
+                title: 'NAKSHATRA',
+                value: 'Krittika',
+                endsAt: 'Ends at 04:12 AM (Next Day)',
+                charcoalText: charcoalText,
+                subtitleColor: subtitleColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: _buildPanchangCard(
+                icon: Icons.self_improvement_rounded,
+                title: 'YOGA',
+                value: 'Shiva',
+                endsAt: 'Ends at 09:15 AM',
+                charcoalText: charcoalText,
+                subtitleColor: subtitleColor,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: _buildPanchangCard(
+                icon: Icons.timelapse_rounded,
+                title: 'KARANA',
+                value: 'Bava',
+                endsAt: 'Ends at 02:36 PM',
+                charcoalText: charcoalText,
+                subtitleColor: subtitleColor,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPanchangCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required String endsAt,
+    required Color charcoalText,
+    required Color subtitleColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 16, color: const Color(0xFF6A5D64)),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF6A5D64),
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'serif',
+              color: charcoalText,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            endsAt,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: subtitleColor,
             ),
           ),
         ],
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(child: _buildCarousel()),
-              SliverToBoxAdapter(child: const SizedBox(height: 16)),
-              SliverToBoxAdapter(child: _buildHeader()),
-              SliverToBoxAdapter(child: const SizedBox(height: 18)),
-              SliverToBoxAdapter(child: _buildNaamJaapCard()),
-              SliverToBoxAdapter(child: const SizedBox(height: 20)),
-              SliverToBoxAdapter(child: _buildAmritVachanSection()),
-              SliverToBoxAdapter(child: const SizedBox(height: 20)),
-              SliverToBoxAdapter(child: _buildSectionHeader('Explore', '')),
-              SliverToBoxAdapter(child: const SizedBox(height: 10)),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverGrid.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.15,
-                  children: [
-                    ExploreItem(
-                      '🎮',
-                      'Hotel',
-                      'Book a staycation In Ayodhya',
-                      const Color(0xFFE3EEFF),
-                      const Color(0xFF4A7AE0),
-                    ),
-                    ExploreItem(
-                      '\u{1F46A}',
-                      'Family',
-                      'View your family tree',
-                      const Color(0xFFFFF4DE),
-                      const Color(0xFFD18C00),
-                    ),
-                    ExploreItem(
-                      '👨‍👩‍👧',
-                      'DashBoard',
-                      'Personal Information',
-                      const Color(0xFFFFEDE8),
-                      const Color(0xFFE05A30),
-                    ),
-                    ExploreItem(
-                      '🖼',
-                      'LeaderBoard',
-                      'Divine Collection',
-                      const Color(0xFFE8F9F0),
-                      const Color(0xFF2DAA6E),
-                    ),
-                    ExploreItem(
-                      '🎵',
-                      'Donate',
-                      'Support for Humanity',
-                      const Color(0xFFF0E8FF),
-                      const Color(0xFF8B5CF6),
-                    ),
-                    ExploreItem(
-                      '🎵',
-                      'Jaap',
-                      'Support for Humanity',
-                      const Color(0xFFF0E8FF),
-                      const Color(0xFF8B5CF6),
-                    ),
-                  ].map(_buildExploreCard).toList(),
+    );
+  }
+
+  // ─── Auspicious Timing Card ────────────────────────────────────────────────
+  Widget _buildAuspiciousTimingCard(Color mauveCard) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: mauveCard,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: mauveCard.withOpacity(0.35),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.wb_sunny_outlined,
+                size: 16,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'AUSPICIOUS TIMING',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white.withOpacity(0.9),
+                  letterSpacing: 0.8,
                 ),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 90)),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: _buildBottomNav(),
-    );
-  }
-
-  // ── Header ─────────────────────────────────────────────────
-  Widget _buildHinduCalendarTitle(DateTime today) {
-    return SizedBox(
-      width: 240,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: ColoredBox(
-          color: Colors.white.withOpacity(0.14),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: HinduCalendarWidget(
-              year: today.year,
-              month: today.month,
-              day: today.day,
-              compact: true,
-              latitude: _ayodhyaLatitude,
-              longitude: _ayodhyaLongitude,
-              fontSize: 12,
+          const SizedBox(height: 8),
+          const Text(
+            'Abhijit Muhurat',
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'serif',
+              color: Colors.white,
+              letterSpacing: -0.5,
             ),
           ),
-        ),
+          const SizedBox(height: 14),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.22),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.access_time_rounded,
+                  size: 20,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '11:45 AM - 12:28 PM',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Ideal for important new beginnings',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildHeader() {
-    final today = DateTime.now();
+  // ─── Celestial Timings Card ────────────────────────────────────────────────
+  Widget _buildCelestialTimingsCard(Color charcoalText, Color subtitleColor) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'CELESTIAL TIMINGS',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF6A5D64),
+              letterSpacing: 0.8,
+            ),
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: _buildCelestialItem(
+                  icon: Icons.wb_twilight_rounded,
+                  label: 'Sunrise',
+                  time: '06:42 AM',
+                  bgColor: const Color(0xFFFBEBF1),
+                  iconColor: const Color(0xFF9E3A6B),
+                  charcoalText: charcoalText,
+                  subtitleColor: subtitleColor,
+                ),
+              ),
+              Expanded(
+                child: _buildCelestialItem(
+                  icon: Icons.wb_sunny_rounded,
+                  label: 'Sunset',
+                  time: '05:28 PM',
+                  bgColor: const Color(0xFFF1EFF1),
+                  iconColor: const Color(0xFF6B5F66),
+                  charcoalText: charcoalText,
+                  subtitleColor: subtitleColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildCelestialItem(
+                  icon: Icons.nightlight_round,
+                  label: 'Moonrise',
+                  time: '07:15 AM',
+                  bgColor: const Color(0xFFFBEBF1),
+                  iconColor: const Color(0xFF9E3A6B),
+                  charcoalText: charcoalText,
+                  subtitleColor: subtitleColor,
+                ),
+              ),
+              Expanded(
+                child: _buildCelestialItem(
+                  icon: Icons.bedtime_outlined,
+                  label: 'Moonset',
+                  time: '06:05 PM',
+                  bgColor: const Color(0xFFF5EFEA),
+                  iconColor: const Color(0xFF8A6B52),
+                  charcoalText: charcoalText,
+                  subtitleColor: subtitleColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-    // ── Get live Panchanga data from the package ───────────────
-    final Map<String, dynamic> calculation =
-        HinduCalculationEngine.calculateHinduDate(
-          today.year,
-          today.month,
-          today.day,
-          latitude: _ayodhyaLatitude,
-          longitude: _ayodhyaLongitude,
-        );
-    final PancangaDate p = PancangaDate.fromCalculation(calculation);
-
-    // ── Gregorian helpers (no hardcoding) ──────────────────────
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const dayNames = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
-
-    // Moon phase: elongation 0–360 → 0.0–1.0
-    double elongation = (p.moonLongitude - p.sunLongitude) % 360;
-    if (elongation < 0) elongation += 360;
-    final double moonPhase = elongation / 360.0;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 236, 135, 19),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+  Widget _buildCelestialItem({
+    required IconData icon,
+    required String label,
+    required String time,
+    required Color bgColor,
+    required Color iconColor,
+    required Color charcoalText,
+    required Color subtitleColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: bgColor,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, size: 20, color: iconColor),
+        ),
+        const SizedBox(width: 12),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+                color: subtitleColor,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              time,
+              style: TextStyle(
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+                color: charcoalText,
+              ),
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+      ],
+    );
+  }
+
+  // ─── Inauspicious Period Card (Rahu Kaal) ───────────────────────────────────
+  Widget _buildInauspiciousPeriodCard(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFDF4F6),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFFF7E2E8), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              // ── Top row ────────────────────────────────────────
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 16,
+                color: primaryPlum,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'INAUSPICIOUS PERIOD',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: primaryPlum,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Moon phase painter
-                  CustomPaint(
-                    size: const Size(52, 52),
-                    painter: _MoonPhasePainter(moonPhase),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  // Tithi / Paksha / Samvat
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '${p.tithiNumber}, ${p.lunarMonth}',
-                          style: const TextStyle(
-                            color: Color(0xFFE8C84A),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          '${p.paksha}, ${p.tithiName}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${p.hinduYear} Vikrama Samvata',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                  Container(
+                    width: 3,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: primaryPlum,
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-
-                  // Gregorian date (right side)
+                  const SizedBox(width: 12),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${today.day}',
-                        style: const TextStyle(
-                          color: Color(0xFFE8C84A),
-                          fontSize: 38,
-                          fontWeight: FontWeight.w800,
-                          height: 1.0,
+                        'Rahu Kaal',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'serif',
+                          color: charcoalText,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${monthNames[today.month - 1]} ${today.year}',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        'Avoid starting important tasks',
+                        style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 1),
-                      Text(
-                        dayNames[today.weekday - 1],
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 11.5,
+                          fontWeight: FontWeight.w400,
+                          color: subtitleColor,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-
-              const SizedBox(height: 10),
-
-              // ── Location ───────────────────────────────────────
-              // const Text(
-              //   'Ayodhya, India',
-              //   style: TextStyle(
-              //     color: Colors.white70,
-              //     fontSize: 11.5,
-              //     fontWeight: FontWeight.w500,
-              //   ),
-              // ),
-
-              // ── Festival / special day ─────────────────────────
-              // varaName = weekday, rituName = season; show nakshatra as festival line
-              if (p.nakshatraName.isNotEmpty) ...[
-                const Divider(
-                  color: Colors.white24,
-                  height: 16,
-                  thickness: 0.5,
+              Text(
+                '03:00 PM -\n04:30 PM',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: charcoalText,
+                  height: 1.25,
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${p.nakshatraName} Nakshatra · ${p.rituName}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── Upcoming Festivals ────────────────────────────────────────────────────
+  Widget _buildUpcomingFestivals(
+    Color primaryPlum,
+    Color charcoalText,
+    Color subtitleColor,
+  ) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'UPCOMING FESTIVALS',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF6A5D64),
+                letterSpacing: 0.8,
+              ),
+            ),
+            TextButton(
+              onPressed: () => context.push('/events'),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(50, 30),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: primaryPlum,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildFestivalCard(
+                badge: 'TOMORROW',
+                hasIcon: true,
+                title: 'Govardhan Puja',
+                subtitle: 'Kartik Shukla Pratipada',
+                charcoalText: charcoalText,
+                subtitleColor: subtitleColor,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: _buildFestivalCard(
+                badge: 'IN 3 DAYS',
+                hasIcon: false,
+                title: 'Bhai Dooj',
+                subtitle: 'Kartik Shukla Dwitiya',
+                charcoalText: charcoalText,
+                subtitleColor: subtitleColor,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFestivalCard({
+    required String badge,
+    required bool hasIcon,
+    required String title,
+    required String subtitle,
+    required Color charcoalText,
+    required Color subtitleColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFBEBF1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  badge,
+                  style: const TextStyle(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF8A305D),
+                    letterSpacing: 0.5,
                   ),
+                ),
+              ),
+              if (hasIcon) ...[
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.celebration_outlined,
+                  size: 16,
+                  color: Color(0xFF8A305D),
                 ),
               ],
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAvatarButton() {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.primaryColor, AppTheme.primaryDark],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryColor.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      alignment: Alignment.center,
-      child: const Text('🕉', style: TextStyle(fontSize: 18)),
-    );
-  }
-
-  // ── Carousel ──────────────────────────────────────────────
-  Widget _buildProfileAvatar(AuthState state) {
-    final profileImageUrl = _profileImageUrlFromState(state);
-
-    return GestureDetector(
-      onTap: () => context.push('/profile'),
-      child: Container(
-        width: 40,
-        height: 40,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          gradient: profileImageUrl == null
-              ? const LinearGradient(
-                  colors: [AppTheme.primaryColor, AppTheme.primaryDark],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : null,
-          color: profileImageUrl == null ? null : Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: profileImageUrl == null
-            ? const Icon(Icons.person, color: Colors.white, size: 22)
-            : Image.network(
-                profileImageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) =>
-                    const Icon(Icons.person, color: Colors.white, size: 22),
-              ),
-      ),
-    );
-  }
-
-  String? _profileImageUrlFromState(AuthState state) {
-    if (state is ProfileLoadSuccess) {
-      return _normalizeProfileImageUrl(state.profile.profileImage);
-    }
-    if (state is ProfileUpdateSuccess) {
-      return _normalizeProfileImageUrl(state.profile.profileImage);
-    }
-    return null;
-  }
-
-  String? _normalizeProfileImageUrl(String? imageUrl) {
-    final trimmed = imageUrl?.trim();
-    if (trimmed == null || trimmed.isEmpty) {
-      return null;
-    }
-    return trimmed;
-  }
-
-  Widget _buildCarousel() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 195,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _bannerUrls.length,
-              onPageChanged: (i) => setState(() => _currentPage = i),
-              itemBuilder: (_, i) => _buildCarouselSlide(_bannerUrls[i], i),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(_bannerUrls.length, _buildDot),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCarouselSlide(String imageUrl, int index) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: EdgeInsets.only(right: index != _bannerUrls.length - 1 ? 8 : 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: ColoredBox(
-                color: const Color(0xFFF3E5C8),
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.fill,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-
-                    final expectedBytes = loadingProgress.expectedTotalBytes;
-                    final progress = expectedBytes == null
-                        ? null
-                        : loadingProgress.cumulativeBytesLoaded / expectedBytes;
-
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: progress,
-                        color: AppTheme.primaryDark,
-                      ),
-                    );
-                  },
-                  errorBuilder: (_, __, ___) => Center(
-                    child: Text(
-                      'Banner unavailable',
-                      style: TextStyle(
-                        color: AppTheme.primaryDark,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.06),
-                      Colors.black.withOpacity(0.18),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDot(int index) {
-    final isActive = index == _currentPage;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 3),
-      width: isActive ? 22 : 6,
-      height: 6,
-      decoration: BoxDecoration(
-        color: isActive
-            ? AppTheme.primaryColor
-            : AppTheme.primaryColor.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(3),
-      ),
-    );
-  }
-
-  // ── Naam Jaap Card ─────────────────────────────────────────
-  Widget _buildNaamJaapCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap: () => context.go('/naam-jaap'),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.12),
-                blurRadius: 20,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppTheme.primaryColor, AppTheme.primaryDark],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.primaryColor.withOpacity(0.35),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: const Text('🕉', style: TextStyle(fontSize: 24)),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Naam Jaap',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textPrimary,
-                        letterSpacing: -0.2,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      'Start your daily chant',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppTheme.textPrimary.withOpacity(0.5),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.play_arrow_rounded,
-                  color: AppTheme.primaryColor,
-                  size: 20,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAmritVachanSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap: () => context.go('/amrit-vachan'),
-        child: Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFFFFE2A8), Color(0xFFFFF1D2)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.16),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.auto_stories_rounded,
-                  color: AppTheme.primaryDark,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Amrit-Vachan',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'View today\'s post and all uploaded vachan cards',
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        color: AppTheme.textPrimary.withOpacity(0.7),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.arrow_forward_rounded,
-                  color: AppTheme.primaryDark,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── Section Header ─────────────────────────────────────────
-  Widget _buildSectionHeader(String title, String action) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+          const SizedBox(height: 12),
           Text(
             title,
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: AppTheme.textPrimary,
-              letterSpacing: -0.3,
+              fontSize: 16.5,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'serif',
+              color: charcoalText,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              action,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.primaryColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ── Explore Card ───────────────────────────────────────────
-  Widget _buildExploreCard(ExploreItem item) {
-    return GestureDetector(
-      onTap: () => _handleExploreTap(item),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: item.accentColor.withOpacity(0.08),
-              blurRadius: 14,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: item.iconBg,
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    item.resolvedEmoji,
-                    style: const TextStyle(fontSize: 21),
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_outward_rounded,
-                  size: 16,
-                  color: item.accentColor.withOpacity(0.6),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Text(
-              item.title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-                color: AppTheme.textPrimary,
-                letterSpacing: -0.2,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              item.subtitle,
-              style: TextStyle(
-                fontSize: 10.5,
-                fontWeight: FontWeight.w600,
-                color: item.accentColor.withOpacity(0.7),
-                letterSpacing: 0.3,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _handleExploreTap(ExploreItem item) {
-    if (item.title == 'Hotel') {
-      _showHotelWebsiteOptions();
-      return;
-    }
-
-    if (item.title == 'LeaderBoard') {
-      context.go('/leaderboard');
-      return;
-    }
-
-    if (item.title == 'Jaap') {
-      context.go('/naam-jaap');
-      return;
-    }
-
-    if (item.title == 'Family') {
-      context.go('/family');
-    }
-  }
-
-  Future<void> _showHotelWebsiteOptions() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 44,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  'Choose Hotel',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Open the hotel website you want to explore.',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppTheme.textPrimary.withOpacity(0.6),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _buildHotelWebsiteButton(
-                  label: 'Ramlalla Bhawan',
-                  // subtitle: 'ramlallabhawan.com',
-                  accentColor: const Color(0xFF4A7AE0),
-                  onTap: () => _openHotelWebsite(_ramLallaBhawanUrl),
-                ),
-                const SizedBox(height: 12),
-                _buildHotelWebsiteButton(
-                  label: 'Madhav Bhawan',
-                  // subtitle: 'madhavbhawan.com',
-                  accentColor: const Color(0xFFE05A30),
-                  onTap: () => _openHotelWebsite(_madhavBhawanUrl),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildHotelWebsiteButton({
-    required String label,
-    String? subtitle,
-    required Color accentColor,
-    required VoidCallback onTap,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: accentColor,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          elevation: 0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 4),
-            // Text(
-            //   subtitle!,
-            //   style: TextStyle(
-            //     fontSize: 12,
-            //     color: Colors.white.withOpacity(0.85),
-            //     fontWeight: FontWeight.w500,
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _openHotelWebsite(Uri url) async {
-    Navigator.of(context).pop();
-
-    final launched = await launchUrl(url, mode: LaunchMode.inAppBrowserView);
-    if (!launched && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to open the hotel website.')),
-      );
-    }
-  }
-
-  // ── Bottom Nav ─────────────────────────────────────────────
-  Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.07),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(Icons.home_rounded, 'Home', true, null),
-              _navItem(
-                Icons.event_rounded,
-                'Events',
-                false,
-                () => context.go('/events'),
-              ),
-              _navItem(
-                Icons.play_circle_fill_rounded,
-                'Shorts',
-                false,
-                () => context.go('/shorts'),
-              ),
-              _navItem(
-                Icons.video_library_rounded,
-                'Videos',
-                false,
-                () => context.go('/videos'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navItem(
-    IconData icon,
-    String label,
-    bool isActive,
-    VoidCallback? onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: isActive ? Colors.deepPurple.shade100 : Colors.transparent,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(
-              icon,
-              color: isActive
-                  ? Colors.deepPurple.shade600
-                  : Colors.grey.shade400,
-              size: 22,
-            ),
-          ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
-            label,
+            subtitle,
             style: TextStyle(
-              fontSize: 10,
-              color: isActive
-                  ? Colors.deepPurple.shade600
-                  : Colors.grey.shade400,
-              fontWeight: isActive ? FontWeight.w700 : FontWeight.normal,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: subtitleColor,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
     );
   }
-
-  Widget _navCenterButton() {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: 54,
-        height: 54,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppTheme.primaryColor, AppTheme.primaryDark],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.45),
-              blurRadius: 14,
-              spreadRadius: 1,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
-      ),
-    );
-  }
-}
-
-// ── Data models ────────────────────────────────────────────────
-class CarouselItem {
-  final String emoji;
-  final String title;
-  final String subtitle;
-  final String? hint;
-  final Color? accentColor;
-
-  CarouselItem({
-    required this.emoji,
-    required this.title,
-    required this.subtitle,
-    this.hint,
-    this.accentColor,
-  });
-}
-
-class ExploreItem {
-  final String emoji;
-  final String title;
-  final String subtitle;
-  final Color iconBg;
-  final Color accentColor;
-
-  ExploreItem(
-    this.emoji,
-    this.title,
-    this.subtitle,
-    this.iconBg,
-    this.accentColor,
-  );
-
-  String get resolvedEmoji {
-    switch (title) {
-      case 'Hotel':
-        return '\u{1F3E8}';
-      case 'DashBoard':
-        return '\u{1F4CA}';
-      case 'Family':
-        return '\u{1F46A}';
-      case 'LeaderBoard':
-        return '\u{1F3C6}';
-      case 'Donate':
-        return '\u{1F91D}';
-      case 'Jaap':
-        return '\u{1F64F}';
-      default:
-        return emoji;
-    }
-  }
-
-  String get displayEmoji {
-    switch (title) {
-      case 'Hotel':
-        return '🏨';
-      case 'DashBoard':
-        return '📊';
-      case 'LeaderBoard':
-        return '🏆';
-      case 'Donate':
-        return '🤝';
-      default:
-        return emoji;
-    }
-  }
-}
-
-class _MoonPhasePainter extends CustomPainter {
-  final double phase; // 0.0 = new moon → 0.5 = full moon → 1.0 = new moon
-
-  const _MoonPhasePainter(this.phase);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final r = size.width / 2;
-    final center = Offset(r, r);
-
-    // Dark background
-    canvas.drawCircle(center, r, Paint()..color = const Color(0xFF1A1A2E));
-
-    final litPaint = Paint()..color = const Color.fromARGB(255, 250, 247, 239);
-    final darkPaint = Paint()..color = const Color.fromARGB(255, 5, 5, 8);
-
-    // Draw lit half based on phase
-    final deg = phase * 360;
-    if (deg < 180) {
-      // Waxing: right half lit
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: r),
-        -math.pi / 2,
-        math.pi,
-        false,
-        litPaint,
-      );
-      // Overlay ellipse to shape waxing crescent→gibbous
-      final scaleX = math.cos(deg * math.pi / 180);
-      canvas.drawOval(
-        Rect.fromCenter(
-          center: center,
-          width: r * 2 * scaleX.abs(),
-          height: r * 2,
-        ),
-        deg < 90 ? darkPaint : litPaint,
-      );
-    } else {
-      // Waning: left half lit
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: r),
-        math.pi / 2,
-        math.pi,
-        false,
-        litPaint,
-      );
-      final scaleX = math.cos(deg * math.pi / 180);
-      canvas.drawOval(
-        Rect.fromCenter(
-          center: center,
-          width: r * 2 * scaleX.abs(),
-          height: r * 2,
-        ),
-        deg < 270 ? litPaint : darkPaint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_MoonPhasePainter old) => old.phase != phase;
 }

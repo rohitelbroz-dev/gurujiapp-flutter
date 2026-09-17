@@ -12,6 +12,7 @@ import 'package:guruji/features/events/bloc/events_bloc.dart';
 import 'package:guruji/features/events/data/events_repository.dart';
 import 'package:guruji/features/family/bloc/family_bloc.dart';
 import 'package:guruji/features/family/data/family_repository.dart';
+import 'package:guruji/features/language/bloc/language_bloc.dart';
 import 'package:guruji/features/naam_jaap/bloc/naam_jaap_bloc.dart';
 import 'package:guruji/features/naam_jaap/data/naam_jaap_repository.dart';
 import 'package:guruji/features/videos/bloc/videos_bloc.dart';
@@ -52,6 +53,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) => LanguageBloc()..add(const LoadLanguageEvent()),
+        ),
         BlocProvider(create: (_) => AuthBloc(authRepository: AuthRepository())),
         BlocProvider(
           create: (_) => AmritVachanBloc(
@@ -72,13 +76,19 @@ class MyApp extends StatelessWidget {
           create: (_) => VideosBloc(videosRepository: VideosRepository()),
         ),
       ],
-      child: MaterialApp.router(
-        title: 'Guruji',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
+      child: BlocBuilder<LanguageBloc, LanguageState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'Hari Path',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF7E2B58)),
+              fontFamily: 'sans-serif',
+              useMaterial3: true,
+            ),
+            debugShowCheckedModeBanner: false,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }
