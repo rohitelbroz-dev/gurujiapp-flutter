@@ -27,20 +27,14 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
   }
 
   Future<void> _loadStats() async {
-    setState(() => _isLoading = true);
     try {
       final res = await _repository.fetchStats();
       if (mounted) {
         setState(() {
           _statsData = res;
-          _isLoading = false;
         });
       }
-    } catch (_) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
+    } catch (_) {}
   }
 
   @override
