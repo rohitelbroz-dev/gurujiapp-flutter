@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/core/localization/app_strings.dart';
+import 'package:guruji/core/localization/data_localization_helper.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 
 class AudioLibraryScreen extends StatefulWidget {
@@ -182,19 +183,19 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildDeityItem(
-                        title: 'Ram',
+                        title: context.trData('Ram'),
                         imagePath: 'assets/images/ram_divine.jpg',
                         charcoalText: charcoalText,
                         onTap: () => setState(() => _selectedDeity = 'Ram'),
                       ),
                       _buildDeityItem(
-                        title: 'Krishna',
+                        title: context.trData('Krishna'),
                         imagePath: 'assets/images/krishna_divine.jpg',
                         charcoalText: charcoalText,
                         onTap: () => setState(() => _selectedDeity = 'Krishna'),
                       ),
                       _buildDeityItem(
-                        title: 'Shiva',
+                        title: context.trData('Shiva'),
                         imagePath: 'assets/images/shiva_divine.jpg',
                         charcoalText: charcoalText,
                         onTap: () => setState(() => _selectedDeity = 'Shiva'),
@@ -366,7 +367,7 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item['title'] as String,
+                    context.trData(item['title'] as String),
                     style: TextStyle(
                       fontSize: 17.5,
                       fontWeight: FontWeight.w700,
@@ -384,7 +385,7 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        item['duration'] as String,
+                        context.trData(item['duration'] as String),
                         style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w400,

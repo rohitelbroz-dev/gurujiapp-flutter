@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.panchang),
+        bottomNavigationBar: const AppBottomNav(currentTab: AppNavTab.home),
       ),
     );
   }
@@ -120,26 +120,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Icon(
-              Icons.calendar_month_outlined,
-              size: 24,
-              color: primaryPlum,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              context.tr('todayAuspicious'),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'serif',
+        Expanded(
+          child: Row(
+            children: [
+              Icon(
+                Icons.calendar_month_outlined,
+                size: 22,
                 color: primaryPlum,
-                letterSpacing: -0.3,
               ),
-            ),
-          ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  context.tr('todayAuspicious'),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'serif',
+                    color: primaryPlum,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(width: 8),
         PopupMenuButton<String>(
           onSelected: (loc) {
             setState(() {
@@ -202,9 +209,9 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Margashirsha, Krishna Paksha',
+          context.tr('panchangDateHeader'),
           style: TextStyle(
-            fontSize: 27,
+            fontSize: 26,
             fontWeight: FontWeight.w800,
             fontFamily: 'serif',
             color: charcoalText,
@@ -214,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 6),
         Text(
-          'Tuesday, 14 Nov 2023',
+          context.tr('panchangGregorianDate'),
           style: TextStyle(
             fontSize: 14.5,
             fontWeight: FontWeight.w500,
@@ -238,9 +245,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildPanchangCard(
                 icon: Icons.nightlight_round,
-                title: 'TITHI',
-                value: 'Pratipada',
-                endsAt: 'Ends at 02:36 PM',
+                title: context.tr('tithi'),
+                value: context.tr('tithiVal'),
+                endsAt: context.tr('tithiEndsAt'),
                 charcoalText: charcoalText,
                 subtitleColor: subtitleColor,
               ),
@@ -249,9 +256,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildPanchangCard(
                 icon: Icons.star_border_rounded,
-                title: 'NAKSHATRA',
-                value: 'Krittika',
-                endsAt: 'Ends at 04:12 AM (Next Day)',
+                title: context.tr('nakshatra'),
+                value: context.tr('nakshatraVal'),
+                endsAt: context.tr('nakshatraEndsAt'),
                 charcoalText: charcoalText,
                 subtitleColor: subtitleColor,
               ),
@@ -264,9 +271,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildPanchangCard(
                 icon: Icons.self_improvement_rounded,
-                title: 'YOGA',
-                value: 'Shiva',
-                endsAt: 'Ends at 09:15 AM',
+                title: context.tr('yoga'),
+                value: context.tr('yogaVal'),
+                endsAt: context.tr('yogaEndsAt'),
                 charcoalText: charcoalText,
                 subtitleColor: subtitleColor,
               ),
@@ -275,9 +282,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _buildPanchangCard(
                 icon: Icons.timelapse_rounded,
-                title: 'KARANA',
-                value: 'Bava',
-                endsAt: 'Ends at 02:36 PM',
+                title: context.tr('karana'),
+                value: context.tr('karanaVal'),
+                endsAt: context.tr('karanaEndsAt'),
                 charcoalText: charcoalText,
                 subtitleColor: subtitleColor,
               ),
@@ -379,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(width: 6),
               Text(
-                'AUSPICIOUS TIMING',
+                context.tr('auspiciousTiming').toUpperCase(),
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
@@ -390,9 +397,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Abhijit Muhurat',
-            style: TextStyle(
+          Text(
+            context.tr('abhijitMuhurat'),
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w800,
               fontFamily: 'serif',
@@ -739,7 +746,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: _buildFestivalCard(
-                badge: 'TOMORROW',
+                badge: context.tr('festTomorrow'),
                 hasIcon: true,
                 title: 'Govardhan Puja',
                 subtitle: 'Kartik Shukla Pratipada',
@@ -750,10 +757,10 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: _buildFestivalCard(
-                badge: 'IN 3 DAYS',
+                badge: context.tr('festIn3Days'),
                 hasIcon: false,
-                title: 'Bhai Dooj',
-                subtitle: 'Kartik Shukla Dwitiya',
+                title: context.tr('fest2Title'),
+                subtitle: context.tr('fest2Sub'),
                 charcoalText: charcoalText,
                 subtitleColor: subtitleColor,
               ),
@@ -1412,10 +1419,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: const Color(0xFFEBF7F2),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       Text(
-                        'NOV',
+                        context.tr('featuredEventMonth'),
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
@@ -1423,7 +1430,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Text(
-                        '27',
+                        context.tr('featuredEventDate'),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
@@ -1439,7 +1446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Kartik Purnima Mahotsav',
+                        context.tr('featuredEventTitle'),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -1451,11 +1458,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Icon(Icons.location_on_outlined, size: 13, color: subtitleColor),
                           const SizedBox(width: 3),
-                          Text(
-                            'Shri Dham Vrindavan • Live Darshan',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: subtitleColor,
+                          Expanded(
+                            child: Text(
+                              context.tr('featuredEventLocation'),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: subtitleColor,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -1557,6 +1568,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         context.tr('familyTree'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -1566,6 +1579,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 3),
                       Text(
                         context.tr('familyDesc'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.5,
                           color: subtitleColor,
@@ -1574,20 +1589,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF764BB2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    context.tr('familyTree'),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
+const SizedBox(width: 8),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: Color(0xFF764BB2),
                 ),
               ],
             ),

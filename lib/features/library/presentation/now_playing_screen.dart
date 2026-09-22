@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/core/localization/app_strings.dart';
+import 'package:guruji/core/localization/data_localization_helper.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   final Map<String, dynamic> audioData;
@@ -170,7 +171,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
 
                         // ─── Title & Subtitle ───
                         Text(
-                          title,
+                          context.trData(title),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 32,
@@ -182,7 +183,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          author,
+                          context.trData(author),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 15,

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/services/user_persistence_service.dart';
 
-enum AppNavTab { jaap, library, panchang, profile }
+enum AppNavTab { home, jaap, library, profile, panchang }
 
 class AppBottomNav extends StatelessWidget {
   final AppNavTab currentTab;
@@ -18,6 +18,8 @@ class AppBottomNav extends StatelessWidget {
     const Color activePillBg = Color(0xFFFBE4DC);
     const Color activeTextColor = Color(0xFF2E2428);
     const Color inactiveColor = Color(0xFF8A8287);
+
+    final bool isHomeActive = currentTab == AppNavTab.home || currentTab == AppNavTab.panchang;
 
     return Container(
       decoration: BoxDecoration(
@@ -37,9 +39,21 @@ class AppBottomNav extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              // 1. Home tab at first place
               _buildNavItem(
                 context: context,
-                tab: AppNavTab.jaap,
+                isActive: isHomeActive,
+                icon: Icons.home_rounded,
+                label: context.tr('navHome'),
+                onTap: () => context.go('/home'),
+                activePillBg: activePillBg,
+                activeTextColor: activeTextColor,
+                inactiveColor: inactiveColor,
+              ),
+              // 2. Naam Jaap
+              _buildNavItem(
+                context: context,
+                isActive: currentTab == AppNavTab.jaap,
                 icon: Icons.filter_1_rounded,
                 label: context.tr('navJaap'),
                 onTap: () async {
@@ -55,9 +69,10 @@ class AppBottomNav extends StatelessWidget {
                 activeTextColor: activeTextColor,
                 inactiveColor: inactiveColor,
               ),
+              // 3. Library
               _buildNavItem(
                 context: context,
-                tab: AppNavTab.library,
+                isActive: currentTab == AppNavTab.library,
                 icon: Icons.menu_book_rounded,
                 label: context.tr('navLibrary'),
                 onTap: () => context.go('/library'),
@@ -65,19 +80,10 @@ class AppBottomNav extends StatelessWidget {
                 activeTextColor: activeTextColor,
                 inactiveColor: inactiveColor,
               ),
+              // 4. Profile
               _buildNavItem(
                 context: context,
-                tab: AppNavTab.panchang,
-                icon: Icons.calendar_month_outlined,
-                label: context.tr('navPanchang'),
-                onTap: () => context.go('/home'),
-                activePillBg: activePillBg,
-                activeTextColor: activeTextColor,
-                inactiveColor: inactiveColor,
-              ),
-              _buildNavItem(
-                context: context,
-                tab: AppNavTab.profile,
+                isActive: currentTab == AppNavTab.profile,
                 icon: Icons.person_outline_rounded,
                 label: context.tr('navProfile'),
                 onTap: () => context.go('/profile'),
@@ -94,7 +100,7 @@ class AppBottomNav extends StatelessWidget {
 
   Widget _buildNavItem({
     required BuildContext context,
-    required AppNavTab tab,
+    required bool isActive,
     required IconData icon,
     required String label,
     required VoidCallback onTap,
@@ -102,8 +108,6 @@ class AppBottomNav extends StatelessWidget {
     required Color activeTextColor,
     required Color inactiveColor,
   }) {
-    final isActive = currentTab == tab;
-
     return GestureDetector(
       onTap: () {
         if (!isActive) {

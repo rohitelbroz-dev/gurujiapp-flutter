@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/core/localization/app_strings.dart';
+import 'package:guruji/core/localization/data_localization_helper.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
 import 'package:guruji/features/family/bloc/family_bloc.dart';
 import 'package:guruji/features/family/models/family_member.dart';
@@ -114,8 +115,8 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   const SizedBox(height: 16),
                   _FamilyStatsRow(rootMember: familyTree),
                   const SizedBox(height: 22),
-                  const Text(
-                    'Family Hierarchy Tree',
+                  Text(
+                    context.tr('familyHierarchyTree'),
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 18,
@@ -190,7 +191,7 @@ class _FamilyHeroCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    rootMember.relationLabel,
+                    context.trData(rootMember.relationLabel),
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -238,7 +239,7 @@ class _FamilyStatsRow extends StatelessWidget {
       children: [
         Expanded(
           child: _StatCard(
-            label: 'Members',
+            label: context.tr('membersUnit'),
             value: '$totalMembers',
             icon: Icons.group_rounded,
             color: const Color(0xFF7E2B58),
@@ -248,7 +249,7 @@ class _FamilyStatsRow extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: _StatCard(
-            label: 'Children',
+            label: context.tr('childrenUnit'),
             value: '$childrenCount',
             icon: Icons.family_restroom_rounded,
             color: const Color(0xFFC86134),
@@ -258,7 +259,7 @@ class _FamilyStatsRow extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: _StatCard(
-            label: 'Relations',
+            label: context.tr('relationsUnit'),
             value: '$connectionCount',
             icon: Icons.hub_rounded,
             color: const Color(0xFF2E8A68),
@@ -413,20 +414,20 @@ class _FamilyMemberTile extends StatelessWidget {
           ),
           children: [
             if (member.children.isEmpty && member.connections.isEmpty)
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(
-                    'No direct sub-branches found.',
+                    context.tr('noSubBranches'),
                     style: TextStyle(fontSize: 12, color: Color(0xFF6B5F66)),
                   ),
                 ),
               ),
             if (member.children.isNotEmpty) ...[
-              const _SectionLabel(
+              _SectionLabel(
                 icon: Icons.account_tree_outlined,
-                label: 'Direct Lineage (Children)',
+                label: context.tr('directLineage'),
               ),
               const SizedBox(height: 10),
               ...member.children.map(
@@ -435,9 +436,9 @@ class _FamilyMemberTile extends StatelessWidget {
             ],
             if (member.connections.isNotEmpty) ...[
               const SizedBox(height: 8),
-              const _SectionLabel(
+              _SectionLabel(
                 icon: Icons.hub_outlined,
-                label: 'Connected Relatives',
+                label: context.tr('connectedRelatives'),
               ),
               const SizedBox(height: 10),
               ...member.connections.map(
@@ -592,8 +593,8 @@ class _FamilyErrorView extends StatelessWidget {
               color: primaryPlum,
             ),
             const SizedBox(height: 14),
-            const Text(
-              'Unable to load family circle',
+            Text(
+              context.tr('unableToLoadFamily'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
@@ -614,7 +615,7 @@ class _FamilyErrorView extends StatelessWidget {
                 backgroundColor: primaryPlum,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Retry'),
+              child: Text(context.tr('retry')),
             ),
           ],
         ),

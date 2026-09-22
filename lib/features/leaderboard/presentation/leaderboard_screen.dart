@@ -120,17 +120,22 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'All Sadhak Rankings',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: 'serif',
-                        color: charcoalText,
+                    Expanded(
+                      child: Text(
+                        context.tr('allSadhakRankings'),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'serif',
+                          color: charcoalText,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    const SizedBox(width: 8),
                     Text(
-                      '${response.totalUsers} Active Sadhaks',
+                      '${response.totalUsers} ${context.tr('activeSadhaks')}',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -197,7 +202,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${response.timeframe.toUpperCase()} TOP SADHAK',
+                  context.tr('topSadhakHero').toUpperCase(),
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
@@ -216,7 +221,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${topUser.totalJaps} jaap • ${topUser.totalMalas} malas',
+                  '${topUser.totalJaps} ${context.tr('jaapUnit')} • ${topUser.totalMalas} ${context.tr('malasUnit')}',
                   style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
@@ -234,8 +239,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             ),
             child: Column(
               children: [
-                const Text(
-                  'RANK',
+                Text(
+                  context.tr('rank'),
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w800,
