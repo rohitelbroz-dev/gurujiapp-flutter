@@ -7,7 +7,7 @@ class AppStrings {
     'hi': {
       // General & Common
       'hariPath': 'हरि पाठ',
-      'getStarted': 'शुरू करें',
+      'getStarted': 'आगे बढ़ें',
       'next': 'आगे बढ़ें',
       'skip': 'छोड़ें',
       'edit': 'संपादित करें',
@@ -18,80 +18,71 @@ class AppStrings {
       'refresh': 'रिफ्रेश करें',
       'loading': 'लोड हो रहा है...',
       'save': 'सहेजें',
-      'share': 'शेयर करें',
+      'share': 'साझा करें',
       'download': 'डाउनलोड',
       'whatsApp': 'व्हाट्सएप',
 
-            // Navigation
+      // Navigation
       'navHome': 'होम',
       'navPanchang': 'पंचांग',
+      'navJaap': 'नाम जप',
+      'navVideos': 'वीडियो',
+      'navLibrary': 'लाइब्रेरी',
+      'navFamily': 'परिवार',
+      'navLeaderboard': 'लीडरबोर्ड',
+      'navProfile': 'प्रोफ़ाइल',
 
-      // Panchang Grid & Details
-      'panchangDateHeader': 'मार्गशीर्ष, कृष्ण पक्ष',
-      'panchangGregorianDate': 'मंगलवार, 14 नवंबर 2023',
+      // Language Selection Screen
+      'chooseLanguageTitle': 'अपनी पसंदीदा भाषा\nचुनें',
+      'chooseLanguageSubtitle': 'अपनी आध्यात्मिक यात्रा को सहज बनाने के लिए अपनी मातृभाषा का चयन करें।',
+
+      // Welcome / Onboarding Screen
+      'welcomeSlide1Title': 'दैनिक पंचांग व शुभ मुहूर्त',
+      'welcomeSlide1Subtitle': 'हर दिन के शुभ समय, तिथि और विशेष धार्मिक पर्वों की सटीक जानकारी प्राप्त करें।',
+      'welcomeSlide2Title': 'अखंड नाम जप साधना',
+      'welcomeSlide2Subtitle': 'डिजिटल माला के साथ एकाग्रता से प्रभु के पावन नामों का दैनिक सिमरन करें।',
+      'welcomeSlide3Title': 'पारिवारिक भक्ति मंडल',
+      'welcomeSlide3Subtitle': 'अपने परिवार और मित्रों को साथ जोड़कर सामूहिक साधना के पुण्य का लाभ उठाएं।',
+
+      // Home Screen
+      'todayPanchang': 'आज का पंचांग',
+      'panchangDateHeader': 'राधे-राधे, आज का दिन मंगलमय हो',
+      'panchangGregorianDate': 'रविवार, 14 मई 2023',
       'tithi': 'तिथि',
-      'tithiVal': 'प्रतिपदा',
+      'tithiVal': 'एकादशी',
       'tithiEndsAt': 'दोपहर 02:36 तक',
       'nakshatra': 'नक्षत्र',
-      'nakshatraVal': 'कृत्तिका',
+      'nakshatraVal': 'उत्तराभाद्रपद',
       'nakshatraEndsAt': 'अगले दिन 04:12 AM तक',
       'yoga': 'योग',
-      'yogaVal': 'शिव',
-      'yogaEndsAt': 'सुबह 09:15 AM तक',
+      'yogaVal': 'हर्षण',
+      'yogaEndsAt': 'रात 09:15 AM तक',
       'karana': 'करण',
       'karanaVal': 'बव',
       'karanaEndsAt': 'दोपहर 02:36 PM तक',
       'auspiciousTiming': 'शुभ मुहूर्त',
-      'abhijitMuhurat': 'अभिजीत मुहूर्त',
-      'abhijitDesc': 'नया कार्य एवं पूजा आरंभ के लिए उत्तम',
-      'rahuKaalDesc': 'इस समय में शुभ कार्य वर्जित है',
+      'abhijitMuhurat': 'अभिजित मुहूर्त',
+      'abhijitDesc': 'नवीन कार्यों एवं खरीदारी हेतु अत्यंत शुभ फलदायी समय',
+      'rahuKaalDesc': 'इस समय में शुभ कार्य वर्जित हैं',
       'festTomorrow': 'कल',
       'festIn3Days': '3 दिनों में',
-      'fest1Title': 'कार्तिक पूर्णिमा',
-      'fest1Sub': 'देव दीपावली व स्नान',
-      'fest2Title': 'भाई दूज',
-      'fest2Sub': 'कार्तिक शुक्ल द्वितीया',
-      'featuredEventTitle': 'कार्तिक पूर्णिमा महोत्सव',
+      'fest1Title': 'श्री वल्लभाचार्य जयंती',
+      'fest1Sub': 'विशेष पूजा एवं कीर्तन उत्सव',
+      'fest2Title': 'वरूथिनी एकादशी',
+      'fest2Sub': 'श्री हरि विष्णु पूजन एवं व्रत',
+      'featuredEventTitle': 'श्री वल्लभाचार्य जयंती महोत्सव',
       'featuredEventDate': '27',
-      'featuredEventMonth': 'नवं',
-      'featuredEventLocation': 'श्री धाम वृंदावन • लाइव दर्शन',
+      'featuredEventMonth': 'मई',
+      'featuredEventLocation': 'श्री नाथद्वारा मंदिर, राजस्थान',
       'videoQuickDarshan': 'त्वरित दर्शन',
-      'videoKatha': 'कथा एवं प्रवचन',
-      'videoAarti': 'आरती एवं उत्सव',
-      'navPanchang_old': 'पंचांग',
-      'navJaap': 'नाम जप',
-      'navLibrary': 'लाइब्रेरी',
-      'navProfile': 'प्रोफ़ाइल',
-
-      // Language & Welcome
-      'chooseLanguageTitle': 'अपनी भाषा\nचुनें',
-      'chooseLanguageSubtitle': 'अपनी आध्यात्मिक यात्रा के लिए पसंदीदा भाषा चुनें।',
-      'welcomeToHariPath': 'हरि पाठ में आपका स्वागत है',
-      'welcomeDesc1': 'अपनी आध्यात्मिक यात्रा शुरू करें। भक्ति, ध्यान और आंतरिक शांति के मार्ग पर अग्रसर हों।',
-      'naamJaapTitle': 'दैनिक नाम जप',
-      'naamJaapDesc': 'डिजिटल जप माला और काउंटर के साथ नाम जप करें और अपनी प्रगति ट्रैक करें।',
-      'amritVachanTitle': 'अमृत वचन व सत्संग',
-      'amritVachanDesc': 'प्रतिदिन दिव्य उपदेश, आध्यात्मिक विचार और संतों के पावन वचनों का लाभ उठाएं।',
-
-      // Home / Panchang
-      'vedicPanchang': 'वैदिक पंचांग',
-      'todayAuspicious': 'आज का शुभ समय व पंचांग',
-      'celestialTimings': 'खगोलीय समय',
-      'sunrise': 'सूर्योदय',
-      'sunset': 'सूर्यास्त',
-      'moonrise': 'चन्द्रोदय',
-      'moonset': 'चन्द्रास्त',
-      'inauspiciousPeriod': 'अशुभ काल',
-      'rahuKaal': 'राहु काल',
-      'rahuKaalCaution': 'महत्वपूर्ण कार्य प्रारंभ करने से बचें',
-      'upcomingFestivals': 'आगामी व्रत एवं त्यौहार',
-      'sacredSeva': 'पवित्र सेवा एवं दान',
-      'supportOurCows': 'गौ माता की सेवा करें',
-      'donateDesc': 'गौमाता के दैनिक पोषण, उपचार और आश्रय में सहयोग दें',
-      'donateBtn': 'दान करें',
-      'exploreSacred': 'दिव्य आध्यात्मिक सेवाएं',
-      'videosAndSatsang': 'सत्संग एवं वीडियो',
-      'videosDesc': 'भजन, कीर्तन, कथा और दिव्य सत्संग देखें',
+      'videoKatha': 'सत्संग कथा',
+      'videoAarti': 'संध्या आरती',
+      'spiritualDiscourses': 'आध्यात्मिक अमृत वचन',
+      'viewDetails': 'विवरण देखें',
+      'upcomingEvents': 'आगामी धार्मिक उत्सव',
+      'recentVideos': 'नवीनतम वीडियो सत्संग',
+      'seeMore': 'और देखें',
+      'amritVachan': 'दैनिक अमृत वचन',
       'amritVachanDescShort': 'दैनिक आध्यात्मिक सुविचार एवं संतों की वाणी',
       'spiritualEvents': 'आध्यात्मिक उत्सव एवं कार्यक्रम',
       'eventsDesc': 'धार्मिक अनुष्ठान, कथा व महाकुंभ उत्सव',
@@ -100,7 +91,7 @@ class AppStrings {
       'sadhakLeaderboard': 'साधक लीडरबोर्ड',
       'leaderboardDesc': 'वैश्विक साधकों की साधना स्थिति व प्रेरणा',
 
-      // Naam Jaap
+      // Naam Jaap Screens
       'dailyNaamJaap': 'दैनिक नाम जप',
       'tapToCount': 'गिनती के लिए टैप करें',
       'completedMalas': 'पूर्ण मालाएं',
@@ -113,8 +104,6 @@ class AppStrings {
       'krishnaNaam': 'कृष्ण नाम',
       'radhaNaam': 'राधा नाम',
       'omNamahShivaya': 'ॐ नमः शिवाय',
-
-      // Jaap History
       'jaapHistoryTitle': 'नाम जप इतिहास',
       'jaapHistorySubtitle': 'समय के साथ आपकी भक्ति यात्रा का विवरण',
       'activityHeatmap': 'साधना गतिविधि',
@@ -128,7 +117,7 @@ class AppStrings {
       'month': 'माह',
       'year': 'वर्ष',
 
-      // Audio Library & Player
+      // Audio Library Screen
       'audioLibraryTitle': 'दिव्य ऑडियो लाइब्रेरी',
       'audioSearchHint': 'प्रार्थना, आरती, मंत्र खोजें...',
       'allDeities': 'सभी देवता',
@@ -136,8 +125,36 @@ class AppStrings {
       'playlist': 'प्लेलिस्ट',
       'addedToFavorites': 'पसंदीदा में जोड़ा गया',
       'removedFromFavorites': 'पसंदीदा से हटाया गया',
+      'sacredLibrary': 'लाइब्रेरी',
+      'divineFocus': 'सभी देवता',
 
-      // Profile
+      // Family Tree Screen
+      'familyHierarchyTree': 'पारिवारिक पदानुक्रम वृक्ष',
+      'membersUnit': 'सदस्य',
+      'childrenUnit': 'संतान',
+      'relationsUnit': 'संबंध',
+      'directLineage': 'प्रत्यक्ष वंश (संतान)',
+      'connectedRelatives': 'जुड़े हुए संबंधी',
+      'noSubBranches': 'कोई प्रत्यक्ष उप-शाखा नहीं मिली।',
+      'unableToLoadFamily': 'परिवार चक्र लोड करने में असमर्थ',
+      'retry': 'पुनः प्रयास करें',
+      'familyHeader': 'पारिवारिक साधना मंडल',
+      'headOfFamily': 'मुखिया (कर्ता)',
+      'members': 'सदस्य',
+      'addFamilyMember': 'परिवार का सदस्य जोड़ें',
+
+      // Leaderboard Screen
+      'leaderboardHeader': 'वैश्विक साधक लीडरबोर्ड',
+      'topSadhak': 'सर्वोच्च साधक',
+      'topSadhakHero': 'शीर्ष साधक',
+      'allSadhakRankings': 'सभी साधक रैंकिंग',
+      'activeSadhaks': 'सक्रिय साधक',
+      'rank': 'रैंक',
+      'jaapUnit': 'जप',
+      'malasUnit': 'माला',
+      'chants': 'जप',
+
+      // Profile Screen
       'profileTitle': 'साधक प्रोफ़ाइल',
       'devotee': 'भक्त साधक',
       'personalInfo': 'व्यक्तिगत जानकारी',
@@ -156,56 +173,21 @@ class AppStrings {
       'logout': 'लॉग आउट',
       'logoutConfirm': 'क्या आप वाकई लॉग आउट करना चाहते हैं?',
 
-      // Videos
+      // Videos / Satsang
       'videosTitle': 'दिव्य सत्संग एवं कथा',
       'shortsTab': 'शॉर्ट्स',
       'videosTab': 'वीडियो',
       'liveTab': 'लाइव',
       'noVideosFound': 'कोई वीडियो उपलब्ध नहीं है',
 
-      // Amrit Vachan
+      // Amrit Vachan & Events
       'amritVachanHeader': 'दैनिक अमृत वचन',
       'totalAmritVachan': 'कुल अमृत वचन',
       'allAmritVachan': 'सभी अमृत वचन',
-
-      // Events
       'eventsHeader': 'आध्यात्मिक उत्सव एवं कार्यक्रम',
       'noEventsFound': 'कोई आगामी कार्यक्रम नहीं मिला',
 
-            // Family Tree Keys
-      'familyHierarchyTree': 'पारिवारिक वंश वृक्ष',
-      'membersUnit': 'सदस्य',
-      'childrenUnit': 'संतान',
-      'relationsUnit': 'संबंध',
-      'directLineage': 'प्रत्यक्ष वंशज (संतान)',
-      'connectedRelatives': 'जुड़े हुए संबंधी',
-      'noSubBranches': 'कोई प्रत्यक्ष उप-शाखा नहीं मिली।',
-      'unableToLoadFamily': 'परिवार चक्र लोड करने में असमर्थ',
-      'retry': 'पुनः प्रयास करें',
-
-      // Leaderboard Keys
-      'allSadhakRankings': 'सभी साधक रैंकिंग',
-      'activeSadhaks': 'सक्रिय साधक',
-      'rank': 'रैंक',
-      'jaapUnit': 'जप',
-      'malasUnit': 'माला',
-      'topSadhakHero': 'शीर्ष साधक',
-
-      // Library Keys
-      'divineFocus': 'सभी देवता',
-      'sacredLibrary': 'लाइब्रेरी',
-            // Family
-      'familyHeader': 'पारिवारिक साधना मंडल',
-      'headOfFamily': 'मुखिया (कर्ता)',
-      'members': 'सदस्य',
-      'addFamilyMember': 'परिवार का सदस्य जोड़ें',
-
-      // Leaderboard
-      'leaderboardHeader': 'वैश्विक साधक लीडरबोर्ड',
-      'topSadhak': 'सर्वोच्च साधक',
-      'chants': 'जप',
-
-      // Donate
+      // Donation / Gau Seva
       'donateHeader': 'पवित्र गौ सेवा सहयोग',
       'monthlyPlan': 'मासिक सहयोग',
       'yearlyPlan': 'वार्षिक सहयोग',
@@ -231,76 +213,67 @@ class AppStrings {
       'download': 'Download',
       'whatsApp': 'WhatsApp',
 
-            // Navigation
+      // Navigation
       'navHome': 'Home',
       'navPanchang': 'Panchang',
-
-      // Panchang Grid & Details
-      'panchangDateHeader': 'Margashirsha, Krishna Paksha',
-      'panchangGregorianDate': 'Tuesday, 14 Nov 2023',
-      'tithi': 'TITHI',
-      'tithiVal': 'Pratipada',
-      'tithiEndsAt': 'Ends at 02:36 PM',
-      'nakshatra': 'NAKSHATRA',
-      'nakshatraVal': 'Krittika',
-      'nakshatraEndsAt': 'Ends at 04:12 AM (Next Day)',
-      'yoga': 'YOGA',
-      'yogaVal': 'Shiva',
-      'yogaEndsAt': 'Ends at 09:15 AM',
-      'karana': 'KARANA',
-      'karanaVal': 'Bava',
-      'karanaEndsAt': 'Ends at 02:36 PM',
-      'auspiciousTiming': 'AUSPICIOUS TIMING',
-      'abhijitMuhurat': 'Abhijit Muhurat',
-      'abhijitDesc': 'Ideal for starting new work & worship',
-      'rahuKaalDesc': 'Avoid starting important tasks during this period',
-      'festTomorrow': 'TOMORROW',
-      'festIn3Days': 'IN 3 DAYS',
-      'fest1Title': 'Kartik Purnima',
-      'fest1Sub': 'Dev Deepawali & Snan',
-      'fest2Title': 'Bhai Dooj',
-      'fest2Sub': 'Kartik Shukla Dwitiya',
-      'featuredEventTitle': 'Kartik Purnima Mahotsav',
-      'featuredEventDate': '27',
-      'featuredEventMonth': 'NOV',
-      'featuredEventLocation': 'Shri Dham Vrindavan • Live Darshan',
-      'videoQuickDarshan': 'Quick Darshan',
-      'videoKatha': 'Katha & Pravachan',
-      'videoAarti': 'Aarti & Utsav',
-      'navPanchang_old': 'Panchang',
       'navJaap': 'Naam Jaap',
+      'navVideos': 'Videos',
       'navLibrary': 'Library',
+      'navFamily': 'Family',
+      'navLeaderboard': 'Leaderboard',
       'navProfile': 'Profile',
 
-      // Language & Welcome
+      // Language Selection Screen
       'chooseLanguageTitle': 'Choose Your\nLanguage',
-      'chooseLanguageSubtitle': 'Select the language you prefer for your spiritual journey.',
-      'welcomeToHariPath': 'Welcome to Hari Path',
-      'welcomeDesc1': 'Begin Your Spiritual Journey. Immerse yourself in a guided path of devotion, mindfulness, and inner peace.',
-      'naamJaapTitle': 'Daily Naam Jaap',
-      'naamJaapDesc': 'Chant holy names daily with digital jaap counter, track streaks, and elevate your spiritual energy.',
-      'amritVachanTitle': 'Amrit Vachan & Satsang',
-      'amritVachanDesc': 'Discover sacred quotes, daily wisdom, uplifting discourses, and holy teachings.',
+      'chooseLanguageSubtitle': 'Select your preferred language to make your spiritual journey effortless and peaceful.',
 
-      // Home / Panchang
-      'vedicPanchang': 'Vedic Panchang',
-      'todayAuspicious': 'Today\'s Auspicious Timings',
-      'celestialTimings': 'Celestial Timings',
-      'sunrise': 'Sunrise',
-      'sunset': 'Sunset',
-      'moonrise': 'Moonrise',
-      'moonset': 'Moonset',
-      'inauspiciousPeriod': 'Inauspicious Period',
-      'rahuKaal': 'Rahu Kaal',
-      'rahuKaalCaution': 'Avoid starting important tasks',
-      'upcomingFestivals': 'Upcoming Festivals',
-      'sacredSeva': 'Sacred Seva & Contributions',
-      'supportOurCows': 'Support Our Cows',
-      'donateDesc': 'Ensure daily nourishment, medical care & shelter for Gaumata',
-      'donateBtn': 'Donate',
-      'exploreSacred': 'Sacred Spiritual Features',
-      'videosAndSatsang': 'Satsang & Videos',
-      'videosDesc': 'Watch divine kathas, bhajans and live broadcasts',
+      // Welcome / Onboarding Screen
+      'welcomeSlide1Title': 'Daily Panchang & Shubh Muhurat',
+      'welcomeSlide1Subtitle': 'Get accurate daily timings for tithi, nakshatra, and auspicious religious festivals.',
+      'welcomeSlide2Title': 'Unbroken Naam Jaap Sadhana',
+      'welcomeSlide2Subtitle': 'Chant the holy names of God daily with a digital prayer mala and build mindfulness.',
+      'welcomeSlide3Title': 'Family Sadhana Circle',
+      'welcomeSlide3Subtitle': 'Connect your family and friends to share the divine merits of collective prayers.',
+
+      // Home Screen
+      'todayPanchang': "Today's Panchang",
+      'panchangDateHeader': 'Radhe Radhe, Have a blessed day',
+      'panchangGregorianDate': 'Sunday, 14 May 2023',
+      'tithi': 'Tithi',
+      'tithiVal': 'Ekadashi',
+      'tithiEndsAt': 'until 02:36 PM',
+      'nakshatra': 'Nakshatra',
+      'nakshatraVal': 'Uttara Bhadrapada',
+      'nakshatraEndsAt': 'until next day 04:12 AM',
+      'yoga': 'Yoga',
+      'yogaVal': 'Harshana',
+      'yogaEndsAt': 'until 09:15 AM',
+      'karana': 'Karana',
+      'karanaVal': 'Bava',
+      'karanaEndsAt': 'until 02:36 PM',
+      'auspiciousTiming': 'Auspicious Timings',
+      'abhijitMuhurat': 'Abhijit Muhurat',
+      'abhijitDesc': 'Highly auspicious time for starting new work and purchases',
+      'rahuKaalDesc': 'Auspicious activities are prohibited during this time',
+      'festTomorrow': 'Tomorrow',
+      'festIn3Days': 'In 3 days',
+      'fest1Title': 'Shri Vallabhacharya Jayanti',
+      'fest1Sub': 'Special prayers & kirtan celebration',
+      'fest2Title': 'Varuthini Ekadashi',
+      'fest2Sub': 'Lord Vishnu worship and fasting',
+      'featuredEventTitle': 'Shri Vallabhacharya Mahotsav',
+      'featuredEventDate': '27',
+      'featuredEventMonth': 'May',
+      'featuredEventLocation': 'Shri Nathdwara Temple, Rajasthan',
+      'videoQuickDarshan': 'Quick Darshan',
+      'videoKatha': 'Satsang Katha',
+      'videoAarti': 'Evening Aarti',
+      'spiritualDiscourses': 'Spiritual Discourses',
+      'viewDetails': 'View Details',
+      'upcomingEvents': 'Upcoming Sacred Events',
+      'recentVideos': 'Recent Video Satsangs',
+      'seeMore': 'See More',
+      'amritVachan': 'Daily Amrit Vachan',
       'amritVachanDescShort': 'Daily spiritual quotes and saint discourses',
       'spiritualEvents': 'Spiritual Events & Utsav',
       'eventsDesc': 'Utsav celebrations, yagnas and sacred gatherings',
@@ -309,7 +282,7 @@ class AppStrings {
       'sadhakLeaderboard': 'Sadhak Leaderboard',
       'leaderboardDesc': 'Global community devotion rankings & inspiration',
 
-      // Naam Jaap
+      // Naam Jaap Screens
       'dailyNaamJaap': 'Daily Naam Jaap',
       'tapToCount': 'TAP TO COUNT',
       'completedMalas': 'Completed Malas',
@@ -322,8 +295,6 @@ class AppStrings {
       'krishnaNaam': 'Krishna Naam',
       'radhaNaam': 'Radha Naam',
       'omNamahShivaya': 'Om Namah Shivaya',
-
-      // Jaap History
       'jaapHistoryTitle': 'Naam Jaap History',
       'jaapHistorySubtitle': 'Your devotional journey over time.',
       'activityHeatmap': 'Activity Heatmap',
@@ -337,7 +308,7 @@ class AppStrings {
       'month': 'Month',
       'year': 'Year',
 
-      // Audio Library & Player
+      // Audio Library Screen
       'audioLibraryTitle': 'Sacred Audio Library',
       'audioSearchHint': 'Search prayers, aartis, mantras...',
       'allDeities': 'All Deities',
@@ -345,8 +316,36 @@ class AppStrings {
       'playlist': 'Playlist',
       'addedToFavorites': 'Added to Sacred Favorites',
       'removedFromFavorites': 'Removed from Favorites',
+      'sacredLibrary': 'Library',
+      'divineFocus': 'All Deities',
 
-      // Profile
+      // Family Tree Screen
+      'familyHierarchyTree': 'Family Hierarchy Tree',
+      'membersUnit': 'Members',
+      'childrenUnit': 'Children',
+      'relationsUnit': 'Relations',
+      'directLineage': 'Direct Lineage (Children)',
+      'connectedRelatives': 'Connected Relatives',
+      'noSubBranches': 'No direct sub-branches found.',
+      'unableToLoadFamily': 'Unable to load family circle',
+      'retry': 'Try Again',
+      'familyHeader': 'Family Sadhana Circle',
+      'headOfFamily': 'Karta (Head of Family)',
+      'members': 'Members',
+      'addFamilyMember': 'Add Family Member',
+
+      // Leaderboard Screen
+      'leaderboardHeader': 'Global Sadhak Leaderboard',
+      'topSadhak': 'Top Sadhak',
+      'topSadhakHero': 'ALL TOP SADHAK',
+      'allSadhakRankings': 'All Sadhak Rankings',
+      'activeSadhaks': 'Active Sadhaks',
+      'rank': 'RANK',
+      'jaapUnit': 'jaap',
+      'malasUnit': 'malas',
+      'chants': 'Chants',
+
+      // Profile Screen
       'profileTitle': 'Devotee Profile',
       'devotee': 'Devotee Sadhak',
       'personalInfo': 'Personal Information',
@@ -365,34 +364,21 @@ class AppStrings {
       'logout': 'Log Out',
       'logoutConfirm': 'Are you sure you want to log out?',
 
-      // Videos
+      // Videos / Satsang
       'videosTitle': 'Divine Satsang & Videos',
       'shortsTab': 'Shorts',
       'videosTab': 'Videos',
       'liveTab': 'Live',
       'noVideosFound': 'No videos found',
 
-      // Amrit Vachan
+      // Amrit Vachan & Events
       'amritVachanHeader': 'Daily Amrit Vachan',
       'totalAmritVachan': 'Total Amrit Vachan',
       'allAmritVachan': 'All Amrit Vachan',
-
-      // Events
       'eventsHeader': 'Spiritual Events & Utsav',
       'noEventsFound': 'No upcoming events found',
 
-      // Family
-      'familyHeader': 'Family Sadhana Circle',
-      'headOfFamily': 'Karta (Head of Family)',
-      'members': 'Members',
-      'addFamilyMember': 'Add Family Member',
-
-      // Leaderboard
-      'leaderboardHeader': 'Global Sadhak Leaderboard',
-      'topSadhak': 'Top Sadhak',
-      'chants': 'Chants',
-
-      // Donate
+      // Donation / Gau Seva
       'donateHeader': 'Sacred Gau Seva Support',
       'monthlyPlan': 'Monthly Contribution',
       'yearlyPlan': 'Yearly Contribution',
@@ -403,84 +389,108 @@ class AppStrings {
     'mr': {
       // General & Common
       'hariPath': 'हरि पाठ',
-      'getStarted': 'सुरू करा',
-      'next': 'पुढे जा',
+      'getStarted': 'सुरुवात करा',
+      'next': 'पुढे',
       'skip': 'वगळा',
       'edit': 'संपादित करा',
       'cancel': 'रद्द करा',
       'saveChanges': 'बदल जतन करा',
       'tryAgain': 'पुन्हा प्रयत्न करा',
       'viewAll': 'सर्व पहा',
-      'refresh': 'रिफ्रेश करा',
+      'refresh': 'ताजे करा',
       'loading': 'लोड होत आहे...',
       'save': 'जतन करा',
-      'share': 'शेअर करा',
+      'share': 'सामायिक करा',
       'download': 'डाउनलोड',
       'whatsApp': 'व्हॉट्सअॅप',
 
       // Navigation
+      'navHome': 'होम',
       'navPanchang': 'पंचांग',
-      'navJaap': 'नामजप',
+      'navJaap': 'नाम जप',
+      'navVideos': 'व्हिडिओ',
       'navLibrary': 'लायब्ररी',
+      'navFamily': 'कुटुंब',
+      'navLeaderboard': 'लीडरबोर्ड',
       'navProfile': 'प्रोफाइल',
 
-      // Language & Welcome
-      'chooseLanguageTitle': 'आपली भाषा\nनिवडा',
-      'chooseLanguageSubtitle': 'आपल्या आध्यात्मिक प्रवासासाठी पसंतीची भाषा निवडा.',
-      'welcomeToHariPath': 'हरि पाठ मध्ये आपले स्वागत आहे',
-      'welcomeDesc1': 'आपला आध्यात्मिक प्रवास सुरू करा. भक्ती, ध्यान आणि आत्मशांतीच्या मार्गावर चाला.',
-      'naamJaapTitle': 'दैनिक नामजप',
-      'naamJaapDesc': 'डिजिटल जपमाळेसह दररोज नामजप करा आणि आपली प्रगती ट्रॅक करा.',
-      'amritVachanTitle': 'अमृत वचन व सत्संग',
-      'amritVachanDesc': 'दररोज अमृत वचन, प्रवचने आणि आध्यात्मिक विचारांचा लाभ घ्या.',
+      // Language Selection Screen
+      'chooseLanguageTitle': 'तुमची पसंतीची भाषा\nनिवडा',
+      'chooseLanguageSubtitle': 'तुमचा आध्यात्मिक प्रवास सुलभ आणि शांत करण्यासाठी मातृभाषा निवडा.',
 
-      // Home / Panchang
-      'vedicPanchang': 'वैदिक पंचांग',
-      'todayAuspicious': 'आजचा शुभ मुहूर्त व पंचांग',
-      'celestialTimings': 'खगोलीय वेळा',
-      'sunrise': 'सूर्योदय',
-      'sunset': 'सूर्यास्त',
-      'moonrise': 'चंद्रोदय',
-      'moonset': 'चंद्रास्त',
-      'inauspiciousPeriod': 'अशुभ काळ',
-      'rahuKaal': 'राहु काळ',
-      'rahuKaalCaution': 'महत्त्वाची कामे सुरू करणे टाळा',
-      'upcomingFestivals': 'आगामी सण व उत्सव',
-      'sacredSeva': 'पवित्र सेवा आणि दान',
-      'supportOurCows': 'गौमातेची सेवा करा',
-      'donateDesc': 'गौमातेच्या दैनंदिन पोषण, औषधोपचार आणि निवाऱ्यात हातभार लावा',
-      'donateBtn': 'दान करा',
-      'exploreSacred': 'आध्यात्मिक वैशिष्ट्ये',
-      'videosAndSatsang': 'सत्संग व व्हिडिओ',
-      'videosDesc': 'भजन, कीर्तन, कथा आणि थेट सत्संग पहा',
-      'amritVachanDescShort': 'दैनिक आध्यात्मिक सुविचार आणि संतांचे वचन',
-      'spiritualEvents': 'धार्मिक उत्सव व कार्यक्रम',
-      'eventsDesc': 'पूजा, अनुष्ठान आणि धार्मिक मेळावे',
+      // Welcome / Onboarding Screen
+      'welcomeSlide1Title': 'दैनिक पंचांग व शुभ मुहूर्त',
+      'welcomeSlide1Subtitle': 'दररोजचे शुभ मुहूर्त, तिथी आणि धार्मिक सणांची अचूक माहिती मिळवा.',
+      'welcomeSlide2Title': 'अखंड नाम जप साधना',
+      'welcomeSlide2Subtitle': 'डिजिटल माळेच्या साहाय्याने दररोज एकाग्रतेने नामस्मरण करा.',
+      'welcomeSlide3Title': 'कौटुंबिक साधना मंडळ',
+      'welcomeSlide3Subtitle': 'आपल्या संपूर्ण कुटुंबाला जोडून सामूहिक भक्तीचा आनंद घ्या.',
+
+      // Home Screen
+      'todayPanchang': 'आजचे पंचांग',
+      'panchangDateHeader': 'राधे-राधे, आजचा दिवस शुभ जावो',
+      'panchangGregorianDate': 'रविवार, 14 मे 2023',
+      'tithi': 'तिथी',
+      'tithiVal': 'एकादशी',
+      'tithiEndsAt': 'दुपारी 02:36 पर्यंत',
+      'nakshatra': 'नक्षत्र',
+      'nakshatraVal': 'उत्तराभाद्रपद',
+      'nakshatraEndsAt': 'दुसऱ्या दिवशी 04:12 AM पर्यंत',
+      'yoga': 'योग',
+      'yogaVal': 'हर्षण',
+      'yogaEndsAt': 'सकाळी 09:15 AM पर्यंत',
+      'karana': 'करण',
+      'karanaVal': 'बव',
+      'karanaEndsAt': 'दुपारी 02:36 PM पर्यंत',
+      'auspiciousTiming': 'शुभ मुहूर्त',
+      'abhijitMuhurat': 'अभिजित मुहूर्त',
+      'abhijitDesc': 'नवीन कामे आणि खरेदीसाठी अत्यंत शुभ वेळ',
+      'rahuKaalDesc': 'या काळात शुभ कार्ये वर्ज्य आहेत',
+      'festTomorrow': 'उद्या',
+      'festIn3Days': '3 दिवसांत',
+      'fest1Title': 'श्री वल्लभाचार्य जयंती',
+      'fest1Sub': 'विशेष पूजा व कीर्तन उत्सव',
+      'fest2Title': 'वरूथिनी एकादशी',
+      'fest2Sub': 'श्री हरी विष्णू पूजन आणि उपवास',
+      'featuredEventTitle': 'श्री वल्लभाचार्य जयंती महोत्सव',
+      'featuredEventDate': '27',
+      'featuredEventMonth': 'मे',
+      'featuredEventLocation': 'श्री नाथद्वारा मंदिर, राजस्थान',
+      'videoQuickDarshan': 'त्वरित दर्शन',
+      'videoKatha': 'सत्संग कथा',
+      'videoAarti': 'संध्या आरती',
+      'spiritualDiscourses': 'अमृत वचन',
+      'viewDetails': 'तपशील पहा',
+      'upcomingEvents': 'आगामी धार्मिक उत्सव',
+      'recentVideos': 'नवीनतम व्हिडिओ सत्संग',
+      'seeMore': 'अधिक पहा',
+      'amritVachan': 'दैनिक अमृत वचन',
+      'amritVachanDescShort': 'संत वाणी आणि आध्यात्मिक सुविचार',
+      'spiritualEvents': 'आध्यात्मिक उत्सव आणि कार्यक्रम',
+      'eventsDesc': 'धार्मिक अनुष्ठान, कथा आणि मेळावे',
       'familyTree': 'कौटुंबिक साधना मंडळ',
-      'familyDesc': 'आपल्या संपूर्ण कुटुंबाला भक्ती साधनेशी जोडा',
+      'familyDesc': 'आपल्या संपूर्ण कुटुंबाला नाम जपाशी जोडा',
       'sadhakLeaderboard': 'साधक लीडरबोर्ड',
-      'leaderboardDesc': 'जागतिक साधकांची भक्ती स्थिती व प्रेरणा',
+      'leaderboardDesc': 'वैश्विक साधकांची भक्ती स्थिती व प्रेरणा',
 
-      // Naam Jaap
-      'dailyNaamJaap': 'दैनिक नामजप',
+      // Naam Jaap Screens
+      'dailyNaamJaap': 'दैनिक नाम जप',
       'tapToCount': 'मोजण्यासाठी टॅप करा',
       'completedMalas': 'पूर्ण माळा',
       'today': 'आज',
       'streak': 'सातत्य',
       'days': 'दिवस',
       'history': 'इतिहास',
-      'malaCompletedToast': '🌸 १ माळ (१०८ जप) पूर्ण झाली! हरिबोल!',
+      'malaCompletedToast': '🌸 1 माळ (108 जप) पूर्ण झाली! हरिबोल!',
       'ramNaam': 'राम नाम',
       'krishnaNaam': 'कृष्ण नाम',
       'radhaNaam': 'राधा नाम',
       'omNamahShivaya': 'ॐ नमः शिवाय',
-
-      // Jaap History
-      'jaapHistoryTitle': 'नामजप इतिहास',
-      'jaapHistorySubtitle': 'आपल्या भक्ती प्रवासाचा आलेख',
-      'activityHeatmap': 'साधना आलेख',
+      'jaapHistoryTitle': 'नाम जप इतिहास',
+      'jaapHistorySubtitle': 'आपल्या भक्ती प्रवासाचा तपशील',
+      'activityHeatmap': 'साधना दिनदर्शिका',
       'totalCount': 'एकूण जप संख्या',
-      'longestStreak': 'दीर्घकालीन सातत्य',
+      'longestStreak': 'सर्वात मोठे सातत्य',
       'dailyAverage': 'दैनिक सरासरी',
       'recentSessions': 'अलीकडील सत्रे',
       'morningMeditation': 'सकाळची साधना',
@@ -489,21 +499,49 @@ class AppStrings {
       'month': 'महिना',
       'year': 'वर्ष',
 
-      // Audio Library & Player
-      'audioLibraryTitle': 'पवित्र ऑडिओ लायब्ररी',
-      'audioSearchHint': 'प्रार्थना, आरत्या, मंत्र शोधा...',
-      'allDeities': 'सर्व देवता',
+      // Audio Library Screen
+      'audioLibraryTitle': 'दिव्य ऑडिओ लायब्ररी',
+      'audioSearchHint': 'प्रार्थना, आरती, मंत्र शोधा...',
+      'allDeities': 'सर्व देव',
       'nowPlaying': 'आता वाजत आहे',
       'playlist': 'प्लेलिस्ट',
-      'addedToFavorites': 'आवडीच्या यादीत जोडले',
-      'removedFromFavorites': 'आवडीच्या यादीतून काढले',
+      'addedToFavorites': 'आवडीमध्ये जोडले',
+      'removedFromFavorites': 'आवडीतून काढले',
+      'sacredLibrary': 'लायब्ररी',
+      'divineFocus': 'सर्व देव',
 
-      // Profile
+      // Family Tree Screen
+      'familyHierarchyTree': 'कौटुंबिक वंश वृक्ष',
+      'membersUnit': 'सदस्य',
+      'childrenUnit': 'मुले',
+      'relationsUnit': 'नाते',
+      'directLineage': 'प्रत्यक्ष वंशज (मुले)',
+      'connectedRelatives': 'जोडलेले नातेवाईक',
+      'noSubBranches': 'कोणतीही शाखा आढळली नाही.',
+      'unableToLoadFamily': 'कुटुंब लोड करण्यात अयशस्वी',
+      'retry': 'पुन्हा प्रयत्न करा',
+      'familyHeader': 'कौटुंबिक साधना मंडळ',
+      'headOfFamily': 'कुटुंबप्रमुख (कर्ता)',
+      'members': 'सदस्य',
+      'addFamilyMember': 'कुटुंबातील सदस्य जोडा',
+
+      // Leaderboard Screen
+      'leaderboardHeader': 'वैश्विक साधक लीडरबोर्ड',
+      'topSadhak': 'सर्वोच्च साधक',
+      'topSadhakHero': 'सर्वोच्च साधक',
+      'allSadhakRankings': 'सर्व साधक रँकिंग',
+      'activeSadhaks': 'सक्रिय साधक',
+      'rank': 'रँक',
+      'jaapUnit': 'जप',
+      'malasUnit': 'माळा',
+      'chants': 'जप',
+
+      // Profile Screen
       'profileTitle': 'साधक प्रोफाइल',
       'devotee': 'भक्त साधक',
       'personalInfo': 'वैयक्तिक माहिती',
       'fullName': 'पूर्ण नाव',
-      'phone': 'मोबाईल नंबर',
+      'phone': 'मोबाइल नंबर',
       'email': 'ईमेल पत्ता',
       'cityState': 'शहर आणि राज्य',
       'gotra': 'गोत्र',
@@ -511,59 +549,46 @@ class AppStrings {
       'spiritualPreferences': 'आध्यात्मिक प्राधान्ये',
       'dailyMalaGoal': 'दैनिक माळ ध्येय',
       'languageSetting': 'अ‍ॅपची भाषा',
-      'notifications': 'साधना स्मरणपत्रे व सूचना',
+      'notifications': 'साधना स्मरण व सूचना',
       'jaapStreak': 'जप सातत्य',
-      'totalGauseva': 'एकूण गौसेवा',
+      'totalGauseva': 'एकूण गोसेवा',
       'logout': 'लॉग आउट',
-      'logoutConfirm': 'तुम्हाला खात्रीने लॉग आउट करायचे आहे का?',
+      'logoutConfirm': 'आपण खरोखर लॉग आउट करू इच्छिता?',
 
-      // Videos
-      'videosTitle': 'दिव्य सत्संग आणि व्हिडिओ',
+      // Videos / Satsang
+      'videosTitle': 'दिव्य सत्संग व व्हिडिओ',
       'shortsTab': 'शॉर्ट्स',
       'videosTab': 'व्हिडिओ',
-      'liveTab': 'लाइव्ह',
+      'liveTab': 'थेट',
       'noVideosFound': 'कोणतेही व्हिडिओ उपलब्ध नाहीत',
 
-      // Amrit Vachan
+      // Amrit Vachan & Events
       'amritVachanHeader': 'दैनिक अमृत वचन',
       'totalAmritVachan': 'एकूण अमृत वचन',
       'allAmritVachan': 'सर्व अमृत वचन',
-
-      // Events
       'eventsHeader': 'आध्यात्मिक उत्सव आणि कार्यक्रम',
       'noEventsFound': 'कोणतेही आगामी कार्यक्रम नाहीत',
 
-      // Family
-      'familyHeader': 'कौटुंबिक साधना मंडळ',
-      'headOfFamily': 'कुटुंबप्रमुख (कर्ता)',
-      'members': 'सदस्य',
-      'addFamilyMember': 'कुटुंब सदस्य जोडा',
-
-      // Leaderboard
-      'leaderboardHeader': 'जागतिक साधक लीडरबोर्ड',
-      'topSadhak': 'सर्वोच्च साधक',
-      'chants': 'जप',
-
-      // Donate
-      'donateHeader': 'पवित्र गौ सेवा सहयोग',
-      'monthlyPlan': 'मासिक सहयोग',
-      'yearlyPlan': 'वार्षिक सहयोग',
+      // Donation / Gau Seva
+      'donateHeader': 'पवित्र गोसेवा सहकार्य',
+      'monthlyPlan': 'मासिक सहकार्य',
+      'yearlyPlan': 'वार्षिक सहकार्य',
       'oneTimePlan': 'एकदाच दान',
-      'continueToPayment': 'पेमेंटसाठी पुढे जा',
+      'continueToPayment': 'देयकासाठी पुढे जा',
     },
 
     'gu': {
       // General & Common
       'hariPath': 'હરિ પાઠ',
       'getStarted': 'શરૂ કરો',
-      'next': 'આગળ વધો',
+      'next': 'આગળ',
       'skip': 'છોડો',
       'edit': 'સંપાદિત કરો',
       'cancel': 'રદ કરો',
       'saveChanges': 'ફેરફારો સાચવો',
       'tryAgain': 'ફરી પ્રયાસ કરો',
       'viewAll': 'બધા જુઓ',
-      'refresh': 'રીફ્રેશ કરો',
+      'refresh': 'તાજું કરો',
       'loading': 'લોડ થઈ રહ્યું છે...',
       'save': 'સાચવો',
       'share': 'શેર કરો',
@@ -571,86 +596,138 @@ class AppStrings {
       'whatsApp': 'વોટ્સએપ',
 
       // Navigation
+      'navHome': 'હોમ',
       'navPanchang': 'પંચાંગ',
       'navJaap': 'નામ જાપ',
+      'navVideos': 'વીડિયો',
       'navLibrary': 'લાઇબ્રેરી',
+      'navFamily': 'પરિવાર',
+      'navLeaderboard': 'લીડરબોર્ડ',
       'navProfile': 'પ્રોફાઇલ',
 
-      // Language & Welcome
-      'chooseLanguageTitle': 'તમારી ભાષા\nપસંદ કરો',
-      'chooseLanguageSubtitle': 'તમારી આધ્યાત્મિક યાત્રા માટે પસંદગીની ભાષા પસંદ કરો.',
-      'welcomeToHariPath': 'હરિ પાઠમાં આપનું સ્વાગત છે',
-      'welcomeDesc1': 'તમારી આધ્યાત્મિક યાત્રા શરૂ કરો. ભક્તિ, ધ્યાન અને આંતરિક શાંતિનો માર્ગ અપનાવો.',
-      'naamJaapTitle': 'દૈનિક નામ જાપ',
-      'naamJaapDesc': 'ડિજિટલ માળા સાથે દરરોજ નામ જાપ કરો અને તમારી પ્રગતિ જુઓ.',
-      'amritVachanTitle': 'અમૃત વચન અને સત્સંગ',
-      'amritVachanDesc': 'રોજિંદા અમૃત વચન, સત્સંગ અને પવિત્ર જ્ઞાન મેળવો.',
+      // Language Selection Screen
+      'chooseLanguageTitle': 'તમારી પસંદગીની ભાષા\nપસંદ કરો',
+      'chooseLanguageSubtitle': 'તમારી આધ્યાત્મિક યાત્રા સરળ અને શાંતિપૂર્ણ બનાવવા માટે તમારી માતૃભાષા પસંદ કરો.',
 
-      // Home / Panchang
-      'vedicPanchang': 'વૈદિક પંચાંગ',
-      'todayAuspicious': 'આજનો શુભ સમય અને પંચાંગ',
-      'celestialTimings': 'ખગોળીય સમય',
-      'sunrise': 'સૂર્યોદય',
-      'sunset': 'સૂર્યાસ્ત',
-      'moonrise': 'ચંદ્રોદય',
-      'moonset': 'ચંદ્રાસ્ત',
-      'inauspiciousPeriod': 'અશુભ સમય',
-      'rahuKaal': 'રાહુ કાળ',
-      'rahuKaalCaution': 'મહત્વપૂર્ણ કાર્યો શરૂ કરવાનું ટાળો',
-      'upcomingFestivals': 'આગામી તહેવારો',
-      'sacredSeva': 'પવિત્ર સેવા અને દાન',
-      'supportOurCows': 'ગૌમાતાની સેવા કરો',
-      'donateDesc': 'ગૌમાતાના દૈનિક આહાર, સારવાર અને આશ્રયમાં સહયોગ આપો',
-      'donateBtn': 'દાન કરો',
-      'exploreSacred': 'આધ્યાત્મિક સેવાઓ',
-      'videosAndSatsang': 'સત્સંગ અને વીડિયો',
-      'videosDesc': 'ભજન, કીર્તન, કથા અને લાઈવ સત્સંગ જુઓ',
-      'amritVachanDescShort': 'દૈનિક આધ્યાત્મિક સુવિચાર અને સંતોના વચન',
-      'spiritualEvents': 'ધાર્મિક ઉત્સવ અને કાર્યક્રમો',
-      'eventsDesc': 'પૂજા, અનુષ્ઠાન અને પવિત્ર સભાઓ',
+      // Welcome / Onboarding Screen
+      'welcomeSlide1Title': 'દૈનિક પંચાંગ અને શુભ મુહૂર્ત',
+      'welcomeSlide1Subtitle': 'દરેક દિવસના શુભ સમય, તિથિ અને વિશેષ ધાર્મિક ઉત્સવોની ચોક્કસ માહિતી મેળવો.',
+      'welcomeSlide2Title': 'અખંડ નામ જાપ સાધના',
+      'welcomeSlide2Subtitle': 'ડિજિટલ માળા સાથે એકાગ્રતાથી પ્રભુના પવિત્ર નામનું દૈનિક સ્મરણ કરો.',
+      'welcomeSlide3Title': 'પારિવારિક ભક્તિ મંડળ',
+      'welcomeSlide3Subtitle': 'તમારા પરિવાર અને મિત્રોને સાથે જોડીને સામૂહિક સાધનાના પુણ્યનો લાભ મેળવો.',
+
+      // Home Screen
+      'todayPanchang': 'આજનું પંચાંગ',
+      'panchangDateHeader': 'રાધે-રાધે, આજનો દિવસ શુભ રહે',
+      'panchangGregorianDate': 'રવિવાર, 14 મે 2023',
+      'tithi': 'તિથિ',
+      'tithiVal': 'એકાદશી',
+      'tithiEndsAt': 'બપોરે 02:36 સુધી',
+      'nakshatra': 'નક્ષત્ર',
+      'nakshatraVal': 'ઉત્તરા ભાદ્રપદ',
+      'nakshatraEndsAt': 'બીજા દિવસે 04:12 AM સુધી',
+      'yoga': 'યોગ',
+      'yogaVal': 'હર્ષણ',
+      'yogaEndsAt': 'સવારે 09:15 AM સુધી',
+      'karana': 'કરણ',
+      'karanaVal': 'બવ',
+      'karanaEndsAt': 'બપોરે 02:36 PM સુધી',
+      'auspiciousTiming': 'શુભ મુહૂર્ત',
+      'abhijitMuhurat': 'અભિજિત મુહૂર્ત',
+      'abhijitDesc': 'નવા કાર્યો અને ખરીદી માટે અત્યંત શુભ સમય',
+      'rahuKaalDesc': 'આ સમય દરમિયાન શુભ કાર્યો વર્જિત છે',
+      'festTomorrow': 'આવતીકાલે',
+      'festIn3Days': '3 દિવસમાં',
+      'fest1Title': 'શ્રી વલ્લભાચાર્ય જયંતી',
+      'fest1Sub': 'વિશેષ પૂજા અને કીર્તન ઉત્સવ',
+      'fest2Title': 'વરૂથિની એકાદશી',
+      'fest2Sub': 'શ્રી હરિ વિષ્ણુ પૂજન અને વ્રત',
+      'featuredEventTitle': 'શ્રી વલ્લભાચાર્ય મહોત્સવ',
+      'featuredEventDate': '27',
+      'featuredEventMonth': 'મે',
+      'featuredEventLocation': 'શ્રી નાથદ્વારા મંદિર, રાજસ્થાન',
+      'videoQuickDarshan': 'ઝડપી દર્શન',
+      'videoKatha': 'સત્સંગ કથા',
+      'videoAarti': 'સાંજની આરતી',
+      'spiritualDiscourses': 'અમૃત વચન',
+      'viewDetails': 'વિગતો જુઓ',
+      'upcomingEvents': 'આગામી ધાર્મિક ઉત્સવો',
+      'recentVideos': 'નવીનતમ વિડિઓ સત્સંગ',
+      'seeMore': 'વધુ જુઓ',
+      'amritVachan': 'દૈનિક અમૃત વચન',
+      'amritVachanDescShort': 'દૈનિક આધ્યાત્મિક સુવિચારો અને સંતોની વાણી',
+      'spiritualEvents': 'આધ્યાત્મિક ઉત્સવો અને કાર્યક્રમો',
+      'eventsDesc': 'ધાર્મિક અનુષ્ઠાન, કથા અને પવિત્ર મેળાવડા',
       'familyTree': 'પારિવારિક સાધના મંડળ',
-      'familyDesc': 'તમારા આખા પરિવારને ભક્તિ સાધના સાથે જોડો',
+      'familyDesc': 'તમારા સમગ્ર પરિવારને ભક્તિ સાધના સાથે જોડો',
       'sadhakLeaderboard': 'સાધક લીડરબોર્ડ',
       'leaderboardDesc': 'વૈશ્વિક સાધકોની ભક્તિ સ્થિતિ અને પ્રેરણા',
 
-      // Naam Jaap
+      // Naam Jaap Screens
       'dailyNaamJaap': 'દૈનિક નામ જાપ',
-      'tapToCount': 'ગણવા માટે ટેપ કરો',
-      'completedMalas': 'પૂર્ણ થયેલી માળા',
+      'tapToCount': 'ગણતરી માટે ટેપ કરો',
+      'completedMalas': 'પૂર્ણ માળાઓ',
       'today': 'આજે',
-      'streak': 'સતત',
+      'streak': 'સતતતા',
       'days': 'દિવસ',
       'history': 'ઇતિહાસ',
-      'malaCompletedToast': '🌸 ૧ માળા (૧૦૮ જાપ) પૂર્ણ થઈ! હરિબોલ!',
+      'malaCompletedToast': '🌸 1 માળા (108 જાપ) પૂર્ણ થઈ! હરિબોલ!',
       'ramNaam': 'રામ નામ',
       'krishnaNaam': 'કૃષ્ણ નામ',
       'radhaNaam': 'રાધા નામ',
       'omNamahShivaya': 'ૐ નમઃ શિવાય',
-
-      // Jaap History
       'jaapHistoryTitle': 'નામ જાપ ઇતિહાસ',
-      'jaapHistorySubtitle': 'સમય સાથે તમારી ભક્તિ યાત્રા',
-      'activityHeatmap': 'સાધના આલેખ',
+      'jaapHistorySubtitle': 'તમારી ભક્તિ યાત્રાની વિગતો',
+      'activityHeatmap': 'સાધના પ્રવૃત્તિ',
       'totalCount': 'કુલ જાપ સંખ્યા',
-      'longestStreak': 'સૌથી લાંબો સમયગાળો',
+      'longestStreak': 'સૌથી લાંબી સતતતા',
       'dailyAverage': 'દૈનિક સરેરાશ',
       'recentSessions': 'તાજેતરના સત્રો',
-      'morningMeditation': 'પ્રભાત સાધના',
+      'morningMeditation': 'સવારની સાધના',
       'eveningReflection': 'સાંજનું ધ્યાન',
-      'week': 'અઠવાડિયું',
+      'week': 'સપ્તાહ',
       'month': 'મહિનો',
       'year': 'વર્ષ',
 
-      // Audio Library & Player
-      'audioLibraryTitle': 'પવિત્ર ઓડિયો લાઇબ્રેરી',
-      'audioSearchHint': 'પ્રાર્થના, આરતી, મંત્રો શોધો...',
+      // Audio Library Screen
+      'audioLibraryTitle': 'દિવ્ય ઑડિયો લાઇબ્રેરી',
+      'audioSearchHint': 'પ્રાર્થના, આરતી, મંત્ર શોધો...',
       'allDeities': 'બધા દેવો',
-      'nowPlaying': 'હવે વાગી રહ્યું છે',
+      'nowPlaying': 'હમણાં વાગી રહ્યું છે',
       'playlist': 'પ્લેલિસ્ટ',
       'addedToFavorites': 'મનપસંદમાં ઉમેરાયું',
       'removedFromFavorites': 'મનપસંદમાંથી દૂર કર્યું',
+      'sacredLibrary': 'લાઇબ્રેરી',
+      'divineFocus': 'બધા દેવો',
 
-      // Profile
+      // Family Tree Screen
+      'familyHierarchyTree': 'પારિવારિક વંશ વૃક્ષ',
+      'membersUnit': 'સભ્યો',
+      'childrenUnit': 'સંતાન',
+      'relationsUnit': 'સંબંધો',
+      'directLineage': 'પ્રત્યક્ષ વંશજ (સંતાન)',
+      'connectedRelatives': 'જોડાયેલા સંબંધીઓ',
+      'noSubBranches': 'કોઈ શાખા મળી નથી.',
+      'unableToLoadFamily': 'પરિવાર લોડ કરવામાં અસમર્થ',
+      'retry': 'ફરી પ્રયાસ કરો',
+      'familyHeader': 'પારિવારિક સાધના મંડળ',
+      'headOfFamily': 'મોભી (કર્તા)',
+      'members': 'સભ્યો',
+      'addFamilyMember': 'પરિવારના સભ્ય ઉમેરો',
+
+      // Leaderboard Screen
+      'leaderboardHeader': 'વૈશ્વિક સાધક લીડરબોર્ડ',
+      'topSadhak': 'સર્વોચ્ચ સાધક',
+      'topSadhakHero': 'ટોચના સાધક',
+      'allSadhakRankings': 'બધા સાધકોની રેન્કિંગ',
+      'activeSadhaks': 'સક્રિય સાધકો',
+      'rank': 'રેન્ક',
+      'jaapUnit': 'જાપ',
+      'malasUnit': 'માળા',
+      'chants': 'જાપ',
+
+      // Profile Screen
       'profileTitle': 'સાધક પ્રોફાઇલ',
       'devotee': 'ભક્ત સાધક',
       'personalInfo': 'વ્યક્તિગત માહિતી',
@@ -663,40 +740,27 @@ class AppStrings {
       'spiritualPreferences': 'આધ્યાત્મિક પસંદગીઓ',
       'dailyMalaGoal': 'દૈનિક માળા લક્ષ્ય',
       'languageSetting': 'એપની ભાષા',
-      'notifications': 'સાધના રીમાઇન્ડર્સ અને સૂચનાઓ',
+      'notifications': 'સાધના સ્મરણ અને સૂચનાઓ',
       'jaapStreak': 'જાપ સાતત્ય',
       'totalGauseva': 'કુલ ગૌસેવા',
       'logout': 'લૉગ આઉટ',
       'logoutConfirm': 'શું તમે ખરેખર લૉગ આઉટ કરવા માંગો છો?',
 
-      // Videos
-      'videosTitle': 'દિવ્ય સત્સંગ અને વીડિયો',
+      // Videos / Satsang
+      'videosTitle': 'દિવ્ય સત્સંગ અને વિડિઓ',
       'shortsTab': 'શોર્ટ્સ',
-      'videosTab': 'વીડિયો',
-      'liveTab': 'લાઈવ',
-      'noVideosFound': 'કોઈ વીડિયો મળ્યો નથી',
+      'videosTab': 'વિડિઓઝ',
+      'liveTab': 'લાઇવ',
+      'noVideosFound': 'કોઈ વિડિઓ મળ્યા નથી',
 
-      // Amrit Vachan
+      // Amrit Vachan & Events
       'amritVachanHeader': 'દૈનિક અમૃત વચન',
       'totalAmritVachan': 'કુલ અમૃત વચન',
       'allAmritVachan': 'બધા અમૃત વચન',
+      'eventsHeader': 'આધ્યાત્મિક ઉત્સવો અને કાર્યક્રમો',
+      'noEventsFound': 'કોઈ આગામી કાર્યક્રમ મળ્યો નથી',
 
-      // Events
-      'eventsHeader': 'ધાર્મિક ઉત્સવ અને કાર્યક્રમો',
-      'noEventsFound': 'કોઈ આગામી કાર્યક્રમો નથી',
-
-      // Family
-      'familyHeader': 'પારિવારિક સાધના મંડળ',
-      'headOfFamily': 'પરિવારના વડા (કર્તા)',
-      'members': 'સભ્યો',
-      'addFamilyMember': 'પરિવારના સભ્ય ઉમેરો',
-
-      // Leaderboard
-      'leaderboardHeader': 'વૈશ્વિક સાધક લીડરબોર્ડ',
-      'topSadhak': 'ટોચના સાધક',
-      'chants': 'જાપ',
-
-      // Donate
+      // Donation / Gau Seva
       'donateHeader': 'પવિત્ર ગૌ સેવા સહયોગ',
       'monthlyPlan': 'માસિક સહયોગ',
       'yearlyPlan': 'વાર્ષિક સહયોગ',
@@ -706,7 +770,7 @@ class AppStrings {
 
     'ta': {
       // General & Common
-      'hariPath': 'ஹரி பாத்',
+      'hariPath': 'ஹரி பாதம்',
       'getStarted': 'தொடங்குங்கள்',
       'next': 'அடுத்து',
       'skip': 'தவிர்',
@@ -723,86 +787,138 @@ class AppStrings {
       'whatsApp': 'வாட்ஸ்அப்',
 
       // Navigation
+      'navHome': 'முகப்பு',
       'navPanchang': 'பஞ்சாங்கம்',
-      'navJaap': 'நாம ஜெபம்',
+      'navJaap': 'நாம ஜபம்',
+      'navVideos': 'வீடியோக்கள்',
       'navLibrary': 'நூலகம்',
+      'navFamily': 'குடும்பம்',
+      'navLeaderboard': 'தரவரிசை',
       'navProfile': 'சுயவிவரம்',
 
-      // Language & Welcome
-      'chooseLanguageTitle': 'உங்கள் மொழியை\nதேர்ந்தெடுங்கள்',
-      'chooseLanguageSubtitle': 'உங்கள் ஆன்மீக பயணத்திற்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.',
-      'welcomeToHariPath': 'ஹரி பாத்திற்கு நல்வரவு',
-      'welcomeDesc1': 'உங்கள் ஆன்மீக பயணத்தைத் தொடங்குங்கள். பக்தி, தியானம் மற்றும் அமைதியின் வழியில் பயணியுங்கள்.',
-      'naamJaapTitle': 'தினசரி நாம ஜெபம்',
-      'naamJaapDesc': 'டிஜிட்டல் ஜெபமாலையுடன் தினசரி நாம ஜெபம் செய்து ஆன்மீக அமைதி பெறுங்கள்.',
-      'amritVachanTitle': 'அமிர்த வசனம் & சத்சங்கம்',
-      'amritVachanDesc': 'தினசரி ஆன்மீக சிந்தனைகள் மற்றும் வழிகாட்டுதல்களைப் பெறுங்கள்.',
+      // Language Selection Screen
+      'chooseLanguageTitle': 'உங்கள் விருப்பமான\nமொழியைத் தேர்ந்தெடுக்கவும்',
+      'chooseLanguageSubtitle': 'உங்கள் ஆன்மீகப் பயணத்தை அமைதியாகவும் எளிதாகவும் செய்ய உங்கள் தாய்மொழியைத் தேர்ந்தெடுக்கவும்.',
 
-      // Home / Panchang
-      'vedicPanchang': 'வேத பஞ்சாங்கம்',
-      'todayAuspicious': 'இன்றைய சுப நேரங்கள்',
-      'celestialTimings': 'வானியல் நேரங்கள்',
-      'sunrise': 'சூரிய உதயம்',
-      'sunset': 'சூரிய அஸ்தமனம்',
-      'moonrise': 'சந்திர உதயம்',
-      'moonset': 'சந்திர அஸ்தமனம்',
-      'inauspiciousPeriod': 'அசுப காலம்',
-      'rahuKaal': 'ராகு காலம்',
-      'rahuKaalCaution': 'முக்கிய பணிகளைத் தொடங்குவதைத் தவிர்க்கவும்',
-      'upcomingFestivals': 'வரவிருக்கும் பண்டிகைகள்',
-      'sacredSeva': 'புனித சேவை மற்றும் நன்கொடை',
-      'supportOurCows': 'பசு சேவை செய்யுங்கள்',
-      'donateDesc': 'கோமாதாவின் உணவு, மருத்துவம் மற்றும் பராமரிப்பில் உதவுங்கள்',
-      'donateBtn': 'நன்கொடை',
-      'exploreSacred': 'ஆன்மீக சேவைகள்',
-      'videosAndSatsang': 'சத்சங்கம் & வீடியோக்கள்',
-      'videosDesc': 'பக்தி பாடல்கள், உபன்யாசங்கள் மற்றும் நேரலை சத்சங்கம்',
-      'amritVachanDescShort': 'தினசரி ஆன்மீக சிந்தனைகள் மற்றும் பொன்மொழிகள்',
+      // Welcome / Onboarding Screen
+      'welcomeSlide1Title': 'தினசரி பஞ்சாங்கம் & சுப முஹூர்த்தம்',
+      'welcomeSlide1Subtitle': 'ஒவ்வொரு நாளின் சுப நேரம், திதி மற்றும் ஆன்மீக விழாக்களின் துல்லியமான விவரங்களைப் பெறுங்கள்.',
+      'welcomeSlide2Title': 'தொடர்ச்சியான நாம ஜப சாதனை',
+      'welcomeSlide2Subtitle': 'டிஜிட்டல் மாலையுடன் இறைவனின் திருநாமங்களை தினசரி ஏகாக்ரதையுடன் ஜபியுங்கள்.',
+      'welcomeSlide3Title': 'குடும்ப ஆன்மீக வட்டம்',
+      'welcomeSlide3Subtitle': 'உங்கள் குடும்பத்தினருடன் இணைந்து கூட்டுப் பிரார்த்தனையின் புண்ணியத்தைப் பெறுங்கள்.',
+
+      // Home Screen
+      'todayPanchang': 'இன்றைய பஞ்சாங்கம்',
+      'panchangDateHeader': 'ராதே ராதே, இந்த நாள் இனிய நாளாக அமையட்டும்',
+      'panchangGregorianDate': 'ஞாயிறு, 14 மே 2023',
+      'tithi': 'திதி',
+      'tithiVal': 'ஏகாதசி',
+      'tithiEndsAt': 'மதியம் 02:36 வரை',
+      'nakshatra': 'நட்சத்திரம்',
+      'nakshatraVal': 'உத்திரட்டாதி',
+      'nakshatraEndsAt': 'மறுநாள் 04:12 AM வரை',
+      'yoga': 'யோகம்',
+      'yogaVal': 'ஹர்ஷணம்',
+      'yogaEndsAt': 'காலை 09:15 AM வரை',
+      'karana': 'கரணம்',
+      'karanaVal': 'பவம்',
+      'karanaEndsAt': 'மதியம் 02:36 PM வரை',
+      'auspiciousTiming': 'சுப நேரம்',
+      'abhijitMuhurat': 'அபிஜித் முஹூர்த்தம்',
+      'abhijitDesc': 'புதிய காரியங்கள் தொடங்க மிகவும் உகந்த நேரம்',
+      'rahuKaalDesc': 'இந்த நேரத்தில் சுப காரியங்கள் தவிர்க்கப்பட வேண்டும்',
+      'festTomorrow': 'நாளை',
+      'festIn3Days': '3 நாட்களில்',
+      'fest1Title': 'ஸ்ரீ வல்லபாச்சாரியார் ஜெயந்தி',
+      'fest1Sub': 'சிறப்பு பூஜை மற்றும் கீர்த்தனை',
+      'fest2Title': 'வரூதினி ஏகாதசி',
+      'fest2Sub': 'ஸ்ரீ விஷ்ணு வழிபாடு மற்றும் விரதம்',
+      'featuredEventTitle': 'ஸ்ரீ வல்லபாச்சாரியார் மகோற்சவம்',
+      'featuredEventDate': '27',
+      'featuredEventMonth': 'மே',
+      'featuredEventLocation': 'ஸ்ரீ நாத்வாரா கோவில், ராஜஸ்தான்',
+      'videoQuickDarshan': 'விரைவு தரிசனம்',
+      'videoKatha': 'சத்சங்க கதை',
+      'videoAarti': 'மாலை ஆரத்தி',
+      'spiritualDiscourses': 'ஆன்மீக அமுத மொழிகள்',
+      'viewDetails': 'விவரங்களைக் காண்க',
+      'upcomingEvents': 'வரவிருக்கும் புனித நிகழ்வுகள்',
+      'recentVideos': 'சமீபத்திய வீடியோ சத்சங்கம்',
+      'seeMore': 'மேலும் காண்க',
+      'amritVachan': 'தினசரி அமுத வாக்கு',
+      'amritVachanDescShort': 'ஞானிகளின் பொன்மொழிகள் மற்றும் ஆன்மீக சிந்தனைகள்',
       'spiritualEvents': 'ஆன்மீக விழாக்கள் & நிகழ்வுகள்',
-      'eventsDesc': 'பூஜைகள், யாகங்கள் மற்றும் ஆன்மீக கூட்டங்கள்',
-      'familyTree': 'குடும்ப சாதனா வட்டம்',
-      'familyDesc': 'உங்கள் முழு குடும்பத்தையும் பக்தி சாதனையில் இணையுங்கள்',
+      'eventsDesc': 'வழிபாடுகள், யாகங்கள் மற்றும் ஆன்மீகக் கூட்டங்கள்',
+      'familyTree': 'குடும்ப ஆன்மீக வட்டம்',
+      'familyDesc': 'உங்கள் முழு குடும்பத்தையும் நாம ஜபத்தில் இணைக்கவும்',
       'sadhakLeaderboard': 'சாதகர் தரவரிசை',
-      'leaderboardDesc': 'உலகளாவிய பக்தர்களின் பக்தி நிலை மற்றும் ஊக்கம்',
+      'leaderboardDesc': 'உலகளாவிய பக்தர்களின் பக்தி நிலை மற்றும் உத்வேகம்',
 
-      // Naam Jaap
-      'dailyNaamJaap': 'தினசரி நாம ஜெபம்',
+      // Naam Jaap Screens
+      'dailyNaamJaap': 'தினசரி நாம ஜபம்',
       'tapToCount': 'எண்ண தட்டவும்',
-      'completedMalas': 'முடிந்த மாலைகள்',
+      'completedMalas': 'முடித்த மாலைகள்',
       'today': 'இன்று',
       'streak': 'தொடர்ச்சி',
       'days': 'நாட்கள்',
       'history': 'வரலாறு',
-      'malaCompletedToast': '🌸 1 மாலை (108 ஜெபம்) முடிந்தது! ஹரிபோல்!',
+      'malaCompletedToast': '🌸 1 மாலை (108 ஜபம்) முடிந்தது! ஹரிபோல்!',
       'ramNaam': 'ராம நாமம்',
       'krishnaNaam': 'கிருஷ்ண நாமம்',
       'radhaNaam': 'ராதா நாமம்',
       'omNamahShivaya': 'ஓம் நம சிவாய',
-
-      // Jaap History
-      'jaapHistoryTitle': 'நாம ஜெப வரலாறு',
-      'jaapHistorySubtitle': 'காலப்போக்கில் உங்கள் பக்தி பயணம்',
-      'activityHeatmap': 'சாதனை வரைபடம்',
-      'totalCount': 'மொத்த ஜெபங்கள்',
+      'jaapHistoryTitle': 'நாம ஜப வரலாறு',
+      'jaapHistorySubtitle': 'காலப்போக்கில் உங்கள் பக்திப் பயணம்',
+      'activityHeatmap': 'சாதனை செயல்பாடு',
+      'totalCount': 'மொத்த ஜப எண்ணிக்கை',
       'longestStreak': 'நீண்ட தொடர்ச்சி',
       'dailyAverage': 'தினசரி சராசரி',
       'recentSessions': 'சமீபத்திய அமர்வுகள்',
       'morningMeditation': 'காலை தியானம்',
-      'eveningReflection': 'மாலை தியானம்',
+      'eveningReflection': 'மாலை சிந்தனை',
       'week': 'வாரம்',
       'month': 'மாதம்',
-      'year': 'ஆண்டு',
+      'year': 'வருடம்',
 
-      // Audio Library & Player
+      // Audio Library Screen
       'audioLibraryTitle': 'புனித ஆடியோ நூலகம்',
       'audioSearchHint': 'பிரார்த்தனைகள், ஆரத்திகள், மந்திரங்களைத் தேடுங்கள்...',
       'allDeities': 'அனைத்து தெய்வங்கள்',
       'nowPlaying': 'இப்போது ஒலிக்கிறது',
       'playlist': 'பிளேலிஸ்ட்',
-      'addedToFavorites': 'விருப்பமானவற்றில் சேர்க்கப்பட்டது',
-      'removedFromFavorites': 'விருப்பமானவற்றிலிருந்து நீக்கப்பட்டது',
+      'addedToFavorites': 'விருப்பங்களில் சேர்க்கப்பட்டது',
+      'removedFromFavorites': 'விருப்பங்களிலிருந்து நீக்கப்பட்டது',
+      'sacredLibrary': 'நூலகம்',
+      'divineFocus': 'அனைத்து தெய்வங்கள்',
 
-      // Profile
+      // Family Tree Screen
+      'familyHierarchyTree': 'குடும்ப வம்ச மரம்',
+      'membersUnit': 'உறுப்பினர்கள்',
+      'childrenUnit': 'குழந்தைகள்',
+      'relationsUnit': 'உறவுகள்',
+      'directLineage': 'நேரடி பரம்பரை (குழந்தைகள்)',
+      'connectedRelatives': 'இணைக்கப்பட்ட உறவினர்கள்',
+      'noSubBranches': 'கிளைகள் எதுவும் காணப்படவில்லை.',
+      'unableToLoadFamily': 'குடும்ப விவரங்களை ஏற்ற முடியவில்லை',
+      'retry': 'மீண்டும் முயற்சிக்கவும்',
+      'familyHeader': 'குடும்ப ஆன்மீக வட்டம்',
+      'headOfFamily': 'குடும்பத் தலைவர் (கர்த்தா)',
+      'members': 'உறுப்பினர்கள்',
+      'addFamilyMember': 'குடும்ப உறுப்பினரைச் சேர்க்கவும்',
+
+      // Leaderboard Screen
+      'leaderboardHeader': 'உலகளாவிய சாதகர் தரவரிசை',
+      'topSadhak': 'முதன்மையான சாதகர்',
+      'topSadhakHero': 'முதன்மை சாதகர்',
+      'allSadhakRankings': 'அனைத்து சாதகர்கள் தரவரிசை',
+      'activeSadhaks': 'செயலில் உள்ள சாதகர்கள்',
+      'rank': 'ரேங்க்',
+      'jaapUnit': 'ஜபம்',
+      'malasUnit': 'மாலை',
+      'chants': 'ஜபம்',
+
+      // Profile Screen
       'profileTitle': 'சாதகர் சுயவிவரம்',
       'devotee': 'பக்த சாதகர்',
       'personalInfo': 'தனிப்பட்ட தகவல்',
@@ -815,113 +931,126 @@ class AppStrings {
       'spiritualPreferences': 'ஆன்மீக விருப்பங்கள்',
       'dailyMalaGoal': 'தினசரி மாலை இலக்கு',
       'languageSetting': 'செயலி மொழி',
-      'notifications': 'சாதனா நினைவூட்டல்கள் & அறிவிப்புகள்',
-      'jaapStreak': 'ஜெப தொடர்ச்சி',
+      'notifications': 'சாதனை நினைவூட்டல்கள் & அறிவிப்புகள்',
+      'jaapStreak': 'ஜப தொடர்ச்சி',
       'totalGauseva': 'மொத்த கோ சேவை',
       'logout': 'வெளியேறு',
       'logoutConfirm': 'நீங்கள் நிச்சயமாக வெளியேற விரும்புகிறீர்களா?',
 
-      // Videos
-      'videosTitle': 'தெய்வீக சத்சங்கம் & வீடியோக்கள்',
-      'shortsTab': 'ஷார்ட்ஸ்',
+      // Videos / Satsang
+      'videosTitle': 'புனித சத்சங்கம் & வீடியோக்கள்',
+      'shortsTab': 'குறும்படங்கள்',
       'videosTab': 'வீடியோக்கள்',
       'liveTab': 'நேரலை',
-      'noVideosFound': 'வீடியோக்கள் எதுவும் கிடைக்கவில்லை',
+      'noVideosFound': 'வீடியோக்கள் எதுவும் இல்லை',
 
-      // Amrit Vachan
-      'amritVachanHeader': 'தினசரி அமிர்த வசனம்',
-      'totalAmritVachan': 'மொத்த அமிர்த வசனங்கள்',
-      'allAmritVachan': 'அனைத்து அமிர்த வசனங்கள்',
-
-      // Events
+      // Amrit Vachan & Events
+      'amritVachanHeader': 'தினசரி அமுத வாக்கு',
+      'totalAmritVachan': 'மொத்த அமுத வாக்குகள்',
+      'allAmritVachan': 'அனைத்து அமுத வாக்குகள்',
       'eventsHeader': 'ஆன்மீக விழாக்கள் & நிகழ்வுகள்',
-      'noEventsFound': 'வரவிருக்கும் நிகழ்வுகள் இல்லை',
+      'noEventsFound': 'வரவிருக்கும் நிகழ்வுகள் எதுவும் இல்லை',
 
-      // Family
-      'familyHeader': 'குடும்ப சாதனா வட்டம்',
-      'headOfFamily': 'குடும்பத் தலைவர் (கர்த்தா)',
-      'members': 'உறுப்பினர்கள்',
-      'addFamilyMember': 'குடும்ப உறுப்பினரைச் சேர்க்கவும்',
-
-      // Leaderboard
-      'leaderboardHeader': 'உலகளாவிய சாதகர் தரவரிசை',
-      'topSadhak': 'சிறந்த சாதகர்',
-      'chants': 'ஜெபங்கள்',
-
-      // Donate
+      // Donation / Gau Seva
       'donateHeader': 'புனித கோ சேவை உதவி',
       'monthlyPlan': 'மாதாந்திர உதவி',
       'yearlyPlan': 'ஆண்டு உதவி',
-      'oneTimePlan': 'ஒருமுறை நன்கொடை',
+      'oneTimePlan': 'ஒரு முறை நன்கொடை',
       'continueToPayment': 'பணம் செலுத்த தொடரவும்',
     },
 
     'te': {
       // General & Common
-      'hariPath': 'హరి పాఠ్',
+      'hariPath': 'హరి పాఠం',
       'getStarted': 'ప్రారంభించండి',
       'next': 'తరువాత',
       'skip': 'దాటవేయి',
       'edit': 'సవరించు',
       'cancel': 'రద్దు చేయి',
-      'saveChanges': 'మార్పులను భద్రపరచు',
-      'tryAgain': 'మళ్ళీ ప్రయత్నించండి',
+      'saveChanges': 'మార్పులను భద్రపరుచు',
+      'tryAgain': 'మళ్లీ ప్రయత్నించండి',
       'viewAll': 'అన్నీ చూడండి',
       'refresh': 'రిఫ్రెష్ చేయండి',
       'loading': 'లోడ్ అవుతోంది...',
-      'save': 'భద్రపరచు',
+      'save': 'భద్రపరుచు',
       'share': 'భాగస్వామ్యం చేయండి',
       'download': 'డౌన్‌లోడ్',
       'whatsApp': 'వాట్సాప్',
 
       // Navigation
+      'navHome': 'హోమ్',
       'navPanchang': 'పంచాంగం',
       'navJaap': 'నామ జపం',
+      'navVideos': 'వీడియోలు',
       'navLibrary': 'లైబ్రరీ',
+      'navFamily': 'కుటుంబం',
+      'navLeaderboard': 'లీడర్‌బోర్డ్',
       'navProfile': 'ప్రొఫైల్',
 
-      // Language & Welcome
-      'chooseLanguageTitle': 'మీ భాషను\nఎంచుకోండి',
-      'chooseLanguageSubtitle': 'మీ ఆధ్యాత్మిక ప్రయాణానికి ప్రాధాన్యత గల భాషను ఎంచుకోండి.',
-      'welcomeToHariPath': 'హరి పాఠ్‌కు స్వాగతం',
-      'welcomeDesc1': 'మీ ఆధ్యాత్మిక ప్రయాణాన్ని ప్రారంభించండి. భక్తి, ధ్యానం మరియు శాంతి మార్గంలో సాగండి.',
-      'naamJaapTitle': 'రోజువారీ నామ జపం',
-      'naamJaapDesc': 'డిజిటల్ జపమాలతో ప్రతిరోజూ నామ జపం చేయండి మరియు ప్రశాంతతను పొందండి.',
-      'amritVachanTitle': 'అమృత వచనం & సత్సంగం',
-      'amritVachanDesc': 'ప్రతిరోజూ దివ్య వచనాలు మరియు ఆధ్యాత్మిక ప్రవచనాలను వినండి.',
+      // Language Selection Screen
+      'chooseLanguageTitle': 'మీకు ఇష్టమైన భాషను\nఎంచుకోండి',
+      'chooseLanguageSubtitle': 'మీ ఆధ్యాత్మిక ప్రయాణాన్ని ప్రశాంతంగా మరియు సులభంగా మార్చడానికి మీ మాతృభాషను ఎంచుకోండి.',
 
-      // Home / Panchang
-      'vedicPanchang': 'వైదిక పంచాంగం',
-      'todayAuspicious': 'నేటి శుభ ముహూర్తాలు',
-      'celestialTimings': 'ఖగోళ సమయాలు',
-      'sunrise': 'సూర్యోదయం',
-      'sunset': 'సూర్యాస్తమయం',
-      'moonrise': 'చంద్రోదయం',
-      'moonset': 'చంద్రాస్తమయం',
-      'inauspiciousPeriod': 'అశుభ కాలం',
-      'rahuKaal': 'రాహు కాలం',
-      'rahuKaalCaution': 'ముఖ్యమైన పనులు ప్రారంభించవద్దు',
-      'upcomingFestivals': 'రాబోయే పండుగలు',
-      'sacredSeva': 'పవిత్ర సేవ & విరాళాలు',
-      'supportOurCows': 'గోమాత సేవ చేయండి',
-      'donateDesc': 'గోమాత పోషణ, వైద్యం మరియు ఆశ్రయం కోసం సహాయం చేయండి',
-      'donateBtn': 'దానం చేయండి',
-      'exploreSacred': 'ఆధ్యాత్మిక విశేషాలు',
-      'videosAndSatsang': 'సత్సంగం & వీడియోలు',
-      'videosDesc': 'భజనలు, కీర్తనలు, ప్రవచనాలు మరియు ప్రత్యక్ష సత్సంగాలు',
-      'amritVachanDescShort': 'రోజువారీ ఆధ్యాత్మిక సూక్తులు & సాధువుల బోధనలు',
+      // Welcome / Onboarding Screen
+      'welcomeSlide1Title': 'రోజువారీ పంచాంగం & శుభ ముహూర్తం',
+      'welcomeSlide1Subtitle': 'ప్రతి రోజు శుభ సమయం, తిథి మరియు ముఖ్యమైన పండుగల ఖచ్చితమైన సమాచారాన్ని పొందండి.',
+      'welcomeSlide2Title': 'అఖండ నామ జప సాధన',
+      'welcomeSlide2Subtitle': 'డిజిటల్ మాలతో ప్రతిరోజూ ఏకాగ్రతతో భగవంతుని నామస్మరణ చేయండి.',
+      'welcomeSlide3Title': 'కుటుంబ సాధనా మండలి',
+      'welcomeSlide3Subtitle': 'మీ కుటుంబాన్ని మరియు స్నేహితులను జోడించి సామూహిక భక్తి పుణ్యాన్ని పొందండి.',
+
+      // Home Screen
+      'todayPanchang': 'నేటి పంచాంగం',
+      'panchangDateHeader': 'రాధే రాధే, ఈ రోజు మీకు శుభం కలగాలి',
+      'panchangGregorianDate': 'ఆదివారం, 14 మే 2023',
+      'tithi': 'తిథి',
+      'tithiVal': 'ఏకాదశి',
+      'tithiEndsAt': 'మధ్యాహ్నం 02:36 వరకు',
+      'nakshatra': 'నక్షత్రం',
+      'nakshatraVal': 'ఉత్తరాభాద్ర',
+      'nakshatraEndsAt': 'మరుసటి రోజు 04:12 AM వరకు',
+      'yoga': 'యోగం',
+      'yogaVal': 'హర్షణం',
+      'yogaEndsAt': 'ఉదయం 09:15 AM వరకు',
+      'karana': 'కరణం',
+      'karanaVal': 'బవ',
+      'karanaEndsAt': 'మధ్యాహ్నం 02:36 PM వరకు',
+      'auspiciousTiming': 'శుభ సమయాలు',
+      'abhijitMuhurat': 'అభిజిత్ ముహూర్తం',
+      'abhijitDesc': 'కొత్త పనులు మరియు కొనుగోళ్లకు అత్యంత శుభప్రదమైన సమయం',
+      'rahuKaalDesc': 'ఈ సమయంలో శుభకార్యాలు నిషిద్ధం',
+      'festTomorrow': 'రేపు',
+      'festIn3Days': '3 రోజుల్లో',
+      'fest1Title': 'శ్రీ వల్లభాచార్య జయంతి',
+      'fest1Sub': 'ప్రత్యేక పూజ మరియు కీర్తనల ఉత్సవం',
+      'fest2Title': 'వరూథినీ ఏకాదశి',
+      'fest2Sub': 'శ్రీ హరి విష్ణు పూజ మరియు ఉపవాసం',
+      'featuredEventTitle': 'శ్రీ వల్లభాచార్య మహోత్సవం',
+      'featuredEventDate': '27',
+      'featuredEventMonth': 'మే',
+      'featuredEventLocation': 'శ్రీ నాథద్వారా ఆలయం, రాజస్థాన్',
+      'videoQuickDarshan': 'శీఘ్ర దర్శనం',
+      'videoKatha': 'సత్సంగ కథ',
+      'videoAarti': 'సాయంత్రం హారతి',
+      'spiritualDiscourses': 'ఆధ్యాత్మిక అమృత వచనాలు',
+      'viewDetails': 'వివరాలు చూడండి',
+      'upcomingEvents': 'రాబోయే పవిత్ర ఉత్సవాలు',
+      'recentVideos': 'తాజా వీడియో సత్సంగాలు',
+      'seeMore': 'మరిన్ని చూడండి',
+      'amritVachan': 'రోజువారీ అమృత వచనం',
+      'amritVachanDescShort': 'రోజువారీ ఆధ్యాత్మిక సూక్తులు మరియు సాధువుల ప్రవచనాలు',
       'spiritualEvents': 'ఆధ్యాత్మిక ఉత్సవాలు & కార్యక్రమాలు',
-      'eventsDesc': 'పూజలు, యజ్ఞాలు మరియు పవిత్ర సభలు',
-      'familyTree': 'కుటుంబ సాధన మండలి',
-      'familyDesc': 'మీ పూర్తి కుటుంబాన్ని భక్తి సాధనతో అనుసంధానించండి',
+      'eventsDesc': 'ధార్మిక పూజలు, కథలు మరియు పవిత్ర సభలు',
+      'familyTree': 'కుటుంబ సాధనా మండలి',
+      'familyDesc': 'మీ మొత్తం కుటుంబాన్ని నామ జపంలో కలపండి',
       'sadhakLeaderboard': 'సాధక లీడర్‌బోర్డ్',
       'leaderboardDesc': 'ప్రపంచ సాధకుల భక్తి స్థితి మరియు ప్రేరణ',
 
-      // Naam Jaap
+      // Naam Jaap Screens
       'dailyNaamJaap': 'రోజువారీ నామ జపం',
       'tapToCount': 'లెక్కించడానికి నొక్కండి',
       'completedMalas': 'పూర్తయిన మాలలు',
-      'today': 'నేడు',
+      'today': 'ఈ రోజు',
       'streak': 'నిరంతరత',
       'days': 'రోజులు',
       'history': 'చరిత్ర',
@@ -930,100 +1059,122 @@ class AppStrings {
       'krishnaNaam': 'కృష్ణ నామం',
       'radhaNaam': 'రాధా నామం',
       'omNamahShivaya': 'ఓం నమః శివాయ',
-
-      // Jaap History
       'jaapHistoryTitle': 'నామ జప చరిత్ర',
-      'jaapHistorySubtitle': 'సమయంతో మీ భక్తి ప్రయాణం',
-      'activityHeatmap': 'సాధన గ్రాఫ్',
-      'totalCount': 'మొత్తం జపాలు',
-      'longestStreak': 'దీర్ఘకాలిక రికార్డు',
+      'jaapHistorySubtitle': 'కాలక్రమేణా మీ భక్తి ప్రయాణం',
+      'activityHeatmap': 'సాధనా కార్యాచరణ',
+      'totalCount': 'మొత్తం జప సంఖ్య',
+      'longestStreak': 'అత్యంత ఎక్కువ నిరంతరత',
       'dailyAverage': 'రోజువారీ సగటు',
-      'recentSessions': 'ఇటీవలి సెషన్లు',
-      'morningMeditation': 'ఉదయపు ధ్యానం',
+      'recentSessions': 'ఇటీవలి సెషన్‌లు',
+      'morningMeditation': 'ఉదయపు సాధన',
       'eveningReflection': 'సాయంత్రపు ధ్యానం',
       'week': 'వారం',
       'month': 'నెల',
       'year': 'సంవత్సరం',
 
-      // Audio Library & Player
-      'audioLibraryTitle': 'పవిత్ర ఆడియో లైబ్రరీ',
-      'audioSearchHint': 'ప్రార్థనలు, ఆరతులు, మంత్రాలను శోధించండి...',
+      // Audio Library Screen
+      'audioLibraryTitle': 'దివ్య ఆడియో లైబ్రరీ',
+      'audioSearchHint': 'ప్రార్థనలు, హారతులు, మంత్రాలను వెతకండి...',
       'allDeities': 'అన్ని దేవతలు',
       'nowPlaying': 'ఇప్పుడు ప్లే అవుతోంది',
       'playlist': 'ప్లేలిస్ట్',
       'addedToFavorites': 'ఇష్టమైన వాటిలో చేర్చబడింది',
-      'removedFromFavorites': 'ఇష్టమైన వాటి నుండి తొలగించబడింది',
+      'removedFromFavorites': 'ఇష్టమైన వాటి నుండి తీసివేయబడింది',
+      'sacredLibrary': 'లైబ్రరీ',
+      'divineFocus': 'అన్ని దేవతలు',
 
-      // Profile
+      // Family Tree Screen
+      'familyHierarchyTree': 'కుటుంబ వంశ వృక్షం',
+      'membersUnit': 'సభ్యులు',
+      'childrenUnit': 'పిల్లలు',
+      'relationsUnit': 'సంబంధాలు',
+      'directLineage': 'ప్రత్యక్ష వంశం (పిల్లలు)',
+      'connectedRelatives': 'కలిసి ఉన్న బంధువులు',
+      'noSubBranches': 'ఎలాంటి శాఖలు కనుగొనబడలేదు.',
+      'unableToLoadFamily': 'కుటుంబ వివరాలను లోడ్ చేయడం సాధ్యపడలేదు',
+      'retry': 'మళ్లీ ప్రయత్నించండి',
+      'familyHeader': 'కుటుంబ సాధనా మండలి',
+      'headOfFamily': 'కుటుంబ పెద్ద (కర్త)',
+      'members': 'సభ్యులు',
+      'addFamilyMember': 'కుటుంబ సభ్యుడిని చేర్చండి',
+
+      // Leaderboard Screen
+      'leaderboardHeader': 'ప్రపంచ సాధక లీడర్‌బోర్డ్',
+      'topSadhak': 'అగ్ర సాధకుడు',
+      'topSadhakHero': 'అగ్ర సాధకుడు',
+      'allSadhakRankings': 'అన్ని సాధకుల ర్యాంకింగ్స్',
+      'activeSadhaks': 'క్రియాశీల సాధకులు',
+      'rank': 'ర్యాంక్',
+      'jaapUnit': 'జపం',
+      'malasUnit': 'మాల',
+      'chants': 'జపం',
+
+      // Profile Screen
       'profileTitle': 'సాధక ప్రొఫైల్',
       'devotee': 'భక్త సాధకుడు',
       'personalInfo': 'వ్యక్తిగత సమాచారం',
       'fullName': 'పూర్తి పేరు',
-      'phone': 'మొబైల్ సంఖ్య',
-      'email': 'ఈమెయిల్ చిరునామా',
+      'phone': 'మొబైల్ నంబర్',
+      'email': 'ఇమెయిల్ చిరునామా',
       'cityState': 'నగరం & రాష్ట్రం',
       'gotra': 'గోత్రం',
       'dob': 'పుట్టిన తేదీ',
       'spiritualPreferences': 'ఆధ్యాత్మిక ప్రాధాన్యతలు',
       'dailyMalaGoal': 'రోజువారీ మాల లక్ష్యం',
       'languageSetting': 'యాప్ భాష',
-      'notifications': 'సాధన రిమైండర్‌లు & నోటిఫికేషన్‌లు',
+      'notifications': 'సాధనా రిమైండర్‌లు & నోటిఫికేషన్‌లు',
       'jaapStreak': 'జప నిరంతరత',
       'totalGauseva': 'మొత్తం గోసేవ',
       'logout': 'లాగ్ అవుట్',
       'logoutConfirm': 'మీరు ఖచ్చితంగా లాగ్ అవుట్ చేయాలనుకుంటున్నారా?',
 
-      // Videos
+      // Videos / Satsang
       'videosTitle': 'దివ్య సత్సంగం & వీడియోలు',
       'shortsTab': 'షార్ట్స్',
       'videosTab': 'వీడియోలు',
       'liveTab': 'లైవ్',
       'noVideosFound': 'వీడియోలు ఏవీ కనుగొనబడలేదు',
 
-      // Amrit Vachan
+      // Amrit Vachan & Events
       'amritVachanHeader': 'రోజువారీ అమృత వచనం',
       'totalAmritVachan': 'మొత్తం అమృత వచనాలు',
       'allAmritVachan': 'అన్ని అమృత వచనాలు',
-
-      // Events
       'eventsHeader': 'ఆధ్యాత్మిక ఉత్సవాలు & కార్యక్రమాలు',
       'noEventsFound': 'రాబోయే కార్యక్రమాలు ఏవీ లేవు',
 
-      // Family
-      'familyHeader': 'కుటుంబ సాధన మండలి',
-      'headOfFamily': 'కుటుంబ పెద్ద (కర్త)',
-      'members': 'సభ్యులు',
-      'addFamilyMember': 'కుటుంబ సభ్యుడిని జోడించండి',
-
-      // Leaderboard
-      'leaderboardHeader': 'ప్రపంచ సాధక లీడర్‌బోర్డ్',
-      'topSadhak': 'అగ్ర సాధకుడు',
-      'chants': 'జపాలు',
-
-      // Donate
+      // Donation / Gau Seva
       'donateHeader': 'పవిత్ర గోసేవ సహాయం',
       'monthlyPlan': 'నెలవారీ సహాయం',
       'yearlyPlan': 'వార్షిక సహాయం',
       'oneTimePlan': 'ఒకేసారి విరాళం',
-      'continueToPayment': 'చెల్లింపుకు ముందుకు సాగండి',
+      'continueToPayment': 'చెల్లింపుకు కొనసాగండి',
     },
   };
 
+  static Map<String, Map<String, String>> get localizedValues => _localizedValues;
+
   static String get(String key, {String lang = 'hi'}) {
-    return _localizedValues[lang]?[key] ??
-        _localizedValues['hi']?[key] ??
-        _localizedValues['en']?[key] ??
-        key;
+    final langMap = _localizedValues[lang] ?? _localizedValues['hi']!;
+    if (langMap.containsKey(key)) {
+      return langMap[key]!;
+    }
+    // Fallback to Hindi or English if key not present in current language
+    return _localizedValues['hi']?[key] ?? _localizedValues['en']?[key] ?? key;
   }
 }
 
 extension LocalizationExtension on BuildContext {
   String tr(String key) {
     try {
-      final lang = watch<LanguageBloc>().state.languageCode;
-      return AppStrings.get(key, lang: lang);
+      final state = watch<LanguageBloc>().state;
+      return AppStrings.get(key, lang: state.languageCode);
     } catch (_) {
-      return AppStrings.get(key, lang: 'hi');
+      try {
+        final state = read<LanguageBloc>().state;
+        return AppStrings.get(key, lang: state.languageCode);
+      } catch (_) {
+        return AppStrings.get(key, lang: 'hi');
+      }
     }
   }
 
@@ -1031,8 +1182,11 @@ extension LocalizationExtension on BuildContext {
     try {
       return watch<LanguageBloc>().state.languageCode;
     } catch (_) {
-      return 'hi';
+      try {
+        return read<LanguageBloc>().state.languageCode;
+      } catch (_) {
+        return 'hi';
+      }
     }
   }
 }
-

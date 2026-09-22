@@ -105,7 +105,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                         ),
                         child: const Center(
                           child: Text(
-                            '文A',
+                            'अ/A',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w700,
