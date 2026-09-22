@@ -39,57 +39,61 @@ class AppBottomNav extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // 1. Home tab at first place
-              _buildNavItem(
-                context: context,
-                isActive: isHomeActive,
-                icon: Icons.home_rounded,
-                label: context.tr('navHome'),
-                onTap: () => context.go('/home'),
-                activePillBg: activePillBg,
-                activeTextColor: activeTextColor,
-                inactiveColor: inactiveColor,
+              Expanded(
+                child: _buildNavItem(
+                  context: context,
+                  isActive: isHomeActive,
+                  icon: Icons.home_rounded,
+                  label: context.tr('navHome'),
+                  onTap: () => context.go('/home'),
+                  activePillBg: activePillBg,
+                  activeTextColor: activeTextColor,
+                  inactiveColor: inactiveColor,
+                ),
               ),
-              // 2. Naam Jaap
-              _buildNavItem(
-                context: context,
-                isActive: currentTab == AppNavTab.jaap,
-                icon: Icons.filter_1_rounded,
-                label: context.tr('navJaap'),
-                onTap: () async {
-                  final isLoggedIn = await UserPersistenceService.isLoggedIn();
-                  if (!context.mounted) return;
-                  if (isLoggedIn) {
-                    context.go('/naam-jaap');
-                  } else {
-                    context.go('/jaap-intro');
-                  }
-                },
-                activePillBg: activePillBg,
-                activeTextColor: activeTextColor,
-                inactiveColor: inactiveColor,
+              Expanded(
+                child: _buildNavItem(
+                  context: context,
+                  isActive: currentTab == AppNavTab.jaap,
+                  icon: Icons.filter_1_rounded,
+                  label: context.tr('navJaap'),
+                  onTap: () async {
+                    final isLoggedIn = await UserPersistenceService.isLoggedIn();
+                    if (!context.mounted) return;
+                    if (isLoggedIn) {
+                      context.go('/naam-jaap');
+                    } else {
+                      context.go('/jaap-intro');
+                    }
+                  },
+                  activePillBg: activePillBg,
+                  activeTextColor: activeTextColor,
+                  inactiveColor: inactiveColor,
+                ),
               ),
-              // 3. Library
-              _buildNavItem(
-                context: context,
-                isActive: currentTab == AppNavTab.library,
-                icon: Icons.menu_book_rounded,
-                label: context.tr('navLibrary'),
-                onTap: () => context.go('/library'),
-                activePillBg: activePillBg,
-                activeTextColor: activeTextColor,
-                inactiveColor: inactiveColor,
+              Expanded(
+                child: _buildNavItem(
+                  context: context,
+                  isActive: currentTab == AppNavTab.library,
+                  icon: Icons.menu_book_rounded,
+                  label: context.tr('navLibrary'),
+                  onTap: () => context.go('/library'),
+                  activePillBg: activePillBg,
+                  activeTextColor: activeTextColor,
+                  inactiveColor: inactiveColor,
+                ),
               ),
-              // 4. Profile
-              _buildNavItem(
-                context: context,
-                isActive: currentTab == AppNavTab.profile,
-                icon: Icons.person_outline_rounded,
-                label: context.tr('navProfile'),
-                onTap: () => context.go('/profile'),
-                activePillBg: activePillBg,
-                activeTextColor: activeTextColor,
-                inactiveColor: inactiveColor,
+              Expanded(
+                child: _buildNavItem(
+                  context: context,
+                  isActive: currentTab == AppNavTab.profile,
+                  icon: Icons.person_outline_rounded,
+                  label: context.tr('navProfile'),
+                  onTap: () => context.go('/profile'),
+                  activePillBg: activePillBg,
+                  activeTextColor: activeTextColor,
+                  inactiveColor: inactiveColor,
+                ),
               ),
             ],
           ),
@@ -118,8 +122,8 @@ class AppBottomNav extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: isActive
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 5)
-            : const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
+            : const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         decoration: BoxDecoration(
           color: isActive ? activePillBg : Colors.transparent,
           borderRadius: BorderRadius.circular(18),
