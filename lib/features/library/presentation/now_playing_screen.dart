@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/localization/data_localization_helper.dart';
+import 'package:guruji/features/library/data/audio_library_repository.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   final Map<String, dynamic> audioData;
@@ -18,8 +19,9 @@ class NowPlayingScreen extends StatefulWidget {
 }
 
 class _NowPlayingScreenState extends State<NowPlayingScreen> {
+  final AudioLibraryRepository _repository = AudioLibraryRepository();
   bool _isPlaying = true;
-  int _currentSeconds = 84; // 01:24
+  int _currentSeconds = 0;
   late int _totalSeconds;
   String _selectedScript = 'Dev';
   Timer? _playbackTimer;
@@ -29,6 +31,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   void initState() {
     super.initState();
     _totalSeconds = widget.audioData['totalSeconds'] as int? ?? 252;
+    _isSaved = widget.audioData['isFavorite'] as bool? ?? false;
     _startTimer();
   }
 
@@ -41,10 +44,42 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             _currentSeconds++;
           } else {
             _currentSeconds = 0;
+            _isPlaying = false;
           }
         });
       }
     });
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      _isPlaying = !_isPlaying;
+    });
+  }
+
+  void _seekBy(int seconds) {
+    setState(() {
+      _currentSeconds = (_currentSeconds + seconds).clamp(0, _totalSeconds);
+    });
+  }
+
+  void _toggleFavorite() async {
+    final trackId = widget.audioData['id']?.toString() ?? '';
+    setState(() {
+      _isSaved = !_isSaved;
+    });
+    if (trackId.isNotEmpty) {
+      await _repository.toggleFavorite(trackId);
+    }
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isSaved ? context.tr('addedToFavorites') : context.tr('removedFromFavorites')),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   @override
@@ -71,7 +106,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     final title = widget.audioData['title'] as String? ?? 'Shri Ram Stuti';
     final author = widget.audioData['author'] as String? ?? 'Goswami Tulsidas';
     final imagePath = widget.audioData['image'] as String? ?? 'assets/images/ram_divine.jpg';
-    final lyrics = widget.audioData['lyrics'] as String? ?? 'हरण भवभय दारुणम्';
+    final lyrics = widget.audioData['lyrics'] as String? ?? 'श्री रामचन्द्र कृपालु भजु मन हरण भवभय दारुणम्।';
+
+    final isNetworkImage = imagePath.startsWith('http');
 
     return PopScope(
       canPop: false,
@@ -86,348 +123,327 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
         child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [bgGradientStart, bgGradientEnd],
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [bgGradientStart, bgGradientEnd],
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                // ─── Header: Down arrow, NOW PLAYING, more icon ───
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 30, color: Color(0xFF221C20)),
-                        onPressed: () => context.pop(),
-                      ),
-                      Text(
-                        context.tr('nowPlaying').toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF6B5E66),
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert_rounded, size: 24, color: Color(0xFF221C20)),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // ─── Header: Back, NOW PLAYING, Playlist ───
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(height: 12),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            size: 32,
+                            color: Color(0xFF221C20),
+                          ),
+                          onPressed: () {
+                            if (context.canPop()) {
+                              context.pop();
+                            } else {
+                              context.go('/library');
+                            }
+                          },
+                        ),
+                        Text(
+                          context.tr('nowPlaying'),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.4,
+                            color: Color(0xFF7E2B58),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.queue_music_rounded,
+                            size: 24,
+                            color: Color(0xFF221C20),
+                          ),
+                          onPressed: () => context.pop(),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                        // ─── Center Hero Circle Artwork ───
-                        Center(
-                          child: Container(
-                            width: 250,
-                            height: 250,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+
+                          // ─── Center Album Art ───
+                          Container(
+                            width: 220,
+                            height: 220,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              border: Border.all(color: const Color(0xFFEFE3EA), width: 3),
                               boxShadow: [
                                 BoxShadow(
-                                  color: primaryPlum.withOpacity(0.14),
-                                  blurRadius: 30,
-                                  offset: const Offset(0, 10),
+                                  color: primaryPlum.withOpacity(0.12),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
                                 ),
                               ],
                             ),
                             child: ClipOval(
-                              child: Image.asset(
-                                imagePath,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
-                                  color: const Color(0xFFFBEBF1),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.music_note_rounded,
-                                      size: 80,
-                                      color: primaryPlum,
+                              child: isNetworkImage
+                                  ? Image.network(
+                                      imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => Image.asset(
+                                        'assets/images/ram_divine.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Image.asset(
+                                      imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Center(
+                                        child: Icon(Icons.temple_hindu_rounded, size: 64, color: primaryPlum),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 28),
+                          const SizedBox(height: 20),
 
-                        // ─── Title & Subtitle ───
-                        Text(
-                          context.trData(title),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: 'serif',
-                            color: charcoalText,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          context.trData(author),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: subtitleColor,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // ─── Script Selector: Dev, Eng, Mean ───
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFBEBF1),
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: ['Dev', 'Eng', 'Mean'].map((s) {
-                              final isSel = _selectedScript == s;
-                              return GestureDetector(
-                                onTap: () => setState(() => _selectedScript = s),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
-                                  decoration: BoxDecoration(
-                                    color: isSel ? Colors.white : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: isSel
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.04),
-                                              blurRadius: 6,
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Text(
-                                    s,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: isSel ? FontWeight.w700 : FontWeight.w500,
-                                      color: isSel ? charcoalText : subtitleColor,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-
-                        // ─── Lyrics Text Display ───
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          child: Text(
-                            lyrics,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF9E4F73).withOpacity(0.8),
-                              fontFamily: 'serif',
-                              height: 1.4,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // ─── Seekbar & Timestamps ───
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            trackHeight: 4,
-                            activeTrackColor: primaryPlum,
-                            inactiveTrackColor: const Color(0xFFEBDCE3),
-                            thumbColor: primaryPlum,
-                            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
-                            overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
-                          ),
-                          child: Slider(
-                            value: _currentSeconds.toDouble().clamp(0.0, _totalSeconds.toDouble()),
-                            min: 0,
-                            max: _totalSeconds.toDouble(),
-                            onChanged: (val) {
-                              setState(() {
-                                _currentSeconds = val.toInt();
-                              });
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Row(
+                          // ─── Track Title & Save Heart ───
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                _formatTime(_currentSeconds),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: subtitleColor,
-                                ),
-                              ),
-                              Text(
-                                _formatTime(_totalSeconds),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: subtitleColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 18),
-
-                        // ─── Audio Playback Controls ───
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.shuffle_rounded, size: 22, color: Color(0xFF6B5E66)),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.skip_previous_rounded, size: 30, color: charcoalText),
-                              onPressed: () {
-                                setState(() => _currentSeconds = 0);
-                              },
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isPlaying = !_isPlaying;
-                                });
-                              },
-                              child: Container(
-                                width: 72,
-                                height: 72,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: playBtnColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: playBtnColor.withOpacity(0.4),
-                                      blurRadius: 18,
-                                      offset: const Offset(0, 6),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      context.trData(title),
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w800,
+                                        fontFamily: 'serif',
+                                        color: charcoalText,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      context.trData(author),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: subtitleColor,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
-                                child: Center(
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  _isSaved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                                  color: _isSaved ? const Color(0xFFE91E63) : const Color(0xFF8A7D84),
+                                  size: 26,
+                                ),
+                                onPressed: _toggleFavorite,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+
+                          // ─── Progress Slider & Time Labels ───
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              activeTrackColor: primaryPlum,
+                              inactiveTrackColor: const Color(0xFFEBDCE3),
+                              thumbColor: primaryPlum,
+                              trackHeight: 3.5,
+                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                              overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                            ),
+                            child: Slider(
+                              value: _currentSeconds.toDouble().clamp(0.0, _totalSeconds.toDouble()),
+                              min: 0,
+                              max: _totalSeconds.toDouble(),
+                              onChanged: (val) {
+                                setState(() {
+                                  _currentSeconds = val.toInt();
+                                });
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _formatTime(_currentSeconds),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: subtitleColor,
+                                  ),
+                                ),
+                                Text(
+                                  _formatTime(_totalSeconds),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: subtitleColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // ─── Player Controls (Rewind, Play/Pause, Forward) ───
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.replay_10_rounded),
+                                iconSize: 32,
+                                color: charcoalText,
+                                onPressed: () => _seekBy(-10),
+                              ),
+                              const SizedBox(width: 24),
+                              GestureDetector(
+                                onTap: _togglePlayPause,
+                                child: Container(
+                                  width: 68,
+                                  height: 68,
+                                  decoration: BoxDecoration(
+                                    color: playBtnColor,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: playBtnColor.withOpacity(0.4),
+                                        blurRadius: 16,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ],
+                                  ),
                                   child: Icon(
                                     _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                                    size: 38,
                                     color: Colors.white,
+                                    size: 38,
                                   ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.skip_next_rounded, size: 30, color: charcoalText),
-                              onPressed: () {
-                                setState(() => _currentSeconds = 0);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.repeat_rounded, size: 22, color: Color(0xFF6B5E66)),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 28),
+                              const SizedBox(width: 24),
+                              IconButton(
+                                icon: const Icon(Icons.forward_10_rounded),
+                                iconSize: 32,
+                                color: charcoalText,
+                                onPressed: () => _seekBy(10),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
 
-                        // ─── Divider ───
-                        const Divider(color: Color(0xFFF1E3EA), height: 1),
-                        const SizedBox(height: 18),
-
-                        // ─── Bottom Actions: Save, Playlist, Share ───
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _buildBottomAction(
-                              icon: _isSaved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                              label: context.tr('save'),
-                              color: _isSaved ? primaryPlum : subtitleColor,
-                              onTap: () {
-                                setState(() => _isSaved = !_isSaved);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(_isSaved ? context.tr('addedToFavorites') : context.tr('removedFromFavorites')),
-                                    duration: const Duration(seconds: 1),
+                          // ─── Lyrics Section ───
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(color: const Color(0xFFF2E6ED)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.025),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'LYRICS / पाठ',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 1,
+                                        color: Color(0xFF8A7D84),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        _buildScriptPill('Dev', 'देवनागरी'),
+                                        const SizedBox(width: 6),
+                                        _buildScriptPill('Eng', 'English'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 14),
+                                Text(
+                                  lyrics,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: _selectedScript == 'Dev' ? 'serif' : null,
+                                    height: 1.65,
+                                    color: charcoalText,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                            _buildBottomAction(
-                              icon: Icons.playlist_add_rounded,
-                              label: context.tr('playlist'),
-                              color: subtitleColor,
-                              onTap: () {},
-                            ),
-                            _buildBottomAction(
-                              icon: Icons.share_outlined,
-                              label: context.tr('share'),
-                              color: subtitleColor,
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-  Widget _buildBottomAction({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildScriptPill(String key, String label) {
+    final isSelected = _selectedScript == key;
     return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        children: [
-          Icon(icon, size: 22, color: color),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: color,
-            ),
+      onTap: () => setState(() => _selectedScript = key),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF7E2B58) : const Color(0xFFF5ECF1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 10.5,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? Colors.white : const Color(0xFF7E2B58),
           ),
-        ],
+        ),
       ),
     );
   }
