@@ -89,3 +89,10 @@ class LogoutEvent extends AuthEvent {
   List<Object?> get props => [];
 }
 
+
+class DeleteAccountEvent extends AuthEvent {
+  const DeleteAccountEvent();
+
+  @override
+  List<Object?> get props => [];
+}

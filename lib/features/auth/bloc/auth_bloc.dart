@@ -20,6 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GetProfileEvent>(_onGetProfile);
     on<UpdateProfileEvent>(_onUpdateProfile);
     on<LogoutEvent>(_onLogout);
+    on<DeleteAccountEvent>(_onDeleteAccount);
   }
 
   Future<void> _onSendOtp(SendOtpEvent event, Emitter<AuthState> emit) async {
@@ -134,6 +135,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authRepository.logout();
       await UserPersistenceService.logout();
       emit(const LogoutSuccess());
+    } catch (e) {
+      emit(AuthFailure(message: e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+
+  Future<void> _onDeleteAccount(
+    DeleteAccountEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.deleteAccount();
+      await UserPersistenceService.logout();
+      emit(const AccountDeletedSuccess());
     } catch (e) {
       emit(AuthFailure(message: e.toString().replaceAll('Exception: ', '')));
     }

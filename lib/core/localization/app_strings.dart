@@ -5,6 +5,12 @@ import 'package:guruji/features/language/bloc/language_bloc.dart';
 class AppStrings {
   static const Map<String, Map<String, String>> _localizedValues = {
     'hi': {
+      'deleteAccount': 'खाता हटाएं',
+      'deleteAccountConfirm': 'क्या आप वाकई अपना खाता हटाना चाहते हैं? आपकी साधना और सारा डेटा हमेशा के लिए हटा दिया जाएगा।',
+      'deleteAccountSuccess': 'आपका खाता सफलतापूर्वक हटा दिया गया है।',
+      'dikshaDate': 'दीक्षा तिथि',
+      'dikshaDateLabel': 'गुरु दीक्षा की तिथि',
+
       'todayAuspicious': 'आज का शुभ काल',
       'celestialTimings': 'सूर्य एवं चंद्र समय',
       'sunrise': 'सूर्योदय',
@@ -213,6 +219,7 @@ class AppStrings {
     },
 
     'en': {
+
       'todayAuspicious': 'Auspicious Timings',
       'celestialTimings': 'Sun & Moon Timings',
       'sunrise': 'Sunrise',
@@ -421,6 +428,7 @@ class AppStrings {
     },
 
     'mr': {
+
       'todayAuspicious': 'आजचा शुभ काळ',
       'celestialTimings': 'सूर्य व चंद्र वेळ',
       'sunrise': 'सूर्योदय',
@@ -629,6 +637,7 @@ class AppStrings {
     },
 
     'gu': {
+
       'todayAuspicious': 'આજનો શુભ સમય',
       'celestialTimings': 'સૂર્ય અને ચંદ્ર સમય',
       'sunrise': 'સૂર્યોદય',
@@ -837,6 +846,7 @@ class AppStrings {
     },
 
     'ta': {
+
       'todayAuspicious': 'இன்றைய சுப நேரம்',
       'celestialTimings': 'சூரிய மற்றும் சந்திர நேரம்',
       'sunrise': 'சூரியோதயம்',
@@ -1045,6 +1055,7 @@ class AppStrings {
     },
 
     'te': {
+
       'todayAuspicious': 'నేటి శుభ సమయం',
       'celestialTimings': 'సూర్య చంద్ర సమయాలు',
       'sunrise': 'సూర్యోదయం',

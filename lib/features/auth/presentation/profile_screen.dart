@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:guruji/core/localization/app_strings.dart';
 import 'package:guruji/core/services/language_service.dart';
 import 'package:guruji/core/widgets/app_bottom_nav.dart';
-import 'package:guruji/features/auth/models/profile_model.dart';
 import 'package:guruji/features/language/bloc/language_bloc.dart';
+import 'package:guruji/features/naam_jaap/data/naam_jaap_repository.dart';
 import '../bloc/auth_bloc.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
@@ -26,6 +26,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final _stateController = TextEditingController(text: 'Uttar Pradesh');
   final _dateOfBirthController = TextEditingController(text: '1992-08-15');
   final _gotraController = TextEditingController(text: 'Kashyap');
+  final _dikshaDateController = TextEditingController(text: '2022-11-04');
 
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedProfileImageFile;
@@ -33,6 +34,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   bool _isSaving = false;
   bool _showEditForm = false;
+  int _jaapStreakDays = 108;
 
   // Preferences toggles
   bool _muhuratAlerts = true;
@@ -60,6 +62,18 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   void initState() {
     super.initState();
     context.read<AuthBloc>().add(const GetProfileEvent());
+    _loadJaapStats();
+  }
+
+  Future<void> _loadJaapStats() async {
+    try {
+      final stats = await NaamJaapRepository().fetchStats();
+      if (mounted) {
+        setState(() {
+          _jaapStreakDays = stats.currentStreak.days > 0 ? stats.currentStreak.days : 108;
+                  });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -71,6 +85,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     _stateController.dispose();
     _dateOfBirthController.dispose();
     _gotraController.dispose();
+    _dikshaDateController.dispose();
     super.dispose();
   }
 
@@ -86,7 +101,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime(1992, 8, 15),
@@ -108,7 +123,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
     if (picked != null) {
       setState(() {
-        _dateOfBirthController.text =
+        controller.text =
             '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
       });
     }
@@ -131,10 +146,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   }
 
   void _handleBack() {
-    if (_showEditForm) {
-      setState(() => _showEditForm = false);
-      return;
-    }
     if (context.canPop()) {
       context.pop();
     } else {
@@ -142,17 +153,67 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     }
   }
 
+  void _showDeleteAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Color(0xFFC93737), size: 24),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                context.tr('deleteAccount'),
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          context.tr('deleteAccountConfirm'),
+          style: const TextStyle(fontSize: 14, color: Color(0xFF4A4046), height: 1.4),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              context.tr('cancel'),
+              style: const TextStyle(color: Color(0xFF7E2B58), fontWeight: FontWeight.w600),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFC93737),
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<AuthBloc>().add(const DeleteAccountEvent());
+            },
+            child: Text(
+              context.tr('deleteAccount'),
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    const Color bgGradientStart = Color(0xFFFFFDFE);
-    const Color bgGradientEnd = Color(0xFFFBF4F7);
-    const Color primaryPlum = Color(0xFF7E2B58);
-    const Color charcoalText = Color(0xFF1E1A1D);
-    const Color subtitleColor = Color(0xFF6B5E66);
+    const primaryPlum = Color(0xFF7E2B58);
+    const bgGradientStart = Color(0xFFFDF7FA);
+    const bgGradientEnd = Color(0xFFF8EEF3);
+    const charcoalText = Color(0xFF1E1A1D);
+    const subtitleColor = Color(0xFF6E5D68);
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
+      onPopInvoked: (didPop) {
         if (didPop) return;
         _handleBack();
       },
@@ -164,25 +225,36 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               _showEditForm = false;
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('🙏 Profile updated successfully'),
-                backgroundColor: Color(0xFF7E2B58),
+              SnackBar(
+                content: Text(context.tr('saveChanges')),
+                backgroundColor: const Color(0xFF7E2B58),
               ),
             );
           } else if (state is ProfileLoadSuccess) {
             final p = state.profile;
             if (p.name.isNotEmpty) _nameController.text = p.name;
-            if (p.email != null && p.email!.isNotEmpty) _emailController.text = p.email!;
+            if (p.email.isNotEmpty) _emailController.text = p.email;
             if (p.phone.isNotEmpty) _phoneController.text = p.phone;
-            if (p.city != null && p.city!.isNotEmpty) _cityController.text = p.city!;
-            if (p.state != null && p.state!.isNotEmpty) _stateController.text = p.state!;
-            if (p.gotra != null && p.gotra!.isNotEmpty) _gotraController.text = p.gotra!;
-            if (p.dateOfBirth != null) _dateOfBirthController.text = p.dateOfBirth!;
+            if (p.city.isNotEmpty) _cityController.text = p.city;
+            if (p.state.isNotEmpty) _stateController.text = p.state;
+            if (p.gotra.isNotEmpty) _gotraController.text = p.gotra;
+            if (p.dateOfBirth.isNotEmpty) _dateOfBirthController.text = p.dateOfBirth;
+            if (p.dikshaDate != null && p.dikshaDate!.isNotEmpty) {
+              _dikshaDateController.text = p.dikshaDate!;
+            }
             if (p.profileImage != null && p.profileImage!.isNotEmpty) {
               _profileImageUrl = p.profileImage;
             }
             setState(() {});
           } else if (state is LogoutSuccess) {
+            context.go('/home');
+          } else if (state is AccountDeletedSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.tr('deleteAccountSuccess')),
+                backgroundColor: const Color(0xFFC93737),
+              ),
+            );
             context.go('/home');
           } else if (state is AuthFailure) {
             setState(() => _isSaving = false);
@@ -211,7 +283,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
                   child: Column(
                     children: [
-                      // ─── Header: Back Button, Title, and Action Icons ───
+                      // Header: Back Button, Title, and Action Icons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -253,7 +325,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                         ],
                       ),
 
-                      // ─── Center Avatar with Verified Badge & Tap to Change ───
+                      // Center Avatar with Network/File Support & Verified Badge
                       Center(
                         child: GestureDetector(
                           onTap: _showEditForm ? _pickProfileImage : null,
@@ -277,15 +349,29 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                                 child: ClipOval(
                                   child: _selectedProfileImageFile != null
                                       ? Image.file(_selectedProfileImageFile!, fit: BoxFit.cover)
-                                      : Image.asset(
-                                          'assets/images/sadhak_avatar.jpg',
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) => const Icon(
-                                            Icons.person,
-                                            size: 48,
-                                            color: primaryPlum,
-                                          ),
-                                        ),
+                                      : (_profileImageUrl != null && _profileImageUrl!.isNotEmpty)
+                                          ? Image.network(
+                                              _profileImageUrl!,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => Image.asset(
+                                                'assets/images/sadhak_avatar.jpg',
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (_, __, ___) => const Icon(
+                                                  Icons.person,
+                                                  size: 48,
+                                                  color: primaryPlum,
+                                                ),
+                                              ),
+                                            )
+                                          : Image.asset(
+                                              'assets/images/sadhak_avatar.jpg',
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => const Icon(
+                                                Icons.person,
+                                                size: 48,
+                                                color: primaryPlum,
+                                              ),
+                                            ),
                                 ),
                               ),
                               Positioned(
@@ -312,7 +398,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       ),
                       const SizedBox(height: 12),
 
-                      // ─── User Name & Level Badge ───
+                      // User Name & Level Badge
                       Text(
                         _nameController.text.isNotEmpty ? _nameController.text : 'Anand Sharma',
                         style: const TextStyle(
@@ -343,13 +429,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       ),
                       const SizedBox(height: 18),
 
-                      // ─── 2 Top Stat Cards: Jaap Streak & Total Gauseva ───
+                      // 2 Top Stat Cards: Jaap Streak & Total Gauseva
                       Row(
                         children: [
                           Expanded(
                             child: _buildProfileStatCard(
-                              badgeWidget: const Text('🎖', style: TextStyle(fontSize: 18)),
-                              value: '108 ${context.tr('days')}',
+                              badgeWidget: const Text('🔥', style: TextStyle(fontSize: 18)),
+                              value: '$_jaapStreakDays ${context.tr('days')}',
                               label: context.tr('jaapStreak').toUpperCase(),
                               charcoalText: charcoalText,
                               primaryPlum: primaryPlum,
@@ -358,8 +444,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildProfileStatCard(
-                              badgeWidget: const Text('🐄', style: TextStyle(fontSize: 18)),
-                              value: '₹5,100',
+                              badgeWidget: const Text('🌸', style: TextStyle(fontSize: 18)),
+                              value: '₹15,100',
                               label: context.tr('totalGauseva').toUpperCase(),
                               charcoalText: charcoalText,
                               primaryPlum: primaryPlum,
@@ -369,15 +455,15 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       ),
                       const SizedBox(height: 18),
 
-                      // ─── 1) PERSONAL INFORMATION SECTION (ABOVE PREFERENCES) ───
+                      // 1) PERSONAL INFORMATION SECTION
                       _buildPersonalInformationCard(primaryPlum, charcoalText, subtitleColor),
                       const SizedBox(height: 18),
 
-                      // ─── 2) PREFERENCES SECTION (BELOW PERSONAL INFO) ───
+                      // 2) PREFERENCES SECTION
                       _buildPreferencesCard(primaryPlum, charcoalText, subtitleColor),
                       const SizedBox(height: 18),
 
-                      // ─── "View Path History" Action Button ───
+                      // "View Path History" Action Button
                       GestureDetector(
                         onTap: () => context.push('/jaap-history'),
                         child: Container(
@@ -406,7 +492,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       ),
                       const SizedBox(height: 12),
 
-                      // ─── "Sign Out" Action Button ───
+                      // "Sign Out" Action Button
                       GestureDetector(
                         onTap: () {
                           showDialog(
@@ -459,6 +545,36 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 12),
+
+                      // "Delete Account" Action Button (Play Store Compliant)
+                      GestureDetector(
+                        onTap: _showDeleteAccountDialog,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF0F0),
+                            borderRadius: BorderRadius.circular(26),
+                            border: Border.all(color: const Color(0xFFFFD4D4)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.delete_forever_rounded, size: 18, color: Color(0xFFC93737)),
+                              const SizedBox(width: 8),
+                              Text(
+                                context.tr('deleteAccount'),
+                                style: const TextStyle(
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFFC93737),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 16),
                     ],
                   ),
@@ -472,7 +588,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
-  // ─── Personal Information Card (Default View & Edit Form) ──────────────────
+  // Personal Information Card (Default View & Edit Form)
   Widget _buildPersonalInformationCard(
     Color primaryPlum,
     Color charcoalText,
@@ -551,7 +667,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           const SizedBox(height: 16),
 
           if (!_showEditForm) ...[
-            // Read-only Details View (Displayed by default)
+            // Read-only Details View
             _buildInfoRow(
               icon: Icons.phone_android_rounded,
               label: context.tr('phone'),
@@ -591,6 +707,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               charcoalText: charcoalText,
               subtitleColor: subtitleColor,
             ),
+            const Divider(color: Color(0xFFF5EDF1), height: 18),
+            _buildInfoRow(
+              icon: Icons.stars_rounded,
+              label: context.tr('dikshaDate'),
+              value: _dikshaDateController.text.isNotEmpty ? _dikshaDateController.text : 'Not provided',
+              charcoalText: charcoalText,
+              subtitleColor: subtitleColor,
+            ),
           ] else ...[
             // Editable Form Fields View
             _buildInputField(label: context.tr('fullName'), controller: _nameController, icon: Icons.person_outline_rounded),
@@ -606,12 +730,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             _buildInputField(label: context.tr('gotra'), controller: _gotraController, icon: Icons.spa_outlined),
             const SizedBox(height: 12),
             GestureDetector(
-              onTap: () => _selectDate(context),
+              onTap: () => _selectDate(context, _dateOfBirthController),
               child: AbsorbPointer(
                 child: _buildInputField(
                   label: context.tr('dob'),
                   controller: _dateOfBirthController,
                   icon: Icons.calendar_today_rounded,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            GestureDetector(
+              onTap: () => _selectDate(context, _dikshaDateController),
+              child: AbsorbPointer(
+                child: _buildInputField(
+                  label: context.tr('dikshaDate'),
+                  controller: _dikshaDateController,
+                  icon: Icons.stars_rounded,
                 ),
               ),
             ),
@@ -622,27 +757,36 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   child: OutlinedButton(
                     onPressed: () => setState(() => _showEditForm = false),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: subtitleColor,
-                      side: const BorderSide(color: Color(0xFFE0D4DA)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: const BorderSide(color: Color(0xFFD6C2CC)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: Text(context.tr('cancel')),
+                    child: Text(
+                      context.tr('cancel'),
+                      style: const TextStyle(color: Color(0xFF7E2B58), fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _isSaving ? null : _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF8E3763),
+                      backgroundColor: const Color(0xFF7E2B58),
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                     child: _isSaving
-                        ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                        : Text(context.tr('saveChanges'), style: const TextStyle(fontWeight: FontWeight.w700)),
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : Text(
+                            context.tr('save'),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
                   ),
                 ),
               ],
@@ -653,6 +797,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
+  // Row Item for Profile Details
   Widget _buildInfoRow({
     required IconData icon,
     required String label,
@@ -661,15 +806,16 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     required Color subtitleColor,
   }) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 34,
-          height: 34,
+          width: 32,
+          height: 32,
           decoration: BoxDecoration(
-            color: const Color(0xFFFBEBF1),
-            borderRadius: BorderRadius.circular(10),
+            color: const Color(0xFFFDF7FA),
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 17, color: const Color(0xFF7E2B58)),
+          child: Icon(icon, size: 16, color: const Color(0xFF7E2B58)),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -684,16 +830,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   color: subtitleColor,
                 ),
               ),
-              const SizedBox(height: 1),
+              const SizedBox(height: 2),
               Text(
                 value,
                 style: TextStyle(
                   fontSize: 13.5,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   color: charcoalText,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -702,7 +846,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
-  // ─── Preferences Card ──────────────────────────────────────────────────────
+  // Preferences Card
   Widget _buildPreferencesCard(
     Color primaryPlum,
     Color charcoalText,
@@ -816,52 +960,40 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
+  // State Dropdown Builder
   Widget _buildStateDropdown(Color primaryPlum, Color charcoalText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'STATE',
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF7A6D74),
-            letterSpacing: 0.8,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFDF7FA),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE8DCE2)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _states.contains(_stateController.text) ? _stateController.text : _states.first,
+          isExpanded: true,
+          icon: const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF7E2B58)),
+          style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: charcoalText),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                _stateController.text = newValue;
+              });
+            }
+          },
+          items: _states.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         ),
-        const SizedBox(height: 6),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFAF5F8),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFF1E3EA)),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _states.contains(_stateController.text) ? _stateController.text : _states.first,
-              isExpanded: true,
-              icon: Icon(Icons.arrow_drop_down_rounded, color: primaryPlum),
-              items: _states
-                  .map(
-                    (st) => DropdownMenuItem(
-                      value: st,
-                      child: Text(st, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: charcoalText)),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() => _stateController.text = val);
-                }
-              },
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
+  // Stat Card Widget
   Widget _buildProfileStatCard({
     required Widget badgeWidget,
     required String value,
@@ -870,49 +1002,39 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     required Color primaryPlum,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.035),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: const BoxDecoration(
-              color: Color(0xFFFBEBF1),
-              shape: BoxShape.circle,
-            ),
-            child: Center(child: badgeWidget),
-          ),
-          const SizedBox(height: 14),
+          badgeWidget,
+          const SizedBox(height: 6),
           Text(
             value,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 16,
               fontWeight: FontWeight.w800,
-              fontFamily: 'serif',
               color: charcoalText,
-              letterSpacing: -0.5,
+              fontFamily: 'serif',
             ),
           ),
           const SizedBox(height: 2),
           Text(
             label,
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 9.5,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF7A6D74),
-              letterSpacing: 0.8,
+              color: Color(0xFF8A7D84),
+              letterSpacing: 0.5,
             ),
           ),
         ],
@@ -920,6 +1042,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
   }
 
+  // Switch Row Widget
   Widget _buildSwitchRow({
     required String title,
     required String subtitle,
@@ -944,11 +1067,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   color: charcoalText,
                 ),
               ),
-              const SizedBox(height: 1),
+              const SizedBox(height: 2),
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 11.5,
+                  fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: subtitleColor,
                 ),
@@ -956,60 +1079,47 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             ],
           ),
         ),
-        Switch.adaptive(
+        Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: const Color(0xFF8E3763),
+          activeColor: primaryPlum,
           activeTrackColor: const Color(0xFFFBEBF1),
         ),
       ],
     );
   }
 
+  // Input Field Helper
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
     required IconData icon,
     bool enabled = true,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF7A6D74),
-            letterSpacing: 0.8,
-          ),
+    return TextField(
+      controller: controller,
+      enabled: enabled,
+      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: Color(0xFF1E1A1D)),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(fontSize: 12, color: Color(0xFF8A7D84)),
+        prefixIcon: Icon(icon, size: 18, color: const Color(0xFF7E2B58)),
+        filled: true,
+        fillColor: enabled ? const Color(0xFFFDF7FA) : const Color(0xFFF3ECEF),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFFE8DCE2)),
         ),
-        const SizedBox(height: 5),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFAF5F8),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFF1E3EA)),
-          ),
-          child: TextField(
-            controller: controller,
-            enabled: enabled,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1E1A1D),
-            ),
-            decoration: InputDecoration(
-              prefixIcon: Icon(icon, size: 17, color: const Color(0xFF8A7D84)),
-              prefixIconConstraints: const BoxConstraints(minWidth: 30),
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 8),
-            ),
-          ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFFE8DCE2)),
         ),
-      ],
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF7E2B58), width: 1.5),
+        ),
+      ),
     );
   }
 }

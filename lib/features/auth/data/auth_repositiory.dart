@@ -239,4 +239,34 @@ class AuthRepository {
       throw Exception('Server timeout, please try again.');
     }
   }
+
+  Future<void> deleteAccount() async {
+    final token = await UserPersistenceService.getToken();
+    if (token == null) {
+      throw Exception('No authentication token found.');
+    }
+
+    final url = Uri.parse('$_baseUrl/user/account');
+    try {
+      final response = await http
+          .delete(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(const Duration(seconds: 60));
+
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>?;
+        throw Exception(data?['message'] ?? 'Unable to delete account');
+      }
+    } on SocketException {
+      throw Exception('No internet connection.');
+    } on TimeoutException {
+      throw Exception('Server timeout, please try again.');
+    }
+  }
 }
