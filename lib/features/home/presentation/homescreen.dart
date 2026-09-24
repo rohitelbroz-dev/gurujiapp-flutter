@@ -1,3 +1,4 @@
+import 'package:guruji/core/services/user_persistence_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
       final results = await Future.wait([
         _panchangRepo.fetchDailyPanchang(location: _selectedLocation),
         _panchangRepo.fetchUpcomingFestivals(),
-        _amritVachanRepo.fetchTodayPosts().then((list) => list.isNotEmpty ? list.first : null).catchError((_) => null),
+        _amritVachanRepo.fetchTodayPosts().then((list) async {
+          if (list.isNotEmpty) return list.first;
+          final all = await _amritVachanRepo.fetchAllPosts();
+          return all.isNotEmpty ? all.first : null;
+        }).catchError((_) => null),
         _eventsRepo.fetchEvents(page: 1, limit: 1).then((res) => res.events.isNotEmpty ? res.events.first : null).catchError((_) => null),
         _leaderboardRepo.fetchLeaderboard().then((res) => res.leaderboard.isNotEmpty ? res.leaderboard.first : null).catchError((_) => null),
       ]);
@@ -80,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onLocationChanged(String newLocation) {
+    UserPersistenceService.savePreferredCity(newLocation);
     if (_selectedLocation == newLocation) return;
     setState(() {
       _selectedLocation = newLocation;
@@ -1271,7 +1277,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     final vachanQuote = _todayAmritVachan?.caption.isNotEmpty == true
         ? _todayAmritVachan!.caption
-        : 'जो प्रभु के नाम का नित्य आश्रय लेते हैं, उनके जीवन के समस्त संकट दूर हो जाते हैं।';
+        : 'जो व्यक्ति हर पल में ईश्वर का स्मरण करता है, उसके जीवन की समस्त चिंताएं प्रभु हर लेते हैं।';
+    final imageUrl = _todayAmritVachan?.imageUrl;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1288,8 +1296,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Color(0xFF6A5D64),
                   letterSpacing: 0.8,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 8),
@@ -1310,72 +1316,84 @@ class _HomeScreenState extends State<HomeScreen> {
         GestureDetector(
           onTap: () => context.push('/amrit-vachan'),
           child: Container(
-            padding: const EdgeInsets.all(18),
+            width: double.infinity,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFFF9F0), Color(0xFFFFF0E6)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: const Color(0xFFFFE0CC)),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFD47A2A).withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE87A1E),
-                        borderRadius: BorderRadius.circular(10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (hasImage)
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          'assets/images/temple_welcome.jpg',
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.menu_book_rounded, size: 12, color: Colors.white),
-                          const SizedBox(width: 4),
-                          Text(
-                            context.tr('amritVachanHeader'),
-                            style: const TextStyle(
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFBEBF1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.auto_awesome, size: 12, color: primaryPlum),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    context.tr('amritVachanHeader'),
+                                    style: TextStyle(
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: primaryPlum,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          vachanQuote,
+                          style: TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w600,
+                            color: charcoalText,
+                            fontFamily: 'serif',
+                            height: 1.45,
                           ),
-                        ],
-                      ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    const Icon(
-                      Icons.format_quote_rounded,
-                      size: 26,
-                      color: Color(0xFFD97706),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  '"$vachanQuote"',
-                  style: TextStyle(
-                    fontSize: 14.5,
-                    fontStyle: FontStyle.italic,
-                    fontFamily: 'serif',
-                    fontWeight: FontWeight.w600,
-                    color: charcoalText,
-                    height: 1.4,
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -1383,7 +1401,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─── 3) Spiritual Events Card ────────────────────────────────────────────
   Widget _buildEventsSection(
     Color primaryPlum,
     Color charcoalText,

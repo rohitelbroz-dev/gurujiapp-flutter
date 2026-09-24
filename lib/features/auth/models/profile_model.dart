@@ -15,6 +15,10 @@ class Profile {
   final int otpAttempts;
   final String createdAt;
   final String updatedAt;
+  final int totalGauSeva;
+  final int jaapStreak;
+  final bool muhuratAlerts;
+  final bool prayerReminders;
 
   Profile({
     required this.id,
@@ -33,6 +37,10 @@ class Profile {
     required this.otpAttempts,
     required this.createdAt,
     required this.updatedAt,
+    this.totalGauSeva = 0,
+    this.jaapStreak = 0,
+    this.muhuratAlerts = true,
+    this.prayerReminders = true,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -50,9 +58,23 @@ class Profile {
       isVerified: json['isVerified'] == true,
       otpCode: json['otpCode']?.toString(),
       otpExpiresAt: json['otpExpiresAt']?.toString(),
-      otpAttempts: json['otpAttempts'] is int ? json['otpAttempts'] as int : int.tryParse(json['otpAttempts']?.toString() ?? '') ?? 0,
+      otpAttempts: json['otpAttempts'] is int
+          ? json['otpAttempts'] as int
+          : int.tryParse(json['otpAttempts']?.toString() ?? '') ?? 0,
       createdAt: json['createdAt']?.toString() ?? '',
       updatedAt: json['updatedAt']?.toString() ?? '',
+      totalGauSeva: json['totalGauSeva'] is int
+          ? json['totalGauSeva'] as int
+          : int.tryParse(json['totalGauSeva']?.toString() ?? '') ?? 0,
+      jaapStreak: json['jaapStreak'] is int
+          ? json['jaapStreak'] as int
+          : int.tryParse(json['jaapStreak']?.toString() ?? '') ?? 0,
+      muhuratAlerts: json['muhuratAlerts'] == null
+          ? true
+          : (json['muhuratAlerts'] == true || json['muhuratAlerts'].toString() == 'true'),
+      prayerReminders: json['prayerReminders'] == null
+          ? true
+          : (json['prayerReminders'] == true || json['prayerReminders'].toString() == 'true'),
     );
   }
 
@@ -74,6 +96,10 @@ class Profile {
       'otpAttempts': otpAttempts,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'totalGauSeva': totalGauSeva,
+      'jaapStreak': jaapStreak,
+      'muhuratAlerts': muhuratAlerts,
+      'prayerReminders': prayerReminders,
     };
   }
 
@@ -94,6 +120,10 @@ class Profile {
     int? otpAttempts,
     String? createdAt,
     String? updatedAt,
+    int? totalGauSeva,
+    int? jaapStreak,
+    bool? muhuratAlerts,
+    bool? prayerReminders,
   }) {
     return Profile(
       id: id ?? this.id,
@@ -112,6 +142,10 @@ class Profile {
       otpAttempts: otpAttempts ?? this.otpAttempts,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      totalGauSeva: totalGauSeva ?? this.totalGauSeva,
+      jaapStreak: jaapStreak ?? this.jaapStreak,
+      muhuratAlerts: muhuratAlerts ?? this.muhuratAlerts,
+      prayerReminders: prayerReminders ?? this.prayerReminders,
     );
   }
 }

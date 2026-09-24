@@ -68,13 +68,17 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
             }
           },
         ),
-        title: Text(
-          context.tr('amritVachanHeader'),
-          style: const TextStyle(
-            color: primaryPlum,
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-            fontFamily: 'serif',
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            context.tr('amritVachanHeader'),
+            style: const TextStyle(
+              color: primaryPlum,
+              fontWeight: FontWeight.w700,
+              fontSize: 17,
+              fontFamily: 'serif',
+            ),
+            maxLines: 1,
           ),
         ),
         actions: [
@@ -414,30 +418,38 @@ class _AmritVachanScreenState extends State<AmritVachanScreen> {
     required Color bgColor,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 16, color: color),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: color,
-              ),
-              overflow: TextOverflow.ellipsis,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          alignment: Alignment.center,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 15, color: color),
+                const SizedBox(width: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                  maxLines: 1,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

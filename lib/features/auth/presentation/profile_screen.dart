@@ -36,7 +36,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   bool _isSaving = false;
   bool _showEditForm = false;
-  int _jaapStreakDays = 108;
+  int _jaapStreakDays = 0;
+  int _totalGauSeva = 0;
 
   // Preferences toggles
   bool _muhuratAlerts = true;
@@ -65,6 +66,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     super.initState();
     context.read<AuthBloc>().add(const GetProfileEvent());
     _loadJaapStats();
+    _loadPreferences();
     _loadCachedProfileImage();
   }
 
@@ -73,8 +75,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       final stats = await NaamJaapRepository().fetchStats();
       if (mounted) {
         setState(() {
-          _jaapStreakDays = stats.currentStreak.days > 0 ? stats.currentStreak.days : 108;
-                  });
+          _jaapStreakDays = stats.currentStreak.days;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _loadPreferences() async {
+    try {
+      final muhurat = await UserPersistenceService.getMuhuratAlerts();
+      final prayer = await UserPersistenceService.getPrayerReminders();
+      final donation = await UserPersistenceService.getTotalDonation();
+      if (mounted) {
+        setState(() {
+          _muhuratAlerts = muhurat;
+          _prayerReminders = prayer;
+          _totalGauSeva = donation;
+        });
       }
     } catch (_) {}
   }
@@ -242,10 +259,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is ProfileUpdateSuccess) {
+            final p = state.profile;
             setState(() {
               _isSaving = false;
               _showEditForm = false;
+              _totalGauSeva = p.totalGauSeva;
+              if (p.jaapStreak > 0) {
+                _jaapStreakDays = p.jaapStreak;
+              }
+              _muhuratAlerts = p.muhuratAlerts;
+              _prayerReminders = p.prayerReminders;
+              if (p.profileImage != null && p.profileImage!.isNotEmpty) {
+                _profileImageUrl = p.profileImage;
+              }
             });
+            UserPersistenceService.saveMuhuratAlerts(p.muhuratAlerts);
+            UserPersistenceService.savePrayerReminders(p.prayerReminders);
+            UserPersistenceService.saveTotalDonation(p.totalGauSeva);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(context.tr('saveChanges')),
@@ -267,7 +297,17 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             if (p.profileImage != null && p.profileImage!.isNotEmpty) {
               _profileImageUrl = p.profileImage;
             }
-            setState(() {});
+            setState(() {
+              _totalGauSeva = p.totalGauSeva;
+              if (p.jaapStreak > 0) {
+                _jaapStreakDays = p.jaapStreak;
+              }
+              _muhuratAlerts = p.muhuratAlerts;
+              _prayerReminders = p.prayerReminders;
+            });
+            UserPersistenceService.saveMuhuratAlerts(p.muhuratAlerts);
+            UserPersistenceService.savePrayerReminders(p.prayerReminders);
+            UserPersistenceService.saveTotalDonation(p.totalGauSeva);
           } else if (state is LogoutSuccess) {
             context.go('/home');
           } else if (state is AccountDeletedSuccess) {
@@ -475,7 +515,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                           Expanded(
                             child: _buildProfileStatCard(
                               badgeWidget: const Text('🌸', style: TextStyle(fontSize: 18)),
-                              value: '₹15,100',
+                              value: '₹$_totalGauSeva',
                               label: context.tr('totalGauseva').toUpperCase(),
                               charcoalText: charcoalText,
                               primaryPlum: primaryPlum,
@@ -921,7 +961,17 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             title: 'Muhurat Alerts',
             subtitle: context.tr('todayAuspicious'),
             value: _muhuratAlerts,
-            onChanged: (val) => setState(() => _muhuratAlerts = val),
+            onChanged: (val) {
+              setState(() => _muhuratAlerts = val);
+              UserPersistenceService.saveMuhuratAlerts(val);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(val ? 'Muhurat alerts enabled' : 'Muhurat alerts disabled'),
+                  duration: const Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
             primaryPlum: primaryPlum,
             charcoalText: charcoalText,
             subtitleColor: subtitleColor,
@@ -933,7 +983,17 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             title: context.tr('notifications'),
             subtitle: 'Daily sadhana notifications',
             value: _prayerReminders,
-            onChanged: (val) => setState(() => _prayerReminders = val),
+            onChanged: (val) {
+              setState(() => _prayerReminders = val);
+              UserPersistenceService.savePrayerReminders(val);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(val ? 'Sadhana reminders enabled' : 'Sadhana reminders disabled'),
+                  duration: const Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
             primaryPlum: primaryPlum,
             charcoalText: charcoalText,
             subtitleColor: subtitleColor,

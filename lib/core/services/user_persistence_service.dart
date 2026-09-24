@@ -87,4 +87,48 @@ class UserPersistenceService {
     await prefs.setStringList(_favoriteAudiosKey, set.toList());
     return isNowFav;
   }
+  static const String _preferredCityKey = 'user_preferred_city';
+  static const String _muhuratAlertsKey = 'pref_muhurat_alerts';
+  static const String _prayerRemindersKey = 'pref_prayer_reminders';
+  static const String _totalDonationsKey = 'user_total_donations';
+
+  static Future<void> savePreferredCity(String city) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_preferredCityKey, city);
+  }
+
+  static Future<String?> getPreferredCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_preferredCityKey);
+  }
+
+  static Future<void> saveMuhuratAlerts(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_muhuratAlertsKey, enabled);
+  }
+
+  static Future<bool> getMuhuratAlerts() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_muhuratAlertsKey) ?? true;
+  }
+
+  static Future<void> savePrayerReminders(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prayerRemindersKey, enabled);
+  }
+
+  static Future<bool> getPrayerReminders() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_prayerRemindersKey) ?? true;
+  }
+
+  static Future<void> saveTotalDonation(int amount) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_totalDonationsKey, amount);
+  }
+
+  static Future<int> getTotalDonation() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_totalDonationsKey) ?? 0;
+  }
 }
