@@ -478,7 +478,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: mauveCard,
         borderRadius: BorderRadius.circular(24),
@@ -496,42 +496,50 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
+              Expanded(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.wb_sunny_rounded,
+                        size: 15,
+                        color: Colors.white,
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.wb_sunny_rounded,
-                      size: 16,
-                      color: Colors.white,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        context.tr('auspiciousTiming').toUpperCase(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    context.tr('auspiciousTiming').toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Text(
-                  '★ SHUBH',
+                  'SHUBH',
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 9.5,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                     letterSpacing: 0.5,
@@ -544,29 +552,30 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             context.tr('abhijitMuhurat'),
             style: const TextStyle(
-              fontSize: 22,
+              fontSize: 26,
               fontWeight: FontWeight.w800,
               fontFamily: 'serif',
               color: Colors.white,
+              letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             timeRange,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.w700,
               color: Colors.white,
+              letterSpacing: 0.2,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Text(
             context.tr('abhijitDesc'),
             style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+              fontSize: 13,
+              height: 1.4,
               color: Colors.white.withOpacity(0.9),
-              height: 1.35,
             ),
           ),
         ],
@@ -574,7 +583,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─── Celestial Timings ──────────────────────────────────────────────────
   Widget _buildCelestialTimingsCard(Color charcoalText, Color subtitleColor) {
     final sunrise = _panchangData?.celestial.sunrise ?? '05:32 AM';
     final sunset = _panchangData?.celestial.sunset ?? '07:05 PM';

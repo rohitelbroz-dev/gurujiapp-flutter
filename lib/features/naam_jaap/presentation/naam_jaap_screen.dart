@@ -607,7 +607,7 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
 
                           // Column 3: HISTORY
                           GestureDetector(
-                            onTap: () => context.push('/naam-jaap/history'),
+                            onTap: () => context.push('/jaap-history'),
                             behavior: HitTestBehavior.opaque,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
