@@ -57,19 +57,26 @@ class AudioLibraryRepository {
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
         final list = (decoded is Map ? decoded['data'] : decoded) as List? ?? [];
+        final favIds = await UserPersistenceService.getFavoriteAudioIds();
         if (list.isNotEmpty) {
-          return list.map((item) => AudioTrackItem.fromJson(item as Map<String, dynamic>)).toList();
+          return list.map((item) {
+            final track = AudioTrackItem.fromJson(item as Map<String, dynamic>);
+            return track.copyWith(isFavorite: favIds.contains(track.id) || track.isFavorite);
+          }).toList();
         }
       }
     } catch (_) {
       // Fallback to local filter
     }
 
-    return _getFallbackTracks(deity: deity, search: search);
+    final fallbacks = _getFallbackTracks(deity: deity, search: search);
+    final favIds = await UserPersistenceService.getFavoriteAudioIds();
+    return fallbacks.map((t) => t.copyWith(isFavorite: favIds.contains(t.id) || t.isFavorite)).toList();
   }
 
   /// Toggle track favorite
   Future<bool> toggleFavorite(String trackId) async {
+    final localResult = await UserPersistenceService.toggleFavoriteAudioId(trackId);
     try {
       final token = await UserPersistenceService.getToken();
       final url = Uri.parse('$_baseUrl/audio/favorites/toggle');

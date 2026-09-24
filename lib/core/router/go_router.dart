@@ -105,6 +105,10 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const NaamJaapScreen(),
     ),
     GoRoute(
+      path: '/naam-jaap/history',
+      builder: (context, state) => const JaapHistoryScreen(),
+    ),
+    GoRoute(
       path: '/jaap-history',
       builder: (context, state) => const JaapHistoryScreen(),
     ),

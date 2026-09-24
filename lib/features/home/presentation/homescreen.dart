@@ -738,18 +738,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      context.tr('rahuKaal'),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: charcoalText,
+                    Expanded(
+                      child: Text(
+                        context.tr('rahuKaal'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                          color: charcoalText,
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 6),
                     Text(
                       rahuTime,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 12.5,
                         fontWeight: FontWeight.w700,
                         color: primaryPlum,
                       ),

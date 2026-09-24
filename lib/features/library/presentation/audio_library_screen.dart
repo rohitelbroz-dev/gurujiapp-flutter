@@ -93,8 +93,8 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
     super.dispose();
   }
 
-  void _openAudioPlayer(AudioTrackItem item) {
-    context.push(
+  void _openAudioPlayer(AudioTrackItem item) async {
+    await context.push(
       '/now-playing',
       extra: {
         'id': item.id,
@@ -108,6 +108,9 @@ class _AudioLibraryScreenState extends State<AudioLibraryScreen> {
         'isFavorite': item.isFavorite,
       },
     );
+    if (mounted) {
+      _fetchFilteredTracks();
+    }
   }
 
   @override

@@ -299,22 +299,28 @@ class _JaapHistoryScreenState extends State<JaapHistoryScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                context.tr('activityHeatmap'),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'serif',
-                  color: charcoalText,
+              Expanded(
+                child: Text(
+                  context.tr('activityHeatmap'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'serif',
+                    color: charcoalText,
+                  ),
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF7F1F4),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: List.generate(_filterKeys.length, (index) {
                     final isSelected = index == _activeFilterIndex;
                     return GestureDetector(

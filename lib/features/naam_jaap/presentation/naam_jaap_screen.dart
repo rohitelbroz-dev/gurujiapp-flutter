@@ -61,6 +61,7 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
     final sound = await _repository.isSoundEnabled();
     final haptics = await _repository.isHapticsEnabled();
 
+    final draft = await _repository.getDraftSessionCount();
     try {
       final stats = await _repository.fetchStats();
       if (mounted) {
@@ -68,7 +69,8 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
           _dailyGoalMalas = goal;
           _soundEnabled = sound;
           _hapticsEnabled = haptics;
-          _completedMalas = stats.stats.today.malas;
+          _currentBeads = draft % 108;
+          _completedMalas = stats.stats.today.malas + (draft ~/ 108);
           _streakDays = stats.currentStreak.days > 0 ? stats.currentStreak.days : 1;
         });
       }
@@ -78,6 +80,8 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
           _dailyGoalMalas = goal;
           _soundEnabled = sound;
           _hapticsEnabled = haptics;
+          _currentBeads = draft % 108;
+          _completedMalas = draft ~/ 108;
         });
       }
     }
@@ -117,6 +121,8 @@ class _NaamJaapScreenState extends State<NaamJaapScreen>
       }
     });
 
+    final totalChants = (_completedMalas * 108) + _currentBeads;
+    _repository.saveDraftSessionCount(totalChants);
     context.read<NaamJaapBloc>().add(const NaamJaapIncremented());
   }
 

@@ -48,4 +48,43 @@ class UserPersistenceService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+  static const String _profileImagePathKey = 'user_profile_image_path';
+  static const String _favoriteAudiosKey = 'user_favorite_audios';
+
+  static Future<void> saveUserProfileImagePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileImagePathKey, path);
+  }
+
+  static Future<String?> getUserProfileImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_profileImagePathKey);
+  }
+
+  static Future<void> clearUserProfileImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_profileImagePathKey);
+  }
+
+  static Future<Set<String>> getFavoriteAudioIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList(_favoriteAudiosKey) ?? [];
+    return list.toSet();
+  }
+
+  static Future<bool> toggleFavoriteAudioId(String trackId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList(_favoriteAudiosKey) ?? [];
+    final set = list.toSet();
+    bool isNowFav;
+    if (set.contains(trackId)) {
+      set.remove(trackId);
+      isNowFav = false;
+    } else {
+      set.add(trackId);
+      isNowFav = true;
+    }
+    await prefs.setStringList(_favoriteAudiosKey, set.toList());
+    return isNowFav;
+  }
 }

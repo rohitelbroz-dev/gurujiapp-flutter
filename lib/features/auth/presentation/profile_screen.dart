@@ -1,3 +1,4 @@
+import 'package:guruji/core/services/user_persistence_service.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +31,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedProfileImageFile;
+  File? _cachedProfileImageFile;
   String? _profileImageUrl;
 
   bool _isSaving = false;
@@ -63,6 +65,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     super.initState();
     context.read<AuthBloc>().add(const GetProfileEvent());
     _loadJaapStats();
+    _loadCachedProfileImage();
   }
 
   Future<void> _loadJaapStats() async {
@@ -129,7 +132,26 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     }
   }
 
-  void _saveProfile() {
+    Future<void> _loadCachedProfileImage() async {
+    try {
+      final cachedPath = await UserPersistenceService.getUserProfileImagePath();
+      if (cachedPath != null && cachedPath.isNotEmpty && File(cachedPath).existsSync()) {
+        if (mounted) {
+          setState(() {
+            _cachedProfileImageFile = File(cachedPath);
+          });
+        }
+      }
+    } catch (_) {}
+  }
+
+  void _saveProfile() async {
+    if (_selectedProfileImageFile != null) {
+      await UserPersistenceService.saveUserProfileImagePath(_selectedProfileImageFile!.path);
+      setState(() {
+        _cachedProfileImageFile = _selectedProfileImageFile;
+      });
+    }
     setState(() => _isSaving = true);
     context.read<AuthBloc>().add(
           UpdateProfileEvent(
@@ -283,24 +305,30 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
                   child: Column(
                     children: [
-                      // Header: Back Button, Title, and Action Icons
+                      // Header: Back Button, Title, and Action Icons (No Overflow)
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.arrow_back_rounded, size: 22, color: primaryPlum),
                             onPressed: _handleBack,
                           ),
-                          Text(
-                            context.tr('profileTitle'),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'serif',
-                              color: primaryPlum,
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                context.tr('profileTitle'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'serif',
+                                  color: primaryPlum,
+                                ),
+                              ),
                             ),
                           ),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
                                 icon: Icon(
@@ -349,7 +377,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                                 child: ClipOval(
                                   child: _selectedProfileImageFile != null
                                       ? Image.file(_selectedProfileImageFile!, fit: BoxFit.cover)
-                                      : (_profileImageUrl != null && _profileImageUrl!.isNotEmpty)
+                                      : _cachedProfileImageFile != null
+                                          ? Image.file(_cachedProfileImageFile!, fit: BoxFit.cover)
+                                          : (_profileImageUrl != null && _profileImageUrl!.isNotEmpty)
                                           ? Image.network(
                                               _profileImageUrl!,
                                               fit: BoxFit.cover,
