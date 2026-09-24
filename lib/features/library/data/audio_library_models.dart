@@ -66,14 +66,32 @@ class AudioTrackItem {
     this.assetFallback,
   });
 
-  factory AudioTrackItem.fromJson(Map<String, dynamic> json) {
+    factory AudioTrackItem.fromJson(Map<String, dynamic> json) {
+    String rawAudioUrl = json['audioUrl']?.toString() ??
+        json['url']?.toString() ??
+        json['audio']?.toString() ??
+        json['audioFile']?.toString() ??
+        json['audio_url']?.toString() ??
+        json['file']?.toString() ??
+        json['mediaUrl']?.toString() ??
+        '';
+
+    // Normalize relative backend URL if needed
+    if (rawAudioUrl.isNotEmpty && !rawAudioUrl.startsWith('http') && !rawAudioUrl.startsWith('assets/')) {
+      if (rawAudioUrl.startsWith('/')) {
+        rawAudioUrl = 'https://gurujiappbackend.onrender.com$rawAudioUrl';
+      } else {
+        rawAudioUrl = 'https://gurujiappbackend.onrender.com/$rawAudioUrl';
+      }
+    }
+
     return AudioTrackItem(
       id: json['id']?.toString() ?? json['_id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
       artist: json['artist']?.toString() ?? json['author']?.toString() ?? '',
       deity: json['deity']?.toString() ?? 'All',
       category: json['category']?.toString() ?? 'chant',
-      audioUrl: json['audioUrl']?.toString() ?? '',
+      audioUrl: rawAudioUrl,
       coverImage: json['coverImage']?.toString() ?? json['image']?.toString() ?? '',
       durationFormatted: json['durationFormatted']?.toString() ?? json['duration']?.toString() ?? '05:00',
       totalSeconds: (json['totalSeconds'] as num?)?.toInt() ?? 300,
