@@ -44,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Event? _featuredEvent;
   LeaderboardEntry? _topSadhak;
   bool _isLoading = true;
+  DateTime _selectedDate = DateTime.now();
+  bool _isPanchangLoading = false;
 
   @override
   void initState() {
@@ -51,12 +53,68 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadAllHomeData();
   }
 
+  String _formatDateQuery(DateTime dt) {
+    return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  void _onDateChanged(DateTime newDate) {
+    if (_isSameDay(_selectedDate, newDate)) return;
+    setState(() {
+      _selectedDate = newDate;
+      _isPanchangLoading = true;
+    });
+
+    final dateStr = _formatDateQuery(newDate);
+    _panchangRepo.fetchDailyPanchang(date: dateStr, location: _selectedLocation).then((data) {
+      if (mounted) {
+        setState(() {
+          _panchangData = data;
+          _isPanchangLoading = false;
+        });
+      }
+    }).catchError((_) {
+      if (mounted) {
+        setState(() => _isPanchangLoading = false);
+      }
+    });
+  }
+
+  Future<void> _selectCustomDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2035),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF7E2B58),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Color(0xFF1E1A1D),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      _onDateChanged(picked);
+    }
+  }
+
   Future<void> _loadAllHomeData() async {
     setState(() => _isLoading = true);
 
     try {
+      final dateStr = _formatDateQuery(_selectedDate);
       final results = await Future.wait([
-        _panchangRepo.fetchDailyPanchang(location: _selectedLocation),
+        _panchangRepo.fetchDailyPanchang(date: dateStr, location: _selectedLocation),
         _panchangRepo.fetchUpcomingFestivals(),
         _amritVachanRepo.fetchTodayPosts().then((list) async {
           if (list.isNotEmpty) return list.first;
@@ -90,7 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedLocation = newLocation;
     });
-    _panchangRepo.fetchDailyPanchang(location: newLocation).then((data) {
+    final dateStr = _formatDateQuery(_selectedDate);
+    _panchangRepo.fetchDailyPanchang(date: dateStr, location: newLocation).then((data) {
       if (mounted) {
         setState(() => _panchangData = data);
       }
@@ -139,20 +198,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildDateSection(charcoalText, subtitleColor),
                     const SizedBox(height: 24),
 
-                    // ─── 2x2 Grid (Tithi, Nakshatra, Yoga, Karana) ───
-                    _buildPanchangGrid(primaryPlum, charcoalText, subtitleColor),
-                    const SizedBox(height: 20),
-
-                    // ─── Auspicious Timing Card (Abhijit Muhurat) ───
-                    _buildAuspiciousTimingCard(mauveCard),
-                    const SizedBox(height: 20),
-
-                    // ─── Celestial Timings (Sun & Moon) ───
-                    _buildCelestialTimingsCard(charcoalText, subtitleColor),
-                    const SizedBox(height: 20),
-
-                    // ─── Inauspicious Period (Rahu Kaal) ───
-                    _buildInauspiciousPeriodCard(primaryPlum, charcoalText, subtitleColor),
+                    // ─── Dynamic Panchang Section (Tithi, Nakshatra, Muhurat, Rahu Kaal) ───
+                    AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: _isPanchangLoading ? 0.45 : 1.0,
+                      child: Column(
+                        children: [
+                          _buildPanchangGrid(primaryPlum, charcoalText, subtitleColor),
+                          const SizedBox(height: 20),
+                          _buildAuspiciousTimingCard(mauveCard),
+                          const SizedBox(height: 20),
+                          _buildCelestialTimingsCard(charcoalText, subtitleColor),
+                          const SizedBox(height: 20),
+                          _buildInauspiciousPeriodCard(primaryPlum, charcoalText, subtitleColor),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 24),
 
                     // ─── Upcoming Festivals ───
@@ -279,6 +340,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ─── Date Section ────────────────────────────────────────────────────────
   Widget _buildDateSection(Color charcoalText, Color subtitleColor) {
+    const primaryPlum = Color(0xFF7E2B58);
+    final now = DateTime.now();
+    final isToday = _isSameDay(_selectedDate, now);
+    final isYesterday = _isSameDay(_selectedDate, now.subtract(const Duration(days: 1)));
+    final isTomorrow = _isSameDay(_selectedDate, now.add(const Duration(days: 1)));
+
     final gregorian = _panchangData?.gregorianFormatted.isNotEmpty == true
         ? _panchangData!.gregorianFormatted
         : context.tr('panchangGregorianDate');
@@ -286,10 +353,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Greeting Header
         Text(
           context.tr('panchangDateHeader'),
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 24,
             fontWeight: FontWeight.w800,
             fontFamily: 'serif',
             color: charcoalText,
@@ -297,17 +365,226 @@ class _HomeScreenState extends State<HomeScreen> {
             letterSpacing: -0.5,
           ),
         ),
-        const SizedBox(height: 6),
-        Text(
-          gregorian,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: subtitleColor,
-            letterSpacing: 0.1,
+        const SizedBox(height: 14),
+
+        // Quick Day Navigation Chips (Yesterday | Today | Tomorrow | Pick Date)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: [
+              _buildQuickDateChip(
+                label: 'Yesterday',
+                isSelected: isYesterday,
+                onTap: () => _onDateChanged(now.subtract(const Duration(days: 1))),
+                primaryPlum: primaryPlum,
+              ),
+              const SizedBox(width: 8),
+              _buildQuickDateChip(
+                label: 'Today',
+                isSelected: isToday,
+                onTap: () => _onDateChanged(now),
+                primaryPlum: primaryPlum,
+              ),
+              const SizedBox(width: 8),
+              _buildQuickDateChip(
+                label: 'Tomorrow',
+                isSelected: isTomorrow,
+                onTap: () => _onDateChanged(now.add(const Duration(days: 1))),
+                primaryPlum: primaryPlum,
+              ),
+              const SizedBox(width: 8),
+              _buildQuickDateChip(
+                label: 'Custom Date',
+                icon: Icons.calendar_today_rounded,
+                isSelected: !isToday && !isYesterday && !isTomorrow,
+                onTap: () => _selectCustomDate(context),
+                primaryPlum: primaryPlum,
+              ),
+            ],
           ),
         ),
+        const SizedBox(height: 12),
+
+        // Date Stepper Container with Prev / Next arrows & Date display
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: const Color(0xFFF3E5EB), width: 1.2),
+            boxShadow: [
+              BoxShadow(
+                color: primaryPlum.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Previous Day Button
+              IconButton(
+                icon: const Icon(Icons.chevron_left_rounded, size: 24, color: primaryPlum),
+                visualDensity: VisualDensity.compact,
+                splashRadius: 20,
+                tooltip: 'Previous Day',
+                onPressed: () => _onDateChanged(_selectedDate.subtract(const Duration(days: 1))),
+              ),
+
+              // Date Display (Tappable to open calendar)
+              Expanded(
+                child: InkWell(
+                  onTap: () => _selectCustomDate(context),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                gregorian,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF1E1A1D),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            const Icon(Icons.arrow_drop_down_rounded, size: 18, color: primaryPlum),
+                          ],
+                        ),
+                        if (isToday)
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFF0F5),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Text(
+                              'TODAY',
+                              style: TextStyle(
+                                fontSize: 9.0,
+                                fontWeight: FontWeight.w800,
+                                color: primaryPlum,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Next Day Button
+              IconButton(
+                icon: const Icon(Icons.chevron_right_rounded, size: 24, color: primaryPlum),
+                visualDensity: VisualDensity.compact,
+                splashRadius: 20,
+                tooltip: 'Next Day',
+                onPressed: () => _onDateChanged(_selectedDate.add(const Duration(days: 1))),
+              ),
+            ],
+          ),
+        ),
+
+        // If not today, show a small quick-jump button back to today
+        if (!isToday) ...[
+          const SizedBox(height: 8),
+          Center(
+            child: InkWell(
+              onTap: () => _onDateChanged(now),
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF0F5),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0xFFF0D6E2)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.replay_rounded, size: 13, color: primaryPlum),
+                    SizedBox(width: 4),
+                    Text(
+                      'Return to Today',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: primaryPlum,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
+    );
+  }
+
+  Widget _buildQuickDateChip({
+    required String label,
+    IconData? icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required Color primaryPlum,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? primaryPlum : const Color(0xFFF9EEF3),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? primaryPlum : const Color(0xFFEEDBE4),
+            width: 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: primaryPlum.withOpacity(0.25),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 13, color: isSelected ? Colors.white : primaryPlum),
+              const SizedBox(width: 5),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                color: isSelected ? Colors.white : const Color(0xFF5C4751),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
