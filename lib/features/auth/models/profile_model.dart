@@ -17,8 +17,8 @@ class Profile {
   final String updatedAt;
   final int totalGauSeva;
   final int jaapStreak;
-  final bool muhuratAlerts;
-  final bool prayerReminders;
+  final bool? muhuratAlerts;
+  final bool? prayerReminders;
 
   Profile({
     required this.id,
@@ -39,13 +39,28 @@ class Profile {
     required this.updatedAt,
     this.totalGauSeva = 0,
     this.jaapStreak = 0,
-    this.muhuratAlerts = true,
-    this.prayerReminders = true,
+    this.muhuratAlerts,
+    this.prayerReminders,
   });
 
-  factory Profile.fromJson(Map<String, dynamic> json) {
+  factory Profile.fromJson(Map<String, dynamic> raw) {
+    final json = raw['data'] is Map<String, dynamic> ? raw['data'] as Map<String, dynamic> : raw;
+
+    final muhuratRaw = json['muhuratAlerts'] ?? json['muhurat_alerts'] ?? json['muhuratAlert'] ?? json['isMuhuratAlertsEnabled'];
+    final prayerRaw = json['prayerReminders'] ?? json['prayer_reminders'] ?? json['prayerReminder'] ?? json['isPrayerRemindersEnabled'];
+
+    bool? parsedMuhurat;
+    if (muhuratRaw != null) {
+      parsedMuhurat = muhuratRaw == true || muhuratRaw.toString().toLowerCase() == 'true' || muhuratRaw == 1;
+    }
+
+    bool? parsedPrayer;
+    if (prayerRaw != null) {
+      parsedPrayer = prayerRaw == true || prayerRaw.toString().toLowerCase() == 'true' || prayerRaw == 1;
+    }
+
     return Profile(
-      id: json['id']?.toString() ?? '',
+      id: json['id']?.toString() ?? json['_id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
       phone: json['phone']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
@@ -69,12 +84,8 @@ class Profile {
       jaapStreak: json['jaapStreak'] is int
           ? json['jaapStreak'] as int
           : int.tryParse(json['jaapStreak']?.toString() ?? '') ?? 0,
-      muhuratAlerts: json['muhuratAlerts'] == null
-          ? true
-          : (json['muhuratAlerts'] == true || json['muhuratAlerts'].toString() == 'true'),
-      prayerReminders: json['prayerReminders'] == null
-          ? true
-          : (json['prayerReminders'] == true || json['prayerReminders'].toString() == 'true'),
+      muhuratAlerts: parsedMuhurat,
+      prayerReminders: parsedPrayer,
     );
   }
 
@@ -98,8 +109,8 @@ class Profile {
       'updatedAt': updatedAt,
       'totalGauSeva': totalGauSeva,
       'jaapStreak': jaapStreak,
-      'muhuratAlerts': muhuratAlerts,
-      'prayerReminders': prayerReminders,
+      if (muhuratAlerts != null) 'muhuratAlerts': muhuratAlerts,
+      if (prayerReminders != null) 'prayerReminders': prayerReminders,
     };
   }
 

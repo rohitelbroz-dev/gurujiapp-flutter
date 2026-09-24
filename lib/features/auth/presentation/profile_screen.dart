@@ -179,6 +179,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             state: _stateController.text.trim(),
             dateOfBirth: _dateOfBirthController.text.trim(),
             gotra: _gotraController.text.trim(),
+            muhuratAlerts: _muhuratAlerts,
+            prayerReminders: _prayerReminders,
             profileImageFile: _selectedProfileImageFile,
           ),
         );
@@ -267,14 +269,22 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               if (p.jaapStreak > 0) {
                 _jaapStreakDays = p.jaapStreak;
               }
-              _muhuratAlerts = p.muhuratAlerts;
-              _prayerReminders = p.prayerReminders;
+              if (p.muhuratAlerts != null) {
+                _muhuratAlerts = p.muhuratAlerts!;
+              }
+              if (p.prayerReminders != null) {
+                _prayerReminders = p.prayerReminders!;
+              }
               if (p.profileImage != null && p.profileImage!.isNotEmpty) {
                 _profileImageUrl = p.profileImage;
               }
             });
-            UserPersistenceService.saveMuhuratAlerts(p.muhuratAlerts);
-            UserPersistenceService.savePrayerReminders(p.prayerReminders);
+            if (p.muhuratAlerts != null) {
+              UserPersistenceService.saveMuhuratAlerts(p.muhuratAlerts!);
+            }
+            if (p.prayerReminders != null) {
+              UserPersistenceService.savePrayerReminders(p.prayerReminders!);
+            }
             UserPersistenceService.saveTotalDonation(p.totalGauSeva);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -302,11 +312,19 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               if (p.jaapStreak > 0) {
                 _jaapStreakDays = p.jaapStreak;
               }
-              _muhuratAlerts = p.muhuratAlerts;
-              _prayerReminders = p.prayerReminders;
+              if (p.muhuratAlerts != null) {
+                _muhuratAlerts = p.muhuratAlerts!;
+              }
+              if (p.prayerReminders != null) {
+                _prayerReminders = p.prayerReminders!;
+              }
             });
-            UserPersistenceService.saveMuhuratAlerts(p.muhuratAlerts);
-            UserPersistenceService.savePrayerReminders(p.prayerReminders);
+            if (p.muhuratAlerts != null) {
+              UserPersistenceService.saveMuhuratAlerts(p.muhuratAlerts!);
+            }
+            if (p.prayerReminders != null) {
+              UserPersistenceService.savePrayerReminders(p.prayerReminders!);
+            }
             UserPersistenceService.saveTotalDonation(p.totalGauSeva);
           } else if (state is LogoutSuccess) {
             context.go('/home');
@@ -986,6 +1004,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             onChanged: (val) {
               setState(() => _prayerReminders = val);
               UserPersistenceService.savePrayerReminders(val);
+              context.read<AuthBloc>().add(UpdatePreferencesEvent(prayerReminders: val));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(val ? 'Sadhana reminders enabled' : 'Sadhana reminders disabled'),
